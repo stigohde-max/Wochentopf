@@ -1,5 +1,5 @@
 // Wochentopf offline cache. The version changes whenever a file changes, so updates arrive on the next start.
-const CACHE = "wochentopf-edb1caee50";
+const CACHE = "wochentopf-86fc664738";
 const FILES = ["./", "index.html", "manifest.webmanifest", "icons/icon.svg", "icons/icon-180.png", "icons/icon-192.png", "icons/icon-512.png", "fonts/bricolage.woff2", "fonts/figtree.woff2", "fonts/plexmono-400.woff2", "fonts/plexmono-600.woff2"];
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)).then(() => self.skipWaiting()));

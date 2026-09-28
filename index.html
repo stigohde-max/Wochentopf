@@ -298,6 +298,20 @@ const P = {
   karotten: ["Karotten", "1 kg", 1000, 0.99, 0.9, 38, "gemuese", "vegan", ["paprika", "zucchini", "gurke"]],
   gurke: ["Salatgurke", "1 Stück, ca. 400 g", 400, 0.69, 0.6, 14, "gemuese", "vegan", ["paprika", "karotten", "tomaten"]],
   zwiebeln: ["Zwiebeln", "1 kg", 1000, 1.19, 1.2, 40, "gemuese", "vegan", []],
+  salat: ["Eisbergsalat", "1 Stück, ca. 500 g", 500, 0.99, 1, 14, "gemuese", "vegan", ["gurke", "spinat"]],
+  avocado: ["Avocado", "1 Stück, ca. 200 g", 200, 0.99, 2, 160, "gemuese", "vegan", ["hummus", "frischkaese"]],
+  heidelbeeren: ["Heidelbeeren", "250 g", 250, 2.49, 0.7, 45, "gemuese", "vegan", ["beeren", "banane"]],
+  rindersteak: ["Rinderhüftsteak", "2 Stück, 400 g", 400, 7.99, 22, 120, "fleisch", "meat", ["pute", "haehnchen"]],
+  gyros: ["Gyros-Geschnetzeltes, gewürzt", "500 g", 500, 3.99, 19, 180, "fleisch", "meat", ["haehnchen", "pute"]],
+  burgerPatties: ["Rinder-Burger-Patties", "4 Stück, 360 g", 360, 4.49, 18, 250, "fleisch", "meat", ["rinderhack", "hack"]],
+  burgerBrot: ["Burger-Brötchen", "4 Stück, 300 g", 300, 1.29, 9, 270, "brot", "veg", ["toast", "wraps"]],
+  garnelen: ["Garnelen, TK", "250 g", 250, 4.49, 18, 75, "tk", "fish", ["lachs", "seelachs", "haehnchen"]],
+  lachsRaeucher: ["Räucherlachs", "200 g", 200, 3.99, 20, 180, "kuehl", "fish", ["thunfisch", "haehnchenAufschnitt"]],
+  halloumi: ["Grillkäse Halloumi", "225 g", 225, 2.49, 21, 320, "kuehl", "veg", ["feta", "tofu"]],
+  tortellini: ["Tortellini mit Käsefüllung", "400 g", 400, 1.79, 12, 280, "kuehl", "veg", ["gnocchi", "nudeln"], 0, 1.8],
+  edamame: ["Edamame, TK", "500 g", 500, 2.49, 11, 120, "tk", "vegan", ["erbsen", "kichererbsen"]],
+  mandeln: ["Mandeln", "200 g", 200, 2.49, 24, 600, "trocken", "vegan", ["nuesse", "erdnuss"]],
+  proteinriegel: ["Proteinriegel", "1 Riegel, 45 g", 45, 1.29, 33, 380, "trocken", "veg", ["pudding", "nuesse"]],
 };
 const prod = id => { const a = P[id]; return { id, name: a[0], pack: a[1], size: a[2], base: a[3], prot: a[4], kcal: a[5], cat: a[6], diet: a[7], alts: a[8], piece: a[9] || 0 }; };
 const F = pid => P[pid][10] || 1;
@@ -339,6 +353,9 @@ const R = {
   haehnchenBrot: { t: "bf", n: "Vollkornbrot mit Hähnchenaufschnitt & Frischkäse", i: { brot: 150, haehnchenAufschnitt: 50, frischkaese: 30, gurke: 80 }, s: ["Brot mit Frischkäse bestreichen, Aufschnitt und Gurke drauf."] },
   hummusBrot: { t: "bf", n: "Hummus-Brot mit Tomate", i: { brot: 150, hummus: 60, tomaten: 100 }, s: ["Brot dick mit Hummus bestreichen.", "Tomatenscheiben drauf, salzen und pfeffern."] },
   quarkBrot: { t: "bf", n: "Kräuterquark-Brot mit Tomate", i: { brot: 150, quark: 125, tomaten: 100 }, s: ["Quark mit Salz, Pfeffer und TK-Kräutern anrühren.", "Aufs Brot streichen, Tomate drauf."] },
+  avocadoBrot: { t: "bf", n: "Avocado-Brot mit Ei", i: { brot: 120, avocado: 100, eier: 120 }, s: ["Avocado zerdrücken, salzen, aufs Brot streichen.", "2 Eier braten oder 7 Minuten kochen und drauflegen."] },
+  lachsBrot: { t: "bf", n: "Räucherlachs-Brot mit Frischkäse", i: { brot: 120, lachsRaeucher: 60, frischkaese: 40, gurke: 60 }, s: ["Brot mit Frischkäse bestreichen, Lachs und Gurke drauf, pfeffern."] },
+  skyrPremium: { t: "bf", n: "Skyr-Bowl mit Heidelbeeren & Mandeln", i: { skyr: 250, heidelbeeren: 100, mandeln: 20, hafer: 30 }, s: ["Skyr in eine Schüssel, Heidelbeeren, gehackte Mandeln und Haferflocken darüber."] },
   pancakes: { t: "bf", n: "Protein-Pancakes aus Haferflocken", i: { hafer: 60, eier: 120, banane: 100, quark: 100 }, s: ["Haferflocken, Eier, Banane und Quark mit der Gabel oder im Mixer zu Teig verrühren.", "Kleine Pancakes in wenig Öl von beiden Seiten 2 Minuten backen."] },
 
   skyrApfel: { t: "sn", n: "Skyr mit Apfel", i: { skyr: 200, apfel: 150 }, s: ["Apfel klein schneiden und unter den Skyr heben."] },
@@ -349,6 +366,9 @@ const R = {
   nuesseApfel: { t: "sn", n: "Nüsse und ein Apfel", i: { nuesse: 30, apfel: 150 }, s: ["Eine Handvoll Nüsse, ein Apfel. Passt in jede Tasche."] },
   knaecke: { t: "sn", n: "Knäckebrot mit Frischkäse", i: { knaecke: 40, frischkaese: 40, gurke: 80 }, s: ["Knäckebrot mit Frischkäse bestreichen, Gurke drauf."] },
   hummusKarotte: { t: "sn", n: "Karottensticks mit Hummus", i: { karotten: 150, hummus: 60 }, s: ["Karotten schälen, in Stifte schneiden und in Hummus dippen."] },
+  proteinriegel: { t: "sn", n: "Proteinriegel", i: { proteinriegel: 45 }, s: ["Für unterwegs, zum Beispiel nach dem Sport."] },
+  edamameSnack: { t: "sn", n: "Edamame mit Meersalz", i: { edamame: 150 }, s: ["Edamame 4 Minuten in Salzwasser kochen, mit grobem Salz bestreuen."] },
+  mandelnBeeren: { t: "sn", n: "Mandeln & Heidelbeeren", i: { mandeln: 25, heidelbeeren: 100 }, s: ["Einfach zusammen in eine Dose."] },
   eierSnack: { t: "sn", n: "Zwei gekochte Eier", i: { eier: 120 }, s: ["Eier 9 Minuten kochen, abschrecken. Halten sich 5 Tage im Kühlschrank."] },
 
   chickenbowl: { t: "main", n: "Hähnchen-Reis-Bowl mit Brokkoli", i: { haehnchen: 160, reis: 90, brokkoli: 150 }, s: ["Reis kochen. Hähnchen in Würfel schneiden, scharf anbraten, würzen.", "Brokkoli 5 Minuten dämpfen oder mitbraten. Alles in eine Schüssel."] },
@@ -393,6 +413,17 @@ const R = {
   tortillaPizza: { t: "main", n: "Tortilla-Pizza mit Schinken", i: { wraps: 125, passiert: 80, reibekaese: 50, schinken: 50, champignons: 80 }, s: ["Wraps mit passierten Tomaten bestreichen, Oregano drauf.", "Mit Schinken, Pilzen und Käse belegen, 8 Minuten bei 220 °C backen."] },
   tortillaVeggie: { t: "main", n: "Tortilla-Pizza mit Gemüse", i: { wraps: 125, passiert: 80, reibekaese: 50, paprika: 80, champignons: 80 }, s: ["Wraps mit passierten Tomaten bestreichen, Oregano drauf.", "Mit Gemüse und Käse belegen, 8 Minuten bei 220 °C backen."] },
   nudelauflauf: { t: "main", n: "Nudelauflauf mit Brokkoli", i: { nudeln: 110, brokkoli: 150, reibekaese: 50, milch: 100, eier: 60 }, s: ["Nudeln 2 Minuten kürzer kochen, mit Brokkoli in eine Form.", "Milch und Ei verquirlen, würzen, drübergießen, Käse drauf. 25 Minuten bei 200 °C backen."] },
+  steak: { t: "main", n: "Rinderhüftsteak mit Ofenkartoffeln & Brokkoli", i: { rindersteak: 180, kartoffeln: 300, brokkoli: 150 }, s: ["Kartoffeln in Spalten 30 Minuten bei 200 °C backen.", "Steak Zimmertemperatur annehmen lassen, pro Seite 3 Minuten scharf braten, 5 Minuten ruhen lassen. Brokkoli dämpfen."] },
+  garnelenPasta: { t: "main", n: "Garnelen-Pasta mit Knoblauch & Tomaten", i: { garnelen: 125, spaghetti: 110, tomaten: 150 }, s: ["Spaghetti kochen. Knoblauch in Öl anschwitzen, aufgetaute Garnelen 3 Minuten braten.", "Tomatenstücke dazu, mit Chili, Salz und etwas Nudelwasser mit der Pasta mischen."] },
+  garnelenBowl: { t: "main", n: "Garnelen-Reis-Bowl mit Edamame", i: { garnelen: 125, reis: 80, edamame: 100, gurke: 80 }, s: ["Reis kochen, Edamame 4 Minuten mitgaren.", "Garnelen mit Knoblauch und Sojasoße braten, mit Gurke auf den Reis geben."] },
+  lachsBowl: { t: "main", n: "Lachs-Bowl mit Avocado & Edamame", i: { lachs: 125, reis: 80, avocado: 100, edamame: 80, gurke: 80 }, s: ["Reis kochen, Edamame kurz mitgaren. Lachs braten und zerpflücken.", "Mit Avocado- und Gurkenscheiben in eine Schüssel, Sojasoße drüber."] },
+  gyros: { t: "main", n: "Gyros mit Reis & Tzatziki", i: { gyros: 180, reis: 80, joghurt: 100, gurke: 100 }, s: ["Reis kochen. Gyros in der heißen Pfanne 8 Minuten braten.", "Tzatziki: Gurke raspeln, mit Joghurt, Knoblauch und Salz mischen."] },
+  burger: { t: "main", n: "Burger mit Käse & Salat (2 Stück)", i: { burgerPatties: 180, burgerBrot: 150, gouda: 40, tomaten: 80, salat: 60 }, s: ["Patties pro Seite 4 Minuten braten, zum Schluss Käse drauf schmelzen lassen.", "Brötchen kurz anrösten, mit Salat und Tomate belegen."] },
+  caesarWrap: { t: "main", n: "Hähnchen-Caesar-Wraps", i: { haehnchen: 140, wraps: 125, salat: 80, reibekaese: 25, joghurt: 50 }, s: ["Hähnchen in Streifen braten.", "Joghurt mit Senf, Knoblauch und Salz verrühren. Wraps mit Salat, Hähnchen, Käse und Soße füllen."] },
+  puteSuess: { t: "main", n: "Putensteak mit Süßkartoffel-Pommes & Dip", i: { pute: 160, suesskartoffel: 300, joghurt: 60, salat: 60 }, s: ["Süßkartoffel in Stifte schneiden, mit Öl 25 Minuten bei 220 °C backen.", "Pute würzen und pro Seite 4 Minuten braten. Joghurt mit Kräutern als Dip."] },
+  halloumiBowl: { t: "main", n: "Halloumi-Couscous-Bowl", i: { halloumi: 110, couscous: 80, paprika: 100, gurke: 100 }, s: ["Couscous mit kochendem Wasser quellen lassen.", "Halloumi in Scheiben goldbraun braten, mit Gemüse auf den Couscous."] },
+  tortelliniSpinat: { t: "main", n: "Tortellini in Tomaten-Spinat-Soße", i: { tortellini: 200, passiert: 150, spinat: 80, reibekaese: 30 }, s: ["Passierte Tomaten mit Spinat 5 Minuten köcheln.", "Tortellini nach Packung kochen, unterheben, Käse drüber."] },
+  tofuBowl: { t: "main", n: "Crispy-Tofu-Bowl mit Avocado", i: { tofu: 180, reis: 80, avocado: 80, edamame: 80 }, s: ["Tofu würfeln, in Speisestärke wälzen und knusprig braten.", "Mit Reis, Edamame und Avocado anrichten, Sojasoße drüber."] },
   kichererbsenCouscous: { t: "main", n: "Kichererbsen-Spinat-Pfanne mit Couscous", i: { kichererbsen: 240, spinat: 150, couscous: 80, tomatenDose: 100 }, s: ["Couscous mit kochendem Wasser quellen lassen.", "Kichererbsen anbraten, Spinat und Tomaten dazu, mit Kreuzkümmel würzen, 8 Minuten köcheln."] },
 };
 
@@ -486,12 +517,12 @@ function pick(rng, arr, k) { const a = arr.slice(); for (let i = a.length - 1; i
 
 function randomPlan(rng, pools) {
   const plan = { bf: [], sn: [], batches: [] };
-  if (S.meals.bf && pools.bf.length) { const b = pick(rng, pools.bf, Math.min(2, pools.bf.length)); const lb = pools.bf.filter(r => S.likeR.includes(r) && !b.includes(r)); if (lb.length && rng() < 0.8) b[0] = lb[Math.floor(rng() * lb.length)]; for (let d = 0; d < 7; d++) plan.bf.push(b[d % b.length]); }
+  if (S.meals.bf && pools.bf.length) { const b = pick(rng, pools.bf, Math.min(2 + Math.floor(rng() * 2), pools.bf.length)); const lb = pools.bf.filter(r => S.likeR.includes(r) && !b.includes(r)); if (lb.length && rng() < 0.8) b[0] = lb[Math.floor(rng() * lb.length)]; for (let d = 0; d < 7; d++) plan.bf.push(b[d % b.length]); }
   if (S.meals.snack && pools.sn.length) { const b = pick(rng, pools.sn, Math.min(2, pools.sn.length)); for (let d = 0; d < 7; d++) plan.sn.push(b[d % b.length]); }
   const slots = slotsFor(S.meals);
   const nb = Math.ceil(slots.length / 2);
   if (nb && pools.main.length) {
-    const k = Math.min(pools.main.length, 3 + Math.floor(rng() * 3));
+    const k = Math.min(pools.main.length, 4 + Math.floor(rng() * 4));
     const chosen = pick(rng, pools.main, k);
     const liked = pools.main.filter(r => S.likeR.includes(r) && !chosen.includes(r));
     if (liked.length && rng() < 0.8) chosen[chosen.length - 1] = liked[Math.floor(rng() * liked.length)];
@@ -535,15 +566,53 @@ function evaluate(plan) {
 }
 
 function score(plan, ev) {
-  const distinct = new Set(plan.batches).size + new Set(plan.bf).size;
+  const distinct = new Set(plan.batches).size + new Set(plan.bf).size + new Set(plan.sn).size;
+  // spending well below the budget counts against a plan (except when the goal is to save)
+  const under = Math.max(0, S.budget * 0.9 - ev.cost);
   let s;
-  if (S.goal === "protein") s = ev.protDay * 1.0 + distinct * 0.6 - ev.cost * 0.05;
+  if (S.goal === "protein") s = ev.protDay * 1.0 + distinct * 0.8 - under * 1.5;
   else if (S.goal === "cheap") s = -ev.cost * 2 + ev.protDay * 0.05 + distinct * 0.2;
-  else s = ev.protDay * 0.35 + distinct * 2 - ev.cost * 0.4;
+  else s = ev.protDay * 0.35 + distinct * 2 - under * 1.5;
   s += [...new Set([...plan.batches, ...plan.bf, ...plan.sn])].filter(r => S.likeR.includes(r)).length * 8;
   s -= Math.abs(ev.kcalDay - S.kcal) * 0.01;
+  // at least 4 different main dishes a week (when enough are allowed)
+  const mains = new Set(plan.batches).size, want = Math.min(4, plan.batches.length);
+  if (mains < want) s -= (want - mains) * 6;
   if (ev.cost > S.budget) s -= 1000 + (ev.cost - S.budget) * 10;
   return s;
+}
+
+// Portions follow the energy target; the budget wins if both can't be met
+function sized(p) {
+  p.scale = 1;
+  const raw = evaluate(p);
+  p.scale = raw.kcalDay ? Math.min(1.4, Math.max(0.8, Math.round(S.kcal / raw.kcalDay * 20) / 20)) : 1;
+  let ev = evaluate(p);
+  while (ev.cost > S.budget && p.scale > 0.85) { p.scale = Math.round((p.scale - 0.05) * 100) / 100; ev = evaluate(p); }
+  return ev;
+}
+const clonePlan = p => ({ bf: p.bf.slice(), sn: p.sn.slice(), batches: p.batches.slice(), scale: p.scale });
+
+// Improve a plan by trying other dishes in each slot, keeping every change that scores better
+function improve(c, pools, rng) {
+  const groups = [["batches", pools.main], ["bf", pools.bf], ["sn", pools.sn]];
+  for (let pass = 0; pass < 2; pass++) {
+    let better = false;
+    for (const [key, pool] of groups) {
+      const distinctNow = [...new Set(c.p[key])];
+      for (const cur of distinctNow) {
+        for (const alt of pick(rng, pool, Math.min(pool.length, 14))) {
+          if (c.p[key].includes(alt)) continue;
+          const q = clonePlan(c.p);
+          q[key] = q[key].map(r => r === cur ? alt : r);
+          const ev = sized(q), sc = score(q, ev);
+          if (sc > c.s + 0.01) { c = { p: q, ev, s: sc }; better = true; break; }
+        }
+      }
+    }
+    if (!better) break;
+  }
+  return c;
 }
 
 function generate(seed) {
@@ -551,21 +620,16 @@ function generate(seed) {
   const pools = { bf: [], sn: [], main: [] };
   for (const rid in R) if (recipeOk(rid, ex)) pools[R[rid].t].push(rid);
   const rng = mulberry32(seed);
-  const cands = [];
-  for (let i = 0; i < 500; i++) {
+  let cands = [];
+  for (let i = 0; i < 400; i++) {
     const p = randomPlan(rng, pools);
-    // scale portions so the day lands near the chosen energy target
-    p.scale = 1;
-    const raw = evaluate(p);
-    p.scale = raw.kcalDay ? Math.min(1.4, Math.max(0.8, Math.round(S.kcal / raw.kcalDay * 20) / 20)) : 1;
-    let ev = evaluate(p);
-    // budget beats portion size: shrink toward normal portions until it fits
-    while (ev.cost > S.budget && p.scale > 0.85) { p.scale = Math.round((p.scale - 0.05) * 100) / 100; ev = evaluate(p); }
+    const ev = sized(p);
     cands.push({ p, ev, s: score(p, ev) });
   }
   cands.sort((a, b) => b.s - a.s);
+  cands = cands.slice(0, 5).map(c => improve(c, pools, rng)).sort((a, b) => b.s - a.s);
   const best = cands[0].s;
-  const good = cands.filter(c => c.s >= best - Math.max(1.5, Math.abs(best) * 0.06)).slice(0, 12);
+  const good = cands.filter(c => c.s >= best - Math.max(1.5, Math.abs(best) * 0.04));
   const choice = good[Math.floor(rng() * good.length)];
   return { plan: choice.p, pools };
 }
@@ -622,7 +686,7 @@ function renderPlan() {
     <div class="panel">
       <div><div class="label">Schritt 2</div><h2>Wochenbudget</h2></div>
       <div class="budget-row"><input type="range" id="budget" min="20" max="90" step="1" value="${S.budget}" aria-label="Wochenbudget in Euro"><span class="bignum num" id="budgetOut">${S.budget} €</span></div>
-      <p class="small muted">Nur Lebensmittel für dich allein. Etwa ${eur(S.budget / 7)} pro Tag.</p>
+      <p class="small muted">Nur Lebensmittel für dich allein. Etwa <span id="perDay">${eur(S.budget / 7)}</span> pro Tag.</p>
     </div>
     <div class="panel">
       <div><div class="label">Schritt 3</div><h2>Wie willst du essen?</h2></div>
@@ -804,7 +868,7 @@ document.addEventListener("click", e => {
   if (d.unl) { S.likeR = S.likeR.filter(x => x !== d.unl); save(); render(); return; }
 });
 document.addEventListener("input", e => {
-  if (e.target.id === "budget") { S.budget = +e.target.value; $("#budgetOut").textContent = S.budget + " €"; renderSummary(S.plan ? evaluate(S.plan) : null); saveSoon(); }
+  if (e.target.id === "budget") { S.budget = +e.target.value; $("#budgetOut").textContent = S.budget + " €"; $("#perDay").textContent = eur(S.budget / 7); renderSummary(S.plan ? evaluate(S.plan) : null); saveSoon(); }
 });
 document.addEventListener("change", e => {
   const t = e.target;
