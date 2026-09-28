@@ -191,7 +191,7 @@ footer.note { margin-top: 28px; font-size: 0.8rem; color: var(--muted); }
   <section id="view-list" class="stack" hidden></section>
   <section id="view-prices" class="stack" hidden></section>
 
-  <footer class="note">Die Preise sind Richtwerte für Eigenmarken (Stand 2026) und können je nach Filiale und Angebot abweichen. Unter „Preise“ trägst du echte Preise vom Kassenbon ein. Danach rechnet die App mit deinen Werten. Öl, Salz, Pfeffer, Gewürze und Brühe setzt der Plan als Grundvorrat voraus.</footer>
+  <footer class="note">Die Preise sind Richtwerte für Eigenmarken (Stand 2026) und können je nach Filiale und Angebot abweichen. Unter „Preise“ trägst du echte Preise vom Kassenbon ein. Danach rechnet die App mit deinen Werten. Öl, Salz, Pfeffer, Gewürze und Brühe setzt der Plan als Grundvorrat voraus.<br><span id="appVersion">Version 29.09.2026</span></footer>
 </div>
 <div class="toast" id="toast" hidden></div>
 
@@ -847,11 +847,20 @@ document.addEventListener("click", e => {
   if (d.unr) { S.dislikeR = S.dislikeR.filter(x => x !== d.unr); save(); render(); toast("Gericht ist wieder erlaubt. Gilt ab dem nächsten Plan."); return; }
   if (d.unl) { S.likeR = S.likeR.filter(x => x !== d.unl); save(); render(); return; }
 });
+function budgetMoved(el) {
+  S.budget = +el.value;
+  const out = $("#budgetOut"), per = $("#perDay");
+  if (out) out.textContent = S.budget + " €";
+  if (per) per.textContent = eur(S.budget / 7);
+  renderSummary(S.plan ? evaluate(S.plan) : null);
+  saveSoon();
+}
 document.addEventListener("input", e => {
-  if (e.target.id === "budget") { S.budget = +e.target.value; $("#budgetOut").textContent = S.budget + " €"; $("#perDay").textContent = eur(S.budget / 7); renderSummary(S.plan ? evaluate(S.plan) : null); saveSoon(); }
+  if (e.target.id === "budget") budgetMoved(e.target);
 });
 document.addEventListener("change", e => {
   const t = e.target;
+  if (t.id === "budget") { budgetMoved(t); clearTimeout(saveT); save(); return; }
   if (t.id === "importFile" && t.files && t.files[0]) {
     const r = new FileReader();
     r.onload = () => {
@@ -926,6 +935,9 @@ function save() {
   if (dbRef) dbRef.set(snapshot()).then(() => setSync("Gespeichert")).catch(() => setSync("Nur auf diesem Gerät gespeichert"));
 }
 let saveT; function saveSoon() { clearTimeout(saveT); saveT = setTimeout(save, 600); }
+// closing the app right after a change must not lose it
+addEventListener("pagehide", () => { if (saveT) { clearTimeout(saveT); saveT = null; save(); } });
+document.addEventListener("visibilitychange", () => { if (document.hidden && saveT) { clearTimeout(saveT); saveT = null; save(); } });
 function setSync(t) { $("#syncState").textContent = t; }
 function apply(obj) {
   if (!obj || typeof obj !== "object") return;
@@ -937,7 +949,7 @@ function apply(obj) {
 const STANDALONE = !(window.claude && window.claude.use);
 (function boot() {
   if (STANDALONE && "serviceWorker" in navigator && /^https:|^http:\/\/localhost/.test(location.href)) {
-    navigator.serviceWorker.register("sw.js").catch(() => {});
+    navigator.serviceWorker.register("sw.js", { updateViaCache: "none" }).catch(() => {});
   }
   try { const raw = localStorage.getItem(LS); if (raw) apply(JSON.parse(raw)); } catch (e) {}
   if (!S.plan) S.plan = generate(S.seed).plan;
