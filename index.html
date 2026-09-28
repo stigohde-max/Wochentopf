@@ -147,6 +147,13 @@ header.top { display: flex; align-items: flex-end; justify-content: space-betwee
 .linkbtn.warnb { color: var(--warn); }
 .swapped { color: var(--warn); font-size: 0.78rem; }
 .alts { grid-column: 1 / 4; background: var(--bg); border-radius: 10px; padding: 10px; display: flex; flex-direction: column; gap: 8px; font-family: var(--font-body); }
+.share { display: flex; flex-direction: column; gap: 10px; }
+.seg { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 3px; gap: 3px; background: var(--bg); border: 1px solid var(--line); border-radius: 12px; }
+.seg button { border: 0; background: transparent; border-radius: 9px; padding: 7px 4px; line-height: 1.2; font-weight: 600; font-size: 0.85rem; color: var(--muted); }
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,.12); }
+.share textarea { width: 100%; min-height: 150px; font: 0.8rem/1.45 var(--font-mono); padding: 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--ink); resize: vertical; }
+.check { display: flex; gap: 8px; align-items: center; font-size: 0.88rem; }
+.check input { width: 18px; height: 18px; accent-color: var(--accent); margin: 0; }
 .alt { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; }
 .alt .d { font-size: 0.78rem; color: var(--muted); }
 .ai-out { font-size: 0.88rem; white-space: pre-wrap; }
@@ -211,7 +218,7 @@ footer.note { margin-top: 28px; font-size: 0.8rem; color: var(--muted); }
   <section id="view-list" class="stack" hidden></section>
   <section id="view-prices" class="stack" hidden></section>
 
-  <footer class="note">Die Preise sind Richtwerte für Eigenmarken (Stand 2026) und können je nach Filiale und Angebot abweichen. Unter „Preise“ trägst du echte Preise vom Kassenbon ein. Danach rechnet die App mit deinen Werten. Öl, Salz, Pfeffer, Gewürze und Brühe setzt der Plan als Grundvorrat voraus.<br><span id="appVersion">Version 29.09.2026</span></footer>
+  <footer class="note">Die Preise sind Richtwerte für Eigenmarken (Stand 2026) und können je nach Filiale und Angebot abweichen. Unter „Preise“ trägst du echte Preise vom Kassenbon ein. Danach rechnet die App mit deinen Werten. Öl, Salz, Pfeffer, Gewürze und Brühe setzt der Plan als Grundvorrat voraus.<br><span id="appVersion">Version 29.09.2026 · 2</span></footer>
 </div>
 <div class="toast" id="toast" hidden></div>
 
@@ -227,6 +234,7 @@ const STORES = [
   { id: "rewe", name: "Rewe", f: 1.08, note: "Eigenmarke ja!" },
   { id: "edeka", name: "Edeka", f: 1.10, note: "Gut & Günstig" },
 ];
+const CATNAMES = { gemuese: "Obst & Gemüse", kuehl: "Kühlregal", fleisch: "Fleisch", tk: "Tiefkühl", konserve: "Konserven & Gläser", trocken: "Trockensortiment", brot: "Brot & Backwaren" };
 const CATS = { gemuese: "OBST & GEMÜSE", kuehl: "KÜHLREGAL", fleisch: "FLEISCH", tk: "TIEFKÜHL", konserve: "KONSERVEN & GLÄSER", trocken: "TROCKENSORTIMENT", brot: "BROT & BACKWAREN" };
 // id: [name, pack, grams, base €, protein/100g, kcal/100g, category, diet, alternatives, grams per loose piece, portion factor]
 // portion factor: how many grams of this replace 1 g of a "normal" ingredient in the same role (dry lentils 0.5, dry soy 0.35, potatoes 3.5 vs. dry rice)
@@ -468,7 +476,7 @@ const MEALS = [
 const DEFAULT = {
   store: "lidl", budget: 40, goal: "protein", diet: "all",
   kcal: 2200, meals: { bf: true, lunch: true, dinner: true, snack: false },
-  exclude: [], dislikeP: [], dislikeR: [], likeR: [], seed: 7, plan: null, swaps: {}, checked: {}, home: {}, prices: {},
+  exclude: [], dislikeP: [], dislikeR: [], likeR: [], shareMissing: false, seed: 7, plan: null, swaps: {}, checked: {}, home: {}, prices: {},
   createdAt: null, isExample: true,
 };
 let S = JSON.parse(JSON.stringify(DEFAULT));
@@ -750,7 +758,7 @@ function renderList(ev) {
   const inCart = ev.items.filter(it => S.checked[it.pid] && !S.home[it.pid]).reduce((a, b) => a + b.total, 0);
   const d = new Date(S.createdAt || Date.now());
   const swappedFrom = pid => Object.keys(S.swaps).find(k => S.swaps[k] === pid);
-  let html = `<div class="receipt"><div class="rh"><b>${esc(store().name.toUpperCase())}</b><span class="small">EINKAUFSLISTE · KW ${isoWeek(d)}</span><span class="small muted">Abhaken im Laden. „Nicht da?“ zeigt Alternativen.</span></div>`;
+  let html = sharePanel(ev) + `<div class="receipt"><div class="rh"><b>${esc(store().name.toUpperCase())}</b><span class="small">EINKAUFSLISTE · KW ${isoWeek(d)}</span><span class="small muted">Abhaken im Laden. „Nicht da?“ zeigt Alternativen.</span></div>`;
   for (const c of Object.keys(CATS)) {
     if (!byCat[c]) continue;
     html += `<div class="cat">${CATS[c]}</div>`;
@@ -780,6 +788,7 @@ function renderList(ev) {
     <p class="muted small" style="font-family:var(--font-body)">Die Differenz bleibt als Vorrat, zum Beispiel Reis, Haferflocken oder Erdnussbutter. Hast du etwas davon noch, tippe bei dem Artikel auf „Hab ich“.</p>
   </div></div>`;
   $("#view-list").innerHTML = html;
+  const ta = $("#shareText"); if (ta) ta.value = shareText(ev);
 }
 function fmtG(g) { return g >= 1000 ? (g / 1000).toLocaleString("de-DE", { maximumFractionDigits: 2 }) + " kg" : Math.round(g) + " g"; }
 function isoWeek(d) { const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())); const n = t.getUTCDay() || 7; t.setUTCDate(t.getUTCDate() + 4 - n); const y = new Date(Date.UTC(t.getUTCFullYear(), 0, 1)); return Math.ceil(((t - y) / 864e5 + 1) / 7); }
@@ -803,6 +812,86 @@ function altPanel(it) {
     <div class="row" id="aiRow" ${sampleFn ? "" : "hidden"}><button class="btn ghost small" data-ai="${it.pid}">Claude nach einer Idee fragen</button></div>
     <div class="ai-out" id="aiOut"></div>
   </div>`;
+}
+
+/* ---------- Share ---------- */
+let shareFmt = "simple", shareOpen = false;
+function shareItems(ev) {
+  return ev.items.filter(it => !S.home[it.pid] && !(S.shareMissing && S.checked[it.pid]));
+}
+function amountText(it) {
+  const p = prod(it.pid);
+  if (p.piece) return `${it.packs} Stück`;
+  return it.packs > 1 ? `${it.packs} × ${p.pack}` : p.pack;
+}
+function shareText(ev) {
+  const items = shareItems(ev);
+  if (!items.length) return "Alles erledigt, die Liste ist leer.";
+  const byCat = {};
+  items.forEach(it => (byCat[P[it.pid][6]] ||= []).push(it));
+  const order = Object.keys(CATS).filter(c => byCat[c]);
+  const sorted = c => byCat[c].sort((a, b) => P[a.pid][0].localeCompare(P[b.pid][0]));
+  if (shareFmt === "simple") {
+    // one item per line, no extras: pastes cleanly into Bring!, Notizen, Erinnerungen, Google Keep
+    return order.flatMap(c => sorted(c).map(it => `${P[it.pid][0]} (${amountText(it)})`)).join("\n");
+  }
+  const d = new Date(S.createdAt || Date.now());
+  const lines = [`Einkaufsliste ${store().name} · KW ${isoWeek(d)}`, ""];
+  for (const c of order) {
+    lines.push(CATNAMES[c]);
+    for (const it of sorted(c)) lines.push(`☐ ${P[it.pid][0]}, ${amountText(it)} · ${eur(it.total)}`);
+    lines.push("");
+  }
+  const sum = items.reduce((a, b) => a + b.total, 0);
+  lines.push(`Summe ca. ${eur(sum)} (Richtpreise)`);
+  if (shareFmt === "plan") {
+    lines.push("", "Wochenplan");
+    const meals = mealsOf(S.plan), ord = { bf: 0, lunch: 1, dinner: 2, snack: 3 };
+    DAYS.forEach((dn, di) => {
+      const ms = meals.filter(m => m.day === di).sort((a, b) => ord[a.slot] - ord[b.slot]);
+      if (ms.length) lines.push(`${dn}: ` + ms.map(m => `${SLOTNAME[m.slot]} ${R[m.rid].n}`).join(" · "));
+    });
+  }
+  lines.push("", "Erstellt mit Wochentopf");
+  return lines.join("\n");
+}
+function sharePanel(ev) {
+  const n = shareItems(ev).length;
+  const canShare = !!(navigator.share && STANDALONE);
+  return `<div class="panel share">
+    <div class="row" style="justify-content:space-between">
+      <div><div class="label">Teilen</div><h2>Liste verschicken</h2></div>
+      <button class="btn ghost small" data-act="shareToggle" aria-expanded="${shareOpen}">${shareOpen ? "Schließen" : "Öffnen"}</button>
+    </div>
+    ${shareOpen ? `
+    <div class="seg" role="group" aria-label="Format">
+      <button data-fmt="simple" aria-pressed="${shareFmt === "simple"}">Bring! & Notizen</button>
+      <button data-fmt="full" aria-pressed="${shareFmt === "full"}">Mit Preisen</button>
+      <button data-fmt="plan" aria-pressed="${shareFmt === "plan"}">Mit Plan</button>
+    </div>
+    <p class="small muted">${shareFmt === "simple" ? "Ein Artikel pro Zeile, ohne Preise. So lässt sich die Liste in Bring!, Notizen, Erinnerungen oder Google Keep einfügen." : shareFmt === "full" ? "Nach Bereichen im Laden sortiert, mit Preisen und Summe. Gut für WhatsApp oder zum gemeinsamen Einkaufen." : "Einkaufsliste mit Preisen plus alle Gerichte der Woche."}</p>
+    <label class="check" for="shareMissing"><input type="checkbox" id="shareMissing" ${S.shareMissing ? "checked" : ""}> Nur was noch nicht im Wagen ist</label>
+    <textarea id="shareText" readonly aria-label="Text zum Teilen"></textarea>
+    <div class="row">
+      <button class="btn" data-act="copyList">Kopieren (${n} Artikel)</button>
+      ${canShare ? `<button class="btn ghost" data-act="shareList">Teilen …</button>` : ""}
+    </div>` : `<p class="small muted">Kopieren oder per WhatsApp, Nachrichten und Co. an Freunde schicken. Auch zum Einfügen in Bring!.</p>`}
+  </div>`;
+}
+async function copyList(btn) {
+  const text = shareText(evaluate(S.plan));
+  try { await navigator.clipboard.writeText(text); toast("Kopiert. Jetzt in Bring!, WhatsApp oder Notizen einfügen."); }
+  catch (e) {
+    const ta = $("#shareText");
+    if (ta) { ta.focus(); ta.select(); ta.setSelectionRange(0, ta.value.length); }
+    let ok = false; try { ok = document.execCommand("copy"); } catch (e2) {}
+    toast(ok ? "Kopiert." : "Text ist markiert. Tippe auf „Kopieren“ im Menü.");
+  }
+}
+async function shareList() {
+  const text = shareText(evaluate(S.plan));
+  try { await navigator.share({ title: `Einkaufsliste ${store().name}`, text }); }
+  catch (e) { if (e && e.name !== "AbortError") copyList(); }
 }
 
 function renderPrices() {
@@ -841,6 +930,10 @@ document.addEventListener("click", e => {
   if (d.act === "make") { makePlan(false); tab = "week"; render(); window.scrollTo({ top: 0 }); toast("Plan erstellt"); return; }
   if (d.act === "shuffle") { makePlan(true); tab = "week"; render(); toast("Neue Gerichte gemischt"); return; }
   if (d.act === "goplan") { tab = "plan"; render(); return; }
+  if (d.act === "shareToggle") { shareOpen = !shareOpen; render(); return; }
+  if (d.fmt) { shareFmt = d.fmt; render(); return; }
+  if (d.act === "copyList") { copyList(t); return; }
+  if (d.act === "shareList") { shareList(); return; }
   if (d.act === "export") {
     const blob = new Blob([JSON.stringify(snapshot(), null, 1)], { type: "application/json" });
     const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
@@ -880,6 +973,7 @@ document.addEventListener("input", e => {
 });
 document.addEventListener("change", e => {
   const t = e.target;
+  if (t.id === "shareMissing") { S.shareMissing = t.checked; save(); render(); return; }
   if (t.id === "budget") { budgetMoved(t); clearTimeout(saveT); save(); return; }
   if (t.id === "importFile" && t.files && t.files[0]) {
     const r = new FileReader();
