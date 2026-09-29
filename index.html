@@ -82,6 +82,16 @@ header.top { display: flex; align-items: flex-end; justify-content: space-betwee
 @media (prefers-reduced-motion: no-preference) { .toggle .sw, .toggle .sw::after { transition: all .15s; } }
 .hide-nutri .nutri { display: none !important; }
 .summary.two { grid-template-columns: minmax(0, 1fr); }
+.people { display: flex; flex-direction: column; gap: 8px; }
+.person { border: 1px solid var(--line); border-radius: 12px; background: var(--bg); padding: 8px 10px; display: flex; flex-direction: column; gap: 8px; }
+.person-head { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; }
+.person-head input[type=checkbox] { width: 20px; height: 20px; accent-color: var(--accent); margin: 0; }
+.person-head .pn { font-weight: 700; min-width: 0; }
+.person-head .pn small { display: block; font-weight: 400; color: var(--muted); font-size: 0.8rem; }
+.person.off .pn { color: var(--muted); }
+.person input[type=text] { width: 100%; font: inherit; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink); }
+.who-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.warn-line { color: var(--warn); font-size: 0.82rem; font-weight: 600; }
 .editor { margin-top: 8px; padding: 10px 12px; border-radius: 10px; background: var(--bg); border: 1px solid var(--line); display: flex; flex-direction: column; gap: 8px; font-size: 0.9rem; }
 .editor .row { justify-content: space-between; }
 .pill.who { background: var(--surface); color: var(--ink); border: 1px solid var(--line); }
@@ -246,7 +256,7 @@ footer.note { margin-top: 28px; font-size: 0.8rem; color: var(--muted); }
   <section id="view-list" class="stack" hidden></section>
   <section id="view-prices" class="stack" hidden></section>
 
-  <footer class="note">Die Preise sind Richtwerte für Eigenmarken (Stand 2026) und können je nach Filiale und Angebot abweichen. Unter „Preise“ trägst du echte Preise vom Kassenbon ein. Danach rechnet die App mit deinen Werten. Öl, Salz, Pfeffer, Gewürze und Brühe setzt der Plan als Grundvorrat voraus.<br><span id="appVersion">Version 29.09.2026 · 4</span></footer>
+  <footer class="note">Die Preise sind Richtwerte für Eigenmarken (Stand 2026) und können je nach Filiale und Angebot abweichen. Unter „Preise“ trägst du echte Preise vom Kassenbon ein. Danach rechnet die App mit deinen Werten. Öl, Salz, Pfeffer, Gewürze und Brühe setzt der Plan als Grundvorrat voraus.<br><span id="appVersion">Version 29.09.2026 · 5</span></footer>
 </div>
 <div class="toast" id="toast" hidden></div>
 
@@ -567,7 +577,7 @@ const MEALS = [
 const DEFAULT = {
   store: "lidl", budget: 40, goal: "protein", diet: "all",
   persons: 1, fixed: {}, quick: false, kcal: 2200, meals: { bf: true, lunch: true, dinner: true, snack: false },
-  exclude: [], dislikeP: [], dislikeR: [], likeR: [], shareMissing: false, showNutri: true, mealPersons: {}, seed: 7, plan: null, swaps: {}, checked: {}, home: {}, prices: {},
+  exclude: [], dislikeP: [], dislikeR: [], likeR: [], shareMissing: false, showNutri: true, mealPersons: {}, people: [], guests: 0, mealEaters: {}, mealGuests: {}, seed: 7, plan: null, swaps: {}, checked: {}, home: {}, prices: {},
   createdAt: null, isExample: true,
 };
 let S = JSON.parse(JSON.stringify(DEFAULT));
@@ -592,11 +602,33 @@ function priceOf(pid, storeId = S.store) {
 }
 const dietRank = { vegan: 0, veg: 1, fish: 2, meat: 2 };
 const allowedDiet = { all: 2, veg: 1, vegan: 0 };
-function excludedProducts() { return new Set([...EXCLUDES.filter(e => S.exclude.includes(e.k)).flatMap(e => e.p), ...S.dislikeP]); }
+/* ---------- People (WG / Familie) ---------- */
+const peopleMode = () => S.people.length > 0;
+const personById = id => S.people.find(p => p.id === id);
+const weeklyEaters = () => S.people.filter(p => p.on !== false).map(p => p.id);
+const exProducts = keys => EXCLUDES.filter(e => keys.includes(e.k)).flatMap(e => e.p);
+function personOk(rid, p) {
+  if (!p || !R[rid]) return true;
+  const ex = new Set(exProducts(p.exclude || []));
+  return Object.keys(R[rid].i).every(pid0 => { const pid = S.swaps[pid0] || pid0; return !ex.has(pid) && dietRank[P[pid][7]] <= allowedDiet[p.diet || "all"]; });
+}
+const whoCant = (rid, ids) => ids.map(personById).filter(p => p && !personOk(rid, p));
+const okFor = (rid, ids) => whoCant(rid, ids).length === 0;
+// strictest diet among the household settings and everyone eating this week
+const dietLevel = () => Math.min(allowedDiet[S.diet], ...(peopleMode() ? weeklyEaters().map(id => allowedDiet[personById(id).diet || "all"]) : []));
+// who eats a given meal (people mode): your per-meal choice, or everyone eating this week
+const eatersOf = key => Array.isArray(S.mealEaters[key]) ? S.mealEaters[key].filter(personById) : weeklyEaters();
+const guestsOf = key => typeof S.mealGuests[key] === "number" ? S.mealGuests[key] : (S.guests || 0);
+const householdN = () => peopleMode() ? weeklyEaters().length + (S.guests || 0) : (S.persons || 1);
+
+function excludedProducts() {
+  const keys = [...S.exclude, ...(peopleMode() ? weeklyEaters().flatMap(id => personById(id).exclude || []) : [])];
+  return new Set([...exProducts(keys), ...S.dislikeP]);
+}
 function recipeOk(rid, ex) {
   const r = R[rid];
   if (S.dislikeR.includes(rid)) return false;
-  return Object.keys(r.i).every(pid => !ex.has(pid) && dietRank[P[pid][7]] <= allowedDiet[S.diet]);
+  return Object.keys(r.i).every(pid => !ex.has(pid) && dietRank[P[pid][7]] <= dietLevel());
 }
 let undoFn = null;
 function toast(msg, undo) {
@@ -615,7 +647,12 @@ function slotsFor(meals) {
 }
 const OUT = "__out";
 // people eating a given meal: your own number per meal, or the household default
-const mealN = (d, slot) => { const v = S.mealPersons[d + "-" + slot]; return typeof v === "number" ? v : (S.persons || 1); };
+const mealN = (d, slot) => {
+  const key = d + "-" + slot;
+  if (peopleMode()) return eatersOf(key).length + guestsOf(key);
+  const v = S.mealPersons[key]; return typeof v === "number" ? v : (S.persons || 1);
+};
+const mealCustom = key => peopleMode() ? (Array.isArray(S.mealEaters[key]) || typeof S.mealGuests[key] === "number") : typeof S.mealPersons[key] === "number";
 const fixedAt = (d, slot) => { const r = S.fixed[d + "-" + slot]; return r === OUT || R[r] ? r : null; };
 // main slots the planner fills itself (fixed ones are left out, the rest pair up for cooking twice)
 const mainSlots = () => slotsFor(S.meals).filter(([d, m]) => !fixedAt(d, m));
@@ -711,6 +748,7 @@ function score(plan, ev) {
   // at least 4 different main dishes a week (when enough are allowed)
   const mains = new Set(plan.batches).size, want = Math.min(4, plan.batches.length);
   if (mains < want) s -= (want - mains) * 6;
+  if (peopleMode()) for (const m of mealsOf(plan)) if (!m.fixed && m.rid !== OUT && !okFor(m.rid, eatersOf(m.day + "-" + m.slot))) s -= 60;
   if (ev.cost > S.budget) s -= 1000 + (ev.cost - S.budget) * 10;
   return s;
 }
@@ -769,7 +807,7 @@ function generate(seed) {
 
 function makePlan(newSeed) {
   if (newSeed) S.seed = Math.floor(Math.random() * 1e9);
-  if (S.createdAt && (Date.now() - new Date(S.createdAt)) / 864e5 > 6) S.mealPersons = {};
+  if (S.createdAt && (Date.now() - new Date(S.createdAt)) / 864e5 > 6) { S.mealPersons = {}; S.mealEaters = {}; S.mealGuests = {}; }
   S.swaps = {}; S.checked = {}; S.home = {}; openAlt = null; editKey = null;
   const { plan, pools } = generate(S.seed);
   S.plan = plan;
@@ -810,8 +848,8 @@ function renderSummary(ev) {
   const pct = Math.min(100, ev.cost / S.budget * 100);
   $("#summary").innerHTML = `
     <div class="stat"><div class="v num">${eur(ev.cost)}</div><div class="k">von ${eur(S.budget)} · ${esc(store().name)}</div><div class="meter"><i class="${ev.cost > S.budget ? "over" : ""}" style="width:${pct}%"></i></div></div>
-    <div class="stat nutri"><div class="v num">${Math.round(ev.protDay)} g</div><div class="k">Protein pro Tag${S.persons > 1 ? " und Person" : ""}</div></div>
-    <div class="stat nutri"><div class="v num">${Math.round(ev.kcalDay).toLocaleString("de-DE")}</div><div class="k">kcal pro Tag${S.persons > 1 ? " und Person" : ""}${Object.values(S.fixed).includes(OUT) ? ", ohne Auswärts-Essen" : ""}</div></div>`;
+    <div class="stat nutri"><div class="v num">${Math.round(ev.protDay)} g</div><div class="k">Protein pro Tag${householdN() > 1 ? " und Person" : ""}</div></div>
+    <div class="stat nutri"><div class="v num">${Math.round(ev.kcalDay).toLocaleString("de-DE")}</div><div class="k">kcal pro Tag${householdN() > 1 ? " und Person" : ""}${Object.values(S.fixed).includes(OUT) ? ", ohne Auswärts-Essen" : ""}</div></div>`;
 }
 
 function renderPlan() {
@@ -822,12 +860,13 @@ function renderPlan() {
     </div>
     <div class="panel">
       <div><div class="label">Schritt 2</div><h2>Personen & Wochenbudget</h2></div>
-      <div class="row" style="justify-content:space-between">
+      ${peopleMode() ? peoplePanel() : `<div class="row" style="justify-content:space-between">
         <span>Du kochst für</span>
         <div class="stepper" role="group" aria-label="Anzahl Personen"><button data-persons="-1" aria-label="Eine Person weniger" ${S.persons <= 1 ? "disabled" : ""}>−</button><b class="num" id="personsOut">${S.persons}</b><button data-persons="1" aria-label="Eine Person mehr" ${S.persons >= 8 ? "disabled" : ""}>+</button></div>
         <span>${S.persons === 1 ? "Person" : "Personen"}</span>
       </div>
-      <div class="budget-row"><input type="range" id="budget" min="${budgetMin()}" max="${budgetMax()}" step="${S.persons > 2 ? 5 : 1}" value="${S.budget}" aria-label="Wochenbudget in Euro"><span class="bignum num" id="budgetOut">${S.budget} €</span></div>
+      <button class="btn ghost small" data-act="peopleOn">Personen mit Namen anlegen (WG, Familie)</button>`}
+      <div class="budget-row"><input type="range" id="budget" min="${budgetMin()}" max="${budgetMax()}" step="${householdN() > 2 ? 5 : 1}" value="${S.budget}" aria-label="Wochenbudget in Euro"><span class="bignum num" id="budgetOut">${S.budget} €</span></div>
       <p class="small muted" id="budgetHint">${budgetHint()}</p>
     </div>
     <div class="panel">
@@ -851,6 +890,69 @@ function renderPlan() {
       <button class="btn" data-act="make">Plan erstellen</button>
       ${S.plan && !S.isExample ? `<button class="btn ghost" data-act="shuffle">Andere Gerichte</button>` : ""}
     </div>`;
+}
+
+/* ---------- People panel ---------- */
+let editPerson = null;
+const DIETNAME = { all: "isst alles", veg: "vegetarisch", vegan: "vegan" };
+function personSummary(p) {
+  const ex = EXCLUDES.filter(e => (p.exclude || []).includes(e.k)).map(e => e.n);
+  return [DIETNAME[p.diet || "all"], ex.length ? "ohne " + ex.join(", ") : ""].filter(Boolean).join(" · ");
+}
+function peoplePanel() {
+  return `<div class="people">
+    <div class="small muted">Wer isst diese Woche mit? Häkchen raus, wenn jemand die ganze Woche nicht da ist.</div>
+    ${S.people.map(p => `<div class="person ${p.on === false ? "off" : ""}">
+      <div class="person-head">
+        <input type="checkbox" id="on-${p.id}" data-pon="${p.id}" ${p.on === false ? "" : "checked"} aria-label="${esc(p.name)} isst diese Woche mit">
+        <label class="pn" for="on-${p.id}">${esc(p.name)}<small>${esc(personSummary(p))}</small></label>
+        <button class="linkbtn ${editPerson === p.id ? "on" : ""}" data-pedit="${p.id}">${editPerson === p.id ? "Fertig" : "Bearbeiten"}</button>
+      </div>
+      ${editPerson === p.id ? `
+        <input type="text" id="pname-${p.id}" data-pname="${p.id}" value="${esc(p.name)}" aria-label="Name" maxlength="24">
+        <div class="chips" role="group" aria-label="Ernährung">${DIETS.map(g => `<button class="chip" data-pdiet="${p.id}" data-v="${g.id}" aria-pressed="${(p.diet || "all") === g.id}">${g.n}</button>`).join("")}</div>
+        <div class="small muted">Verträgt oder mag nicht:</div>
+        <div class="chips">${EXCLUDES.map(e => `<button class="chip x" data-pex="${p.id}" data-v="${e.k}" aria-pressed="${(p.exclude || []).includes(e.k)}">${e.n}</button>`).join("")}</div>
+        <div><button class="linkbtn warnb" data-pdel="${p.id}">${esc(p.name)} entfernen</button></div>` : ""}
+    </div>`).join("")}
+    <button class="btn ghost small" data-act="padd">+ Person hinzufügen</button>
+    <div class="row" style="justify-content:space-between">
+      <span>Besuch diese Woche<br><span class="small muted">zusätzliche Esser bei jeder Mahlzeit</span></span>
+      <div class="stepper" role="group" aria-label="Besuch"><button data-guests="-1" aria-label="Weniger Besuch" ${(S.guests || 0) <= 0 ? "disabled" : ""}>−</button><b class="num">${S.guests || 0}</b><button data-guests="1" aria-label="Mehr Besuch" ${(S.guests || 0) >= 8 ? "disabled" : ""}>+</button></div>
+    </div>
+    <p class="small"><b>${householdN()} ${householdN() === 1 ? "Person isst" : "Personen essen"} mit.</b> Unverträglichkeiten aller, die mitessen, gelten für den ganzen Plan.</p>
+  </div>`;
+}
+// keep the per-person budget when the number of eaters changes
+function eatersChanged(before) {
+  const after = Math.max(1, householdN());
+  if (before && after !== before) S.budget = Math.round(S.budget * after / before);
+  S.budget = Math.min(budgetMax(), Math.max(budgetMin(), S.budget));
+}
+// swap the dish at one meal (and its leftover partner) for the best one everybody at that meal can eat
+function repairSlot(key) {
+  if (!S.plan) return false;
+  const [ds, slot] = key.split("-"), d = +ds;
+  const ex = excludedProducts();
+  const plan = S.plan;
+  let arrKey, idx, ids;
+  if (slot === "bf" || slot === "snack") { arrKey = slot === "bf" ? "bf" : "sn"; idx = d; ids = eatersOf(key); }
+  else {
+    const slots = mainSlots(), si = slots.findIndex(([a, b]) => a === d && b === slot);
+    if (si < 0) return false;
+    arrKey = "batches"; idx = Math.floor(si / 2);
+    ids = [...new Set([si, si % 2 ? si - 1 : si + 1].filter(i => slots[i]).flatMap(i => eatersOf(slots[i][0] + "-" + slots[i][1])))];
+  }
+  const type = arrKey === "bf" ? "bf" : arrKey === "sn" ? "sn" : "main";
+  const cands = Object.keys(R).filter(r => R[r].t === type && recipeOk(r, ex) && okFor(r, ids));
+  if (!cands.length) return false;
+  let best = null;
+  for (const r of cands) {
+    const q = clonePlan(plan); q[arrKey][idx] = r;
+    const ev = sized(q), sc = score(q, ev);
+    if (!best || sc > best.sc) best = { q, sc };
+  }
+  S.plan = best.q; return true;
 }
 
 /* ---------- Fixed meals ---------- */
@@ -909,7 +1011,8 @@ function renderWeek() {
       ${ms.map(m => {
         if (m.rid === OUT) return `<div class="meal out"><div class="slot">${SLOTNAME[m.slot]}</div><div class="name">Auswärts / Mensa<small>Fest eingeplant, nichts einkaufen</small></div><div><span class="pill fix">Fest</span></div></div>`;
         const r = R[m.rid], x = recipeLine(m.rid);
-        const key = m.day + "-" + m.slot, own = mealN(m.day, m.slot), custom = typeof S.mealPersons[key] === "number";
+        const key = m.day + "-" + m.slot, own = mealN(m.day, m.slot), custom = mealCustom(key);
+        const cant = peopleMode() && own ? whoCant(m.rid, eatersOf(key)) : [];
         const partnerN = m.cookFor ? mealN(m.cookFor[0], m.cookFor[1]) : 0;
         const cookN = m.fromSlot ? own : own + partnerN;
         const ing = ingr(m.rid).map(([pid, g, pid0]) => `<li>${g * cookN >= 1000 ? fmtG(g * cookN) : Math.round(g * cookN) + " g"} ${esc(P[pid][0])}${pid !== pid0 ? ` <span class="swapped">(statt ${esc(P[pid0][0])})</span>` : ""}</li>`).join("");
@@ -923,14 +1026,23 @@ function renderWeek() {
           <div class="name">${esc(r.n)}<small>${note}${own ? (note ? " · " : "") + (m.fromSlot ? "aufwärmen" : r.m + " Min.") : ""}</small>
             <div class="ing">${ingr(m.rid).map(([pid]) => `<button data-nop="${pid}" title="${esc(P[pid][0])} nie wieder vorschlagen" aria-label="${esc(P[pid][0])}: mag ich nicht">${esc(P[pid][0])}<i aria-hidden="true">✕</i></button>`).join("")}</div>
             <div class="fb"><button class="linkbtn ${editing ? "on" : ""}" data-edit="${key}" aria-expanded="${editing}">Bearbeiten</button><button class="linkbtn ${S.likeR.includes(m.rid) ? "liked" : ""}" data-like="${m.rid}">${S.likeR.includes(m.rid) ? "Liebling ✓" : "Öfter bitte"}</button>${m.fixed ? "" : `<button class="linkbtn warnb" data-nor="${m.rid}">Nie wieder</button>`}</div>
-            ${editing ? `<div class="editor">
+            ${cant.length ? `<div class="warn-line">Passt nicht für ${cant.map(p => esc(p.name)).join(", ")}${m.fixed ? "" : ` <button class="linkbtn warnb" data-repair="${key}">Passendes Gericht</button>`}</div>` : ""}
+            ${editing && peopleMode() ? `<div class="editor">
+              <span>Wer isst mit?</span>
+              <div class="who-chips">${S.people.map(p => `<button class="chip" data-meater="${p.id}" data-key="${key}" aria-pressed="${eatersOf(key).includes(p.id)}">${esc(p.name)}</button>`).join("")}</div>
+              <div class="row"><span>Besuch</span>
+                <div class="stepper" role="group" aria-label="Besuch bei dieser Mahlzeit"><button data-mguests="-1" data-key="${key}" aria-label="Weniger Besuch" ${guestsOf(key) <= 0 ? "disabled" : ""}>−</button><b class="num">${guestsOf(key)}</b><button data-mguests="1" data-key="${key}" aria-label="Mehr Besuch" ${guestsOf(key) >= 12 ? "disabled" : ""}>+</button></div></div>
+              <p class="small muted">${own === 0 ? "Niemand isst mit: Die Mahlzeit fällt aus und die App kauft dafür nichts ein." : `${own} ${own === 1 ? "Portion" : "Portionen"}. Gilt nur für ${DAYS[m.day]}, ${SLOTNAME[m.slot]}. Kann jemand das Gericht nicht essen, tauscht die App es aus.`}</p>
+              ${custom ? `<button class="linkbtn" data-mpreset="${key}">Zurück auf Standard</button>` : ""}
+            </div>` : ""}
+            ${editing && !peopleMode() ? `<div class="editor">
               <div class="row"><span>Wie viele essen mit?</span>
                 <div class="stepper" role="group" aria-label="Personen bei dieser Mahlzeit"><button data-mp="-1" data-key="${key}" aria-label="Eine Person weniger" ${own <= 0 ? "disabled" : ""}>−</button><b class="num">${own}</b><button data-mp="1" data-key="${key}" aria-label="Eine Person mehr" ${own >= 12 ? "disabled" : ""}>+</button></div></div>
               <p class="small muted">${own === 0 ? "Bei 0 fällt die Mahlzeit aus und die App kauft dafür nichts ein." : `Gilt nur für ${DAYS[m.day]}, ${SLOTNAME[m.slot]}. Einkaufsliste und Kosten passen sich sofort an.`}</p>
               ${custom ? `<button class="linkbtn" data-mpreset="${key}">Zurück auf ${S.persons} (Standard)</button>` : ""}
             </div>` : ""}
             <details><summary>Zutaten${cookN !== 1 ? ` für ${cookN} Portionen` : ""} & Zubereitung</summary><ul>${ing}</ul><ul>${r.s.map(s => `<li>${esc(s)}</li>`).join("")}</ul></details></div>
-          <div style="text-align:right;display:flex;flex-direction:column;gap:4px;align-items:flex-end">${m.fixed ? `<span class="pill fix">Fest</span>` : ""}${custom ? `<span class="pill who">${own} ${own === 1 ? "Pers." : "Pers."}</span>` : ""}<span class="tag num">${eur(x.c * own)}</span><span class="small muted num nutri">${Math.round(x.p)} g P · ${Math.round(x.k)} kcal${own > 1 ? " p. P." : ""}</span></div></div>`;
+          <div style="text-align:right;display:flex;flex-direction:column;gap:4px;align-items:flex-end">${m.fixed ? `<span class="pill fix">Fest</span>` : ""}${custom ? `<span class="pill who">${peopleMode() && own ? esc(eatersOf(key).map(id => personById(id).name).join(", ") || "") + (guestsOf(key) ? (eatersOf(key).length ? " +" : "") + guestsOf(key) : "") : own + " Pers."}</span>` : ""}<span class="tag num">${eur(x.c * own)}</span><span class="small muted num nutri">${Math.round(x.p)} g P · ${Math.round(x.k)} kcal${own > 1 ? " p. P." : ""}</span></div></div>`;
       }).join("") || `<div class="meal"><div class="name muted">Keine Mahlzeiten ausgewählt</div></div>`}
     </article>`;
   }).join("");
@@ -982,7 +1094,7 @@ function isoWeek(d) { const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(),
 function altPanel(it) {
   const p = prod(it.pid);
   const ex = excludedProducts();
-  const cands = p.alts.filter(a => !ex.has(a) && dietRank[P[a][7]] <= allowedDiet[S.diet] && a !== it.pid);
+  const cands = p.alts.filter(a => !ex.has(a) && dietRank[P[a][7]] <= dietLevel() && a !== it.pid);
   const rows = cands.map(a => {
     const ga = it.g * F(a) / F(it.pid);
     const bb = buy(a, ga), cost = bb.total;
@@ -1121,6 +1233,45 @@ document.addEventListener("click", e => {
     for (const day of set.days) S.fixed[day + "-" + fx.slot] = fx.rid;
     replan(`${fx.rid === OUT ? "Auswärts" : R[fx.rid].n} ist fest eingeplant: ${set.n}, ${SLOTNAME[fx.slot]}.`); return;
   }
+  if (d.act === "peopleOn") {
+    S.people = Array.from({ length: S.persons || 1 }, (_, i) => ({ id: "p" + Date.now().toString(36) + i, name: i ? "Person " + (i + 1) : "Ich", diet: i ? "all" : S.diet, exclude: i ? [] : S.exclude.slice(), on: true }));
+    S.guests = 0; editPerson = S.people[0].id; save(); render(); return;
+  }
+  if (d.act === "padd") {
+    const before = householdN(), id = "p" + Date.now().toString(36);
+    S.people.push({ id, name: "Person " + (S.people.length + 1), diet: "all", exclude: [], on: true });
+    editPerson = id; eatersChanged(before); save(); render(); return;
+  }
+  if (d.pedit) { editPerson = editPerson === d.pedit ? null : d.pedit; if (!editPerson) replan(); else render(); return; }
+  if (d.pdiet) { personById(d.pdiet).diet = d.v; save(); render(); return; }
+  if (d.pex) { const p = personById(d.pex); p.exclude = (p.exclude || []).includes(d.v) ? p.exclude.filter(x => x !== d.v) : [...(p.exclude || []), d.v]; save(); render(); return; }
+  if (d.pdel) {
+    const before = householdN();
+    S.people = S.people.filter(p => p.id !== d.pdel);
+    for (const k in S.mealEaters) S.mealEaters[k] = S.mealEaters[k].filter(x => x !== d.pdel);
+    if (!S.people.length) { S.persons = Math.max(1, S.guests || 0); S.guests = 0; S.mealEaters = {}; S.mealGuests = {}; eatersChanged(before); }
+    else eatersChanged(before);
+    editPerson = null; replan("Person entfernt."); return;
+  }
+  if (d.guests) { const before = householdN(); S.guests = Math.min(8, Math.max(0, (S.guests || 0) + +d.guests)); eatersChanged(before); save(); render(); return; }
+  if (d.meater) {
+    const key = d.key, cur = eatersOf(key);
+    const next = cur.includes(d.meater) ? cur.filter(x => x !== d.meater) : [...cur, d.meater];
+    const same = next.length === weeklyEaters().length && next.every(x => weeklyEaters().includes(x));
+    if (same) delete S.mealEaters[key]; else S.mealEaters[key] = next;
+    const m = mealsOf(S.plan).find(x => x.day + "-" + x.slot === key);
+    if (m && !m.fixed && m.rid !== OUT && !okFor(m.rid, next)) {
+      const who = whoCant(m.rid, next).map(p => p.name).join(", "), old = R[m.rid].n;
+      if (repairSlot(key)) { save(); render(); toast(`${old} passt nicht für ${who}. Neu: ${R[mealsOf(S.plan).find(x => x.day + "-" + x.slot === key).rid].n}`); return; }
+    }
+    save(); render(); return;
+  }
+  if (d.mguests) {
+    const key = d.key, v = Math.min(12, Math.max(0, guestsOf(key) + +d.mguests));
+    if (v === (S.guests || 0)) delete S.mealGuests[key]; else S.mealGuests[key] = v;
+    save(); render(); return;
+  }
+  if (d.repair) { if (repairSlot(d.repair)) { save(); render(); toast("Passendes Gericht eingesetzt."); } else toast("Kein passendes Gericht gefunden."); return; }
   if (d.act === "nutri") { S.showNutri = !S.showNutri; save(); render(); return; }
   if (d.edit) { editKey = editKey === d.edit ? null : d.edit; render(); return; }
   if (d.mp) {
@@ -1128,7 +1279,7 @@ document.addEventListener("click", e => {
     if (v === (S.persons || 1)) delete S.mealPersons[d.key]; else S.mealPersons[d.key] = v;
     save(); render(); return;
   }
-  if (d.mpreset) { delete S.mealPersons[d.mpreset]; save(); render(); return; }
+  if (d.mpreset) { delete S.mealPersons[d.mpreset]; delete S.mealEaters[d.mpreset]; delete S.mealGuests[d.mpreset]; save(); render(); return; }
   if (d.unfix) { delete S.fixed[d.unfix]; replan("Feste Mahlzeit entfernt."); return; }
   if (d.meal) { S.meals[d.meal] = !S.meals[d.meal]; save(); render(); return; }
   if (d.ex) { S.exclude = S.exclude.includes(d.ex) ? S.exclude.filter(x => x !== d.ex) : [...S.exclude, d.ex]; save(); render(); return; }
@@ -1165,12 +1316,13 @@ document.addEventListener("click", e => {
   if (d.unr) { S.dislikeR = S.dislikeR.filter(x => x !== d.unr); save(); render(); toast("Gericht ist wieder erlaubt. Gilt ab dem nächsten Plan."); return; }
   if (d.unl) { S.likeR = S.likeR.filter(x => x !== d.unl); save(); render(); return; }
 });
-const budgetMin = () => 15 * S.persons + 5;
-const budgetMax = () => 90 * S.persons;
+const budgetMin = () => 15 * Math.max(1, householdN()) + 5;
+const budgetMax = () => 90 * Math.max(1, householdN());
 function budgetHint() {
-  return S.persons === 1
-    ? `Nur Lebensmittel für dich allein. Etwa <span id="perDay">${eur(S.budget / 7)}</span> pro Tag.`
-    : `Für ${S.persons} Personen zusammen. Etwa <span id="perDay">${eur(S.budget / 7)}</span> pro Tag, ${eur(S.budget / 7 / S.persons)} pro Person.`;
+  const n = Math.max(1, householdN());
+  return n === 1
+    ? `Nur Lebensmittel für ${peopleMode() ? "eine Person" : "dich allein"}. Etwa <span id="perDay">${eur(S.budget / 7)}</span> pro Tag.`
+    : `Für ${n} Personen zusammen. Etwa <span id="perDay">${eur(S.budget / 7)}</span> pro Tag, ${eur(S.budget / 7 / n)} pro Person.`;
 }
 function budgetMoved(el) {
   S.budget = +el.value;
@@ -1185,6 +1337,8 @@ document.addEventListener("input", e => {
 });
 document.addEventListener("change", e => {
   const t = e.target;
+  if (t.dataset.pon) { const before = householdN(); personById(t.dataset.pon).on = t.checked; eatersChanged(before); replan(); return; }
+  if (t.dataset.pname) { const p = personById(t.dataset.pname); p.name = t.value.trim() || p.name; save(); render(); return; }
   if (t.id === "fxDays") { fx.days = t.value; return; }
   if (t.id === "fxSlot") { fx.slot = t.value; render(); return; }
   if (t.id === "fxRid") { fx.rid = t.value; return; }
