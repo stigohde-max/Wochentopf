@@ -251,7 +251,7 @@ footer.note { margin-top: 28px; font-size: 0.8rem; color: var(--muted); }
   <section id="view-list" class="stack" hidden></section>
   <section id="view-profile" class="stack" hidden></section>
 
-  <footer class="note">Die Preise sind Richtwerte für Eigenmarken (Stand 2026) und können je nach Filiale und Angebot abweichen. Unter „Profil“ trägst du echte Preise vom Kassenbon ein. Danach rechnet die App mit deinen Werten. Öl, Salz, Pfeffer, Gewürze und Brühe setzt der Plan als Grundvorrat voraus.<br><span id="appVersion">Version 29.09.2026 · 6</span></footer>
+  <footer class="note">Die Preise sind Richtwerte für Eigenmarken (Stand 2026) und können je nach Filiale und Angebot abweichen. Unter „Profil“ trägst du echte Preise vom Kassenbon ein. Danach rechnet die App mit deinen Werten. Öl, Salz, Pfeffer, Gewürze und Brühe setzt der Plan als Grundvorrat voraus.<br><span id="appVersion">Version 29.09.2026 · 7</span></footer>
 </div>
 <div class="toast" id="toast" hidden></div>
 
@@ -653,16 +653,16 @@ const fixedAt = (d, slot) => { const r = S.fixed[d + "-" + slot]; return r === O
 const mainSlots = () => slotsFor(S.meals).filter(([d, m]) => !fixedAt(d, m));
 // share of the day's energy by meal, used to lower the target when you eat out
 const WEIGHT = { bf: 0.25, lunch: 0.35, dinner: 0.35, snack: 0.1 };
-function kcalTarget() {
-  let total = 0, eaten = 0;
+// how much of a full eating day the plan covers (Frühstück + Mittag + Abend = 1)
+function planShare() {
+  let eaten = 0;
   for (let d = 0; d < 7; d++) for (const slot of ["bf", "lunch", "dinner", "snack"]) {
     const f = fixedAt(d, slot);
-    if (!f && !S.meals[slot]) continue;
-    total += WEIGHT[slot];
-    if (f !== OUT) eaten += WEIGHT[slot];
+    if (f ? f !== OUT : S.meals[slot]) eaten += WEIGHT[slot];
   }
-  return total ? S.kcal * eaten / total : S.kcal;
+  return Math.min(1, eaten / (7 * 0.95));
 }
+const kcalTarget = () => S.kcal * planShare();
 function pick(rng, arr, k) { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rng() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a.slice(0, k); }
 
 function randomPlan(rng, pools) {
@@ -751,7 +751,9 @@ function score(plan, ev) {
   const distinct = new Set(plan.batches).size + new Set(plan.bf).size + new Set(plan.sn).size;
   const target = kcalTarget();
   // spending well below the budget counts against a plan (except when the goal is to save)
-  const under = Math.max(0, S.budget * 0.9 - ev.cost);
+  // the budget share for the meals you actually plan (only dinner = about a third of the week's food)
+  const aim = S.budget * planShare();
+  const under = Math.max(0, aim * 0.9 - ev.cost) + Math.max(0, ev.cost - aim * 1.05) * 2;
   let s;
   if (S.goal === "protein") s = ev.protDay * 1.0 + distinct * 0.8 - under * 1.5;
   else if (S.goal === "cheap") s = -ev.cost * 2 + ev.protDay * 0.05 + distinct * 0.2;
@@ -875,12 +877,22 @@ function renderSummary(ev) {
 
 function profileSummary() {
   const parts = [GOALS.find(g => g.id === S.goal).n, DIETS.find(g => g.id === S.diet).n, ENERGY.find(e => e.id === S.kcal)?.d,
-    MEALS.filter(m => S.meals[m.id]).map(m => m.n).join(", ")];
+  ];
   const nFix = Object.keys(S.fixed).length, nEx = S.exclude.length + S.dislikeP.length;
   if (S.quick) parts.push("unter der Woche schnell");
   if (nFix) parts.push(`${nFix} feste ${nFix === 1 ? "Mahlzeit" : "Mahlzeiten"}`);
   if (nEx) parts.push(`${nEx} ${nEx === 1 ? "Ausschluss" : "Ausschlüsse"}`);
   return parts.filter(Boolean).join(" · ");
+}
+function mealsHint() {
+  const on = MEALS.filter(m => S.meals[m.id]).map(m => m.n);
+  const txt = on.length === MEALS.length ? "Alle Mahlzeiten" : on.length === 1 ? `Nur ${on[0]}` : on.slice(0, -1).join(", ") + " und " + on[on.length - 1];
+  let prep = "";
+  if (S.meals.lunch && S.meals.dinner) prep = " Mittag und Abend sind Meal-Prep: Du kochst abends die doppelte Menge und isst den Rest am nächsten Mittag.";
+  else if (S.meals.lunch || S.meals.dinner) prep = ` Du kochst jeweils für zwei Tage und isst den Rest am nächsten ${S.meals.lunch ? "Mittag" : "Abend"}.`;
+  const share = planShare(), fit = Math.round(S.budget * share);
+  const tip = share < 0.97 && S.goal !== "cheap" ? ` Dafür sind etwa ${fit} € deines Budgets vorgesehen, wegen ganzer Packungen oft etwas mehr.` : "";
+  return `${txt} kommt in den Plan und auf die Einkaufsliste.${prep}${tip} Feste Mahlzeiten aus deinem Profil bleiben trotzdem drin.`;
 }
 function renderPlan() {
   $("#view-plan").innerHTML = `
@@ -897,6 +909,11 @@ function renderPlan() {
       </div>`}
       <div class="budget-row"><input type="range" id="budget" min="${budgetMin()}" max="${budgetMax()}" step="${householdN() > 2 ? 5 : 1}" value="${S.budget}" aria-label="Wochenbudget in Euro"><span class="bignum num" id="budgetOut">${S.budget} €</span></div>
       <p class="small muted" id="budgetHint">${budgetHint()}</p>
+    </div>
+    <div class="panel">
+      <div><div class="label">Schritt 3</div><h2>Welche Mahlzeiten planen?</h2></div>
+      <div class="chips" role="group" aria-label="Mahlzeiten">${MEALS.map(m => `<button class="chip" id="meal-${m.id}" data-meal="${m.id}" aria-pressed="${!!S.meals[m.id]}">${m.n}</button>`).join("")}</div>
+      <p class="small muted">${mealsHint()}</p>
     </div>
     <div class="panel">
       <div class="row" style="justify-content:space-between;align-items:flex-start">
@@ -926,9 +943,6 @@ function renderProfile() {
       </div>
       <div class="label" style="margin-top:4px">Energiebedarf</div>
       <div class="chips" role="group" aria-label="Energiebedarf">${ENERGY.map(e => `<button class="chip" id="kcal-${e.id}" data-kcal="${e.id}" aria-pressed="${S.kcal === e.id}">${e.n} <span style="font-weight:400;opacity:.8">${e.d}</span></button>`).join("")}</div>
-      <div class="label" style="margin-top:4px">Mahlzeiten pro Tag</div>
-      <div class="chips">${MEALS.map(m => `<button class="chip" id="meal-${m.id}" data-meal="${m.id}" aria-pressed="${!!S.meals[m.id]}">${m.n}</button>`).join("")}</div>
-      <p class="small muted">Mittag und Abend werden als Meal-Prep geplant: Du kochst die doppelte Menge und isst den Rest bei der nächsten Mahlzeit.</p>
       <label class="check" for="quick"><input type="checkbox" id="quick" ${S.quick ? "checked" : ""}> Montag bis Freitag nur schnelle Gerichte (bis 25 Min.)</label>
       <div class="label" style="margin-top:4px">${peopleMode() ? "Für alle: mag keiner / verträgt keiner" : "Mag ich nicht / vertrage ich nicht"}</div>
       <div class="chips">${EXCLUDES.map(e => `<button class="chip x" id="ex-${e.k}" data-ex="${e.k}" aria-pressed="${S.exclude.includes(e.k)}">${e.n}</button>`).join("")}</div>
@@ -1391,7 +1405,10 @@ document.addEventListener("click", e => {
   }
   if (d.mpreset) { delete S.mealPersons[d.mpreset]; delete S.mealEaters[d.mpreset]; delete S.mealGuests[d.mpreset]; save(); render(); return; }
   if (d.unfix) { delete S.fixed[d.unfix]; replan("Feste Mahlzeit entfernt."); return; }
-  if (d.meal) { S.meals[d.meal] = !S.meals[d.meal]; save(); render(); return; }
+  if (d.meal) {
+    if (S.meals[d.meal] && Object.values(S.meals).filter(Boolean).length === 1) { toast("Mindestens eine Mahlzeit muss im Plan sein."); return; }
+    S.meals[d.meal] = !S.meals[d.meal]; save(); render(); toast("Tippe auf „Plan erstellen“, um den Plan anzupassen."); return;
+  }
   if (d.ex) { S.exclude = S.exclude.includes(d.ex) ? S.exclude.filter(x => x !== d.ex) : [...S.exclude, d.ex]; save(); render(); return; }
   if (d.act === "make") { makePlan(false); tab = "week"; render(); window.scrollTo({ top: 0 }); toast("Plan erstellt"); return; }
   if (d.act === "shuffle") { makePlan(true); tab = "week"; render(); toast("Neue Gerichte gemischt"); return; }
