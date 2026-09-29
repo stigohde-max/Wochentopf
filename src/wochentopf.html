@@ -72,6 +72,21 @@ header.top { display: flex; align-items: flex-end; justify-content: space-betwee
 .person input[type=text] { width: 100%; font: inherit; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink); }
 .who-chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .warn-line { color: var(--warn); font-size: 0.82rem; font-weight: 600; }
+details.panel { display: block; }
+details.panel > * + * { margin-top: 12px; }
+details.fold > summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+details.fold > summary::-webkit-details-marker { display: none; }
+details.fold > summary::after { content: "Öffnen"; font-size: 0.82rem; font-weight: 600; color: var(--accent); white-space: nowrap; }
+details.fold[open] > summary::after { content: "Schließen"; }
+.swaps { margin-top: 8px; display: flex; flex-direction: column; gap: 6px; }
+.swaps .alt .d b { color: var(--ink); font-weight: 600; }
+.pantry-row { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; align-items: center; font-size: 0.9rem; }
+.pantry-row input, .pantry-add select, .pantry-add input { font: inherit; font-size: 0.9rem; padding: 6px 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); min-width: 0; }
+.pantry-row input { width: 6.5em; text-align: right; }
+.pantry-add { display: grid; grid-template-columns: 1fr 6.5em auto; gap: 8px; }
+.line.stock .price { color: var(--accent); font-family: var(--font-body); font-size: 0.8rem; font-weight: 700; }
+.meal-extra { grid-column: 1 / -1; min-width: 0; }
+.meal-extra:empty { display: none; }
 .editor { margin-top: 8px; padding: 10px 12px; border-radius: 10px; background: var(--bg); border: 1px solid var(--line); display: flex; flex-direction: column; gap: 8px; font-size: 0.9rem; }
 .editor .row { justify-content: space-between; }
 .pill.who { background: var(--surface); color: var(--ink); border: 1px solid var(--line); }
@@ -225,7 +240,7 @@ footer.note { margin-top: 28px; font-size: 0.8rem; color: var(--muted); }
     <button role="tab" id="tab-plan" data-tab="plan" aria-selected="true">Planen</button>
     <button role="tab" id="tab-week" data-tab="week" aria-selected="false">Woche</button>
     <button role="tab" id="tab-list" data-tab="list" aria-selected="false">Einkauf</button>
-    <button role="tab" id="tab-prices" data-tab="prices" aria-selected="false">Preise</button>
+    <button role="tab" id="tab-profile" data-tab="profile" aria-selected="false">Profil</button>
   </nav>
 
   <div id="banner"></div>
@@ -234,9 +249,9 @@ footer.note { margin-top: 28px; font-size: 0.8rem; color: var(--muted); }
   <section id="view-plan" class="stack"></section>
   <section id="view-week" class="stack" hidden></section>
   <section id="view-list" class="stack" hidden></section>
-  <section id="view-prices" class="stack" hidden></section>
+  <section id="view-profile" class="stack" hidden></section>
 
-  <footer class="note">Die Preise sind Richtwerte für Eigenmarken (Stand 2026) und können je nach Filiale und Angebot abweichen. Unter „Preise“ trägst du echte Preise vom Kassenbon ein. Danach rechnet die App mit deinen Werten. Öl, Salz, Pfeffer, Gewürze und Brühe setzt der Plan als Grundvorrat voraus.<br><span id="appVersion">Version 29.09.2026 · 5</span></footer>
+  <footer class="note">Die Preise sind Richtwerte für Eigenmarken (Stand 2026) und können je nach Filiale und Angebot abweichen. Unter „Profil“ trägst du echte Preise vom Kassenbon ein. Danach rechnet die App mit deinen Werten. Öl, Salz, Pfeffer, Gewürze und Brühe setzt der Plan als Grundvorrat voraus.<br><span id="appVersion">Version 29.09.2026 · 6</span></footer>
 </div>
 <div class="toast" id="toast" hidden></div>
 
@@ -557,7 +572,7 @@ const MEALS = [
 const DEFAULT = {
   store: "lidl", budget: 40, goal: "protein", diet: "all",
   persons: 1, fixed: {}, quick: false, kcal: 2200, meals: { bf: true, lunch: true, dinner: true, snack: false },
-  exclude: [], dislikeP: [], dislikeR: [], likeR: [], shareMissing: false, showNutri: true, mealPersons: {}, people: [], guests: 0, mealEaters: {}, mealGuests: {}, seed: 7, plan: null, swaps: {}, checked: {}, home: {}, prices: {},
+  exclude: [], dislikeP: [], dislikeR: [], likeR: [], shareMissing: false, showNutri: true, mealPersons: {}, people: [], guests: 0, mealEaters: {}, mealGuests: {}, pantry: {}, pantrySnap: {}, shopDone: false, seed: 7, plan: null, swaps: {}, checked: {}, home: {}, prices: {},
   createdAt: null, isExample: true,
 };
 let S = JSON.parse(JSON.stringify(DEFAULT));
@@ -689,6 +704,23 @@ function mealsOf(plan) {
   return out;
 }
 
+// Vorrat: during the week the plan uses the pantry as it was before shopping
+const DURABLE = new Set(["trocken", "konserve", "tk"]);
+const pantryNow = () => S.shopDone ? (S.pantrySnap || {}) : (S.pantry || {});
+function closeShopping(ev) {
+  const snap = JSON.parse(JSON.stringify(S.pantry || {}));
+  const added = [];
+  for (const it of ev.items) {
+    const size = P[it.pid][9] || P[it.pid][2];
+    const bought = S.home[it.pid] ? 0 : it.packs * size;
+    let amt = (S.pantry[it.pid] || 0) - (it.fromPantry || 0);
+    const rest = Math.max(0, bought - (it.g - (it.fromPantry || 0)));
+    if (DURABLE.has(P[it.pid][6]) && rest >= 20) { amt += rest; added.push(`${P[it.pid][0]} ${fmtG(rest)}`); }
+    if (amt >= 20) S.pantry[it.pid] = Math.round(amt); else delete S.pantry[it.pid];
+  }
+  S.pantrySnap = snap; S.shopDone = true;
+  return added;
+}
 function evaluate(plan) {
   const grams = {};
   let prot = 0, kcal = 0;
@@ -701,15 +733,18 @@ function evaluate(plan) {
       prot += g * P[pid][4] / 100; kcal += g * P[pid][5] / 100;
     }
   }
+  // take what is already in the pantry first, buy only the rest
+  const stock = pantryNow();
+  let pantryValue = 0;
   const items = Object.entries(grams).map(([pid, g]) => {
-    const size = P[pid][2];
-    const b = buy(pid, g);
-    const price = priceOf(pid);
-    return { pid, g, ...b };
+    const have = Math.min(g, stock[pid] || 0);
+    pantryValue += have / P[pid][2] * priceOf(pid);
+    if (g - have < 1) return { pid, g, fromPantry: have, packs: 0, qty: "", total: 0, used: 0, rest: 0, price: priceOf(pid) };
+    return { pid, g, fromPantry: have, ...buy(pid, g - have) };
   });
   const cost = items.reduce((a, b) => a + b.total, 0);
   const usedCost = items.reduce((a, b) => a + b.used, 0);
-  return { items, cost, usedCost, protDay: prot / 7, kcalDay: kcal / 7 };
+  return { items, cost, usedCost, pantryValue, protDay: prot / 7, kcalDay: kcal / 7 };
 }
 
 function score(plan, ev) {
@@ -728,6 +763,7 @@ function score(plan, ev) {
   // at least 4 different main dishes a week (when enough are allowed)
   const mains = new Set(plan.batches).size, want = Math.min(4, plan.batches.length);
   if (mains < want) s -= (want - mains) * 6;
+  s += (ev.pantryValue || 0) * 1.5;
   if (peopleMode()) for (const m of mealsOf(plan)) if (!m.fixed && m.rid !== OUT && !okFor(m.rid, eatersOf(m.day + "-" + m.slot))) s -= 60;
   if (ev.cost > S.budget) s -= 1000 + (ev.cost - S.budget) * 10;
   return s;
@@ -788,19 +824,24 @@ function generate(seed) {
 function makePlan(newSeed) {
   if (newSeed) S.seed = Math.floor(Math.random() * 1e9);
   if (S.createdAt && (Date.now() - new Date(S.createdAt)) / 864e5 > 6) { S.mealPersons = {}; S.mealEaters = {}; S.mealGuests = {}; }
-  S.swaps = {}; S.checked = {}; S.home = {}; openAlt = null; editKey = null;
+  let carried = [];
+  const age = S.createdAt ? (Date.now() - new Date(S.createdAt)) / 864e5 : 0;
+  if (S.plan && !S.isExample && !S.shopDone && age > 4) carried = closeShopping(evaluate(S.plan));
+  if (S.shopDone && (age > 4 || carried.length)) { S.shopDone = false; S.pantrySnap = {}; }
+  S.swaps = {}; S.checked = {}; S.home = {}; openAlt = null; editKey = null; swapKey = null;
   const { plan, pools } = generate(S.seed);
   S.plan = plan;
   S.createdAt = new Date().toISOString();
   S.isExample = false;
   save(); render();
   if (!pools.main.length && (S.meals.lunch || S.meals.dinner)) toast("Mit deinen Ausschlüssen bleibt kein Hauptgericht übrig.");
+  else if (carried.length) toast("Reste der letzten Woche sind im Vorrat: " + carried.slice(0, 3).join(", ") + (carried.length > 3 ? " …" : ""));
 }
 
 /* ---------- Render ---------- */
 function render() {
   document.querySelectorAll(".tabs button").forEach(b => b.setAttribute("aria-selected", String(b.dataset.tab === tab)));
-  ["plan", "week", "list", "prices"].forEach(t => $("#view-" + t).hidden = t !== tab);
+  ["plan", "week", "list", "profile"].forEach(t => $("#view-" + t).hidden = t !== tab);
   document.body.classList.toggle("hide-nutri", !S.showNutri);
   const nt = $("#nutriToggle"); if (nt) { nt.setAttribute("aria-pressed", String(!!S.showNutri)); nt.title = S.showNutri ? "Nährwerte ausblenden" : "Nährwerte einblenden"; }
   $("#summary").classList.toggle("two", !S.showNutri);
@@ -809,7 +850,7 @@ function render() {
   if (tab === "plan") renderPlan(ev);
   if (tab === "week") renderWeek(ev);
   if (tab === "list") renderList(ev);
-  if (tab === "prices") renderPrices();
+  if (tab === "profile") renderProfile();
 }
 
 function renderBanner(ev) {
@@ -832,6 +873,15 @@ function renderSummary(ev) {
     <div class="stat nutri"><div class="v num">${Math.round(ev.kcalDay).toLocaleString("de-DE")}</div><div class="k">kcal pro Tag${householdN() > 1 ? " und Person" : ""}${Object.values(S.fixed).includes(OUT) ? ", ohne Auswärts-Essen" : ""}</div></div>`;
 }
 
+function profileSummary() {
+  const parts = [GOALS.find(g => g.id === S.goal).n, DIETS.find(g => g.id === S.diet).n, ENERGY.find(e => e.id === S.kcal)?.d,
+    MEALS.filter(m => S.meals[m.id]).map(m => m.n).join(", ")];
+  const nFix = Object.keys(S.fixed).length, nEx = S.exclude.length + S.dislikeP.length;
+  if (S.quick) parts.push("unter der Woche schnell");
+  if (nFix) parts.push(`${nFix} feste ${nFix === 1 ? "Mahlzeit" : "Mahlzeiten"}`);
+  if (nEx) parts.push(`${nEx} ${nEx === 1 ? "Ausschluss" : "Ausschlüsse"}`);
+  return parts.filter(Boolean).join(" · ");
+}
 function renderPlan() {
   $("#view-plan").innerHTML = `
     <div class="panel">
@@ -839,18 +889,37 @@ function renderPlan() {
       <div class="stores">${STORES.map(s => `<button class="store" id="store-${s.id}" data-store="${s.id}" aria-pressed="${s.id === S.store}"><b>${esc(s.name)}</b><span>${esc(s.note)}</span></button>`).join("")}</div>
     </div>
     <div class="panel">
-      <div><div class="label">Schritt 2</div><h2>Personen & Wochenbudget</h2></div>
-      ${peopleMode() ? peoplePanel() : `<div class="row" style="justify-content:space-between">
+      <div><div class="label">Schritt 2</div><h2>Wer isst mit? Wie viel Budget?</h2></div>
+      ${peopleMode() ? weeklyPeople() : `<div class="row" style="justify-content:space-between">
         <span>Du kochst für</span>
         <div class="stepper" role="group" aria-label="Anzahl Personen"><button data-persons="-1" aria-label="Eine Person weniger" ${S.persons <= 1 ? "disabled" : ""}>−</button><b class="num" id="personsOut">${S.persons}</b><button data-persons="1" aria-label="Eine Person mehr" ${S.persons >= 8 ? "disabled" : ""}>+</button></div>
         <span>${S.persons === 1 ? "Person" : "Personen"}</span>
-      </div>
-      <button class="btn ghost small" data-act="peopleOn">Personen mit Namen anlegen (WG, Familie)</button>`}
+      </div>`}
       <div class="budget-row"><input type="range" id="budget" min="${budgetMin()}" max="${budgetMax()}" step="${householdN() > 2 ? 5 : 1}" value="${S.budget}" aria-label="Wochenbudget in Euro"><span class="bignum num" id="budgetOut">${S.budget} €</span></div>
       <p class="small muted" id="budgetHint">${budgetHint()}</p>
     </div>
     <div class="panel">
-      <div><div class="label">Schritt 3</div><h2>Wie willst du essen?</h2></div>
+      <div class="row" style="justify-content:space-between;align-items:flex-start">
+        <div style="min-width:0;flex:1"><div class="label">Dein Profil</div><p class="small">${esc(profileSummary())}</p></div>
+        <button class="btn ghost small" data-tab="profile">Ändern</button>
+      </div>
+      ${Object.keys(S.pantry).length ? `<p class="small muted">Im Vorrat: ${Object.keys(S.pantry).length} ${Object.keys(S.pantry).length === 1 ? "Artikel" : "Artikel"}. Die App plant ihn zuerst ein.</p>` : ""}
+    </div>
+    <div class="row">
+      <button class="btn" data-act="make">Plan erstellen</button>
+      ${S.plan && !S.isExample ? `<button class="btn ghost" data-act="shuffle">Andere Gerichte</button>` : ""}
+    </div>`;
+}
+let openFold = {};
+function renderProfile() {
+  $("#view-profile").innerHTML = `
+    <div class="panel">
+      <div><div class="label">Wer isst</div><h2>Personen</h2></div>
+      ${peopleMode() ? peoplePanel() : `<p class="small muted">Kochst du für eine WG oder Familie? Leg Personen mit Namen an. Dann kannst du für jede Person eintragen, was sie nicht isst oder nicht verträgt, und bei jeder Mahlzeit wählen, wer mitisst.</p>
+      <button class="btn ghost small" data-act="peopleOn">Personen mit Namen anlegen</button>`}
+    </div>
+    <div class="panel">
+      <div><div class="label">Vorlieben</div><h2>Wie willst du essen?</h2></div>
       <div class="stack" style="gap:10px">
         <div class="chips" role="group" aria-label="Ziel">${GOALS.map(g => `<button class="chip" id="goal-${g.id}" data-goal="${g.id}" aria-pressed="${S.goal === g.id}">${g.n}</button>`).join("")}</div>
         <div class="chips" role="group" aria-label="Ernährung">${DIETS.map(g => `<button class="chip" id="diet-${g.id}" data-diet="${g.id}" aria-pressed="${S.diet === g.id}">${g.n}</button>`).join("")}</div>
@@ -861,15 +930,13 @@ function renderPlan() {
       <div class="chips">${MEALS.map(m => `<button class="chip" id="meal-${m.id}" data-meal="${m.id}" aria-pressed="${!!S.meals[m.id]}">${m.n}</button>`).join("")}</div>
       <p class="small muted">Mittag und Abend werden als Meal-Prep geplant: Du kochst die doppelte Menge und isst den Rest bei der nächsten Mahlzeit.</p>
       <label class="check" for="quick"><input type="checkbox" id="quick" ${S.quick ? "checked" : ""}> Montag bis Freitag nur schnelle Gerichte (bis 25 Min.)</label>
-      <div class="label" style="margin-top:4px">Mag ich nicht / vertrage ich nicht</div>
+      <div class="label" style="margin-top:4px">${peopleMode() ? "Für alle: mag keiner / verträgt keiner" : "Mag ich nicht / vertrage ich nicht"}</div>
       <div class="chips">${EXCLUDES.map(e => `<button class="chip x" id="ex-${e.k}" data-ex="${e.k}" aria-pressed="${S.exclude.includes(e.k)}">${e.n}</button>`).join("")}</div>
     </div>
     ${fixedPanel()}
     ${learnedPanel()}
-    <div class="row">
-      <button class="btn" data-act="make">Plan erstellen</button>
-      ${S.plan && !S.isExample ? `<button class="btn ghost" data-act="shuffle">Andere Gerichte</button>` : ""}
-    </div>`;
+    ${pricesPanel()}
+    <p class="small muted">Änderungen hier gelten ab dem nächsten Plan. Tippe dafür unter „Planen“ auf „Plan erstellen“.</p>`;
 }
 
 /* ---------- People panel ---------- */
@@ -881,11 +948,9 @@ function personSummary(p) {
 }
 function peoplePanel() {
   return `<div class="people">
-    <div class="small muted">Wer isst diese Woche mit? Häkchen raus, wenn jemand die ganze Woche nicht da ist.</div>
-    ${S.people.map(p => `<div class="person ${p.on === false ? "off" : ""}">
-      <div class="person-head">
-        <input type="checkbox" id="on-${p.id}" data-pon="${p.id}" ${p.on === false ? "" : "checked"} aria-label="${esc(p.name)} isst diese Woche mit">
-        <label class="pn" for="on-${p.id}">${esc(p.name)}<small>${esc(personSummary(p))}</small></label>
+    ${S.people.map(p => `<div class="person">
+      <div class="person-head" style="grid-template-columns: 1fr auto">
+        <div class="pn">${esc(p.name)}<small>${esc(personSummary(p))}</small></div>
         <button class="linkbtn ${editPerson === p.id ? "on" : ""}" data-pedit="${p.id}">${editPerson === p.id ? "Fertig" : "Bearbeiten"}</button>
       </div>
       ${editPerson === p.id ? `
@@ -896,11 +961,17 @@ function peoplePanel() {
         <div><button class="linkbtn warnb" data-pdel="${p.id}">${esc(p.name)} entfernen</button></div>` : ""}
     </div>`).join("")}
     <button class="btn ghost small" data-act="padd">+ Person hinzufügen</button>
+    <p class="small muted">Wer diese Woche mitisst, wählst du unter „Planen“. Unverträglichkeiten aller, die mitessen, gelten für den ganzen Plan.</p>
+  </div>`;
+}
+function weeklyPeople() {
+  return `<div class="people">
+    <div class="who-chips">${S.people.map(p => `<button class="chip" data-pon="${p.id}" aria-pressed="${p.on !== false}">${esc(p.name)}</button>`).join("")}</div>
     <div class="row" style="justify-content:space-between">
-      <span>Besuch diese Woche<br><span class="small muted">zusätzliche Esser bei jeder Mahlzeit</span></span>
+      <span>Besuch<br><span class="small muted">zusätzlich bei jeder Mahlzeit</span></span>
       <div class="stepper" role="group" aria-label="Besuch"><button data-guests="-1" aria-label="Weniger Besuch" ${(S.guests || 0) <= 0 ? "disabled" : ""}>−</button><b class="num">${S.guests || 0}</b><button data-guests="1" aria-label="Mehr Besuch" ${(S.guests || 0) >= 8 ? "disabled" : ""}>+</button></div>
     </div>
-    <p class="small"><b>${householdN()} ${householdN() === 1 ? "Person isst" : "Personen essen"} mit.</b> Unverträglichkeiten aller, die mitessen, gelten für den ganzen Plan.</p>
+    <p class="small"><b>${householdN()} ${householdN() === 1 ? "Person isst" : "Personen essen"} mit.</b> <button class="linkbtn" data-tab="profile">Personen bearbeiten</button></p>
   </div>`;
 }
 // keep the per-person budget when the number of eaters changes
@@ -910,28 +981,40 @@ function eatersChanged(before) {
   S.budget = Math.min(budgetMax(), Math.max(budgetMin(), S.budget));
 }
 // swap the dish at one meal (and its leftover partner) for the best one everybody at that meal can eat
+// where a meal lives in the plan, and who eats that cooked dish
+function slotTarget(key) {
+  const [ds, slot] = key.split("-"), d = +ds;
+  if (slot === "bf" || slot === "snack") return { arrKey: slot === "bf" ? "bf" : "sn", idx: d, ids: eatersOf(key), type: slot === "bf" ? "bf" : "sn" };
+  const slots = mainSlots(), si = slots.findIndex(([a, b]) => a === d && b === slot);
+  if (si < 0) return null;
+  const pair = [si, si % 2 ? si - 1 : si + 1].filter(i => slots[i]);
+  return { arrKey: "batches", idx: Math.floor(si / 2), ids: [...new Set(pair.flatMap(i => eatersOf(slots[i][0] + "-" + slots[i][1])))], type: "main", partner: pair.length > 1 ? slots[pair[1]] : null };
+}
+// every dish that could go into that slot, best first (portion size stays as it is)
+function candidatesFor(key) {
+  const t = slotTarget(key); if (!t || !S.plan) return [];
+  const ex = excludedProducts(), cur = S.plan[t.arrKey][t.idx];
+  const base = evaluate(S.plan).cost;
+  return Object.keys(R).filter(r => R[r].t === t.type && r !== cur && recipeOk(r, ex) && (!peopleMode() || okFor(r, t.ids)))
+    .map(r => { const q = clonePlan(S.plan); q[t.arrKey][t.idx] = r; const ev = evaluate(q); return { r, q, sc: score(q, ev), dc: ev.cost - base }; })
+    .sort((a, b) => b.sc - a.sc);
+}
+let swapKey = null, swapOffset = 0, swapList = [];
+function swapPanel(key, m) {
+  const t = slotTarget(key);
+  const show = swapList.slice(swapOffset, swapOffset + 4);
+  return `<div class="swaps">
+    <div class="small"><b>Stattdessen:</b>${t && t.partner ? ` <span class="muted">gilt auch für die Reste am ${DAYSHORT[t.partner[0]]} ${SLOTNAME[t.partner[1]]}</span>` : ""}</div>
+    ${show.map(c => { const x = recipeLine(c.r); return `<div class="alt"><div><b>${esc(R[c.r].n)}</b>
+      <div class="d num">${R[c.r].m} Min. · ${eur(x.c)} pro Portion · Woche <b>${c.dc >= 0 ? "+" : "−"}${eur(Math.abs(c.dc))}</b><span class="nutri"> · ${Math.round(x.p)} g P</span></div></div>
+      <button class="btn small" data-pickmeal="${key}" data-r="${c.r}">Nehmen</button></div>`; }).join("") || `<div class="small muted">Keine andere passende Idee.</div>`}
+    <div class="row">${swapList.length > swapOffset + 4 ? `<button class="linkbtn" data-swapmore="${key}">Andere Vorschläge</button>` : swapOffset ? `<button class="linkbtn" data-swapmore="${key}">Von vorn</button>` : ""}</div>
+  </div>`;
+}
 function repairSlot(key) {
   if (!S.plan) return false;
-  const [ds, slot] = key.split("-"), d = +ds;
-  const ex = excludedProducts();
-  const plan = S.plan;
-  let arrKey, idx, ids;
-  if (slot === "bf" || slot === "snack") { arrKey = slot === "bf" ? "bf" : "sn"; idx = d; ids = eatersOf(key); }
-  else {
-    const slots = mainSlots(), si = slots.findIndex(([a, b]) => a === d && b === slot);
-    if (si < 0) return false;
-    arrKey = "batches"; idx = Math.floor(si / 2);
-    ids = [...new Set([si, si % 2 ? si - 1 : si + 1].filter(i => slots[i]).flatMap(i => eatersOf(slots[i][0] + "-" + slots[i][1])))];
-  }
-  const type = arrKey === "bf" ? "bf" : arrKey === "sn" ? "sn" : "main";
-  const cands = Object.keys(R).filter(r => R[r].t === type && recipeOk(r, ex) && okFor(r, ids));
-  if (!cands.length) return false;
-  let best = null;
-  for (const r of cands) {
-    const q = clonePlan(plan); q[arrKey][idx] = r;
-    const ev = sized(q), sc = score(q, ev);
-    if (!best || sc > best.sc) best = { q, sc };
-  }
+  const best = candidatesFor(key)[0];
+  if (!best) return false;
   S.plan = best.q; return true;
 }
 
@@ -1005,7 +1088,11 @@ function renderWeek() {
         return `<div class="meal ${own ? "" : "out"}"><div class="slot">${SLOTNAME[m.slot]}</div>
           <div class="name">${esc(r.n)}<small>${note}${own ? (note ? " · " : "") + (m.fromSlot ? "aufwärmen" : r.m + " Min.") : ""}</small>
             <div class="ing">${ingr(m.rid).map(([pid]) => `<button data-nop="${pid}" title="${esc(P[pid][0])} nie wieder vorschlagen" aria-label="${esc(P[pid][0])}: mag ich nicht">${esc(P[pid][0])}<i aria-hidden="true">✕</i></button>`).join("")}</div>
-            <div class="fb"><button class="linkbtn ${editing ? "on" : ""}" data-edit="${key}" aria-expanded="${editing}">Bearbeiten</button><button class="linkbtn ${S.likeR.includes(m.rid) ? "liked" : ""}" data-like="${m.rid}">${S.likeR.includes(m.rid) ? "Liebling ✓" : "Öfter bitte"}</button>${m.fixed ? "" : `<button class="linkbtn warnb" data-nor="${m.rid}">Nie wieder</button>`}</div>
+            <div class="fb">${m.fixed || m.rid === OUT ? "" : `<button class="linkbtn ${swapKey === key ? "on" : ""}" data-swapmeal="${key}" aria-expanded="${swapKey === key}">Tauschen</button>`}<button class="linkbtn ${editing ? "on" : ""}" data-edit="${key}" aria-expanded="${editing}">Bearbeiten</button><button class="linkbtn ${S.likeR.includes(m.rid) ? "liked" : ""}" data-like="${m.rid}">${S.likeR.includes(m.rid) ? "Liebling ✓" : "Öfter bitte"}</button>${m.fixed ? "" : `<button class="linkbtn warnb" data-nor="${m.rid}">Nie wieder</button>`}</div>
+            <details><summary>Zutaten${cookN !== 1 ? ` für ${cookN} Portionen` : ""} & Zubereitung</summary><ul>${ing}</ul><ul>${r.s.map(s => `<li>${esc(s)}</li>`).join("")}</ul></details></div>
+          <div style="text-align:right;display:flex;flex-direction:column;gap:4px;align-items:flex-end">${m.fixed ? `<span class="pill fix">Fest</span>` : ""}${custom ? `<span class="pill who">${peopleMode() && own ? esc(eatersOf(key).map(id => personById(id).name).join(", ") || "") + (guestsOf(key) ? (eatersOf(key).length ? " +" : "") + guestsOf(key) : "") : own + " Pers."}</span>` : ""}<span class="tag num">${eur(x.c * own)}</span><span class="small muted num nutri">${Math.round(x.p)} g P · ${Math.round(x.k)} kcal${own > 1 ? " p. P." : ""}</span></div>
+          <div class="meal-extra">
+            ${swapKey === key ? swapPanel(key, m) : ""}
             ${cant.length ? `<div class="warn-line">Passt nicht für ${cant.map(p => esc(p.name)).join(", ")}${m.fixed ? "" : ` <button class="linkbtn warnb" data-repair="${key}">Passendes Gericht</button>`}</div>` : ""}
             ${editing && peopleMode() ? `<div class="editor">
               <span>Wer isst mit?</span>
@@ -1021,8 +1108,7 @@ function renderWeek() {
               <p class="small muted">${own === 0 ? "Bei 0 fällt die Mahlzeit aus und die App kauft dafür nichts ein." : `Gilt nur für ${DAYS[m.day]}, ${SLOTNAME[m.slot]}. Einkaufsliste und Kosten passen sich sofort an.`}</p>
               ${custom ? `<button class="linkbtn" data-mpreset="${key}">Zurück auf ${S.persons} (Standard)</button>` : ""}
             </div>` : ""}
-            <details><summary>Zutaten${cookN !== 1 ? ` für ${cookN} Portionen` : ""} & Zubereitung</summary><ul>${ing}</ul><ul>${r.s.map(s => `<li>${esc(s)}</li>`).join("")}</ul></details></div>
-          <div style="text-align:right;display:flex;flex-direction:column;gap:4px;align-items:flex-end">${m.fixed ? `<span class="pill fix">Fest</span>` : ""}${custom ? `<span class="pill who">${peopleMode() && own ? esc(eatersOf(key).map(id => personById(id).name).join(", ") || "") + (guestsOf(key) ? (eatersOf(key).length ? " +" : "") + guestsOf(key) : "") : own + " Pers."}</span>` : ""}<span class="tag num">${eur(x.c * own)}</span><span class="small muted num nutri">${Math.round(x.p)} g P · ${Math.round(x.k)} kcal${own > 1 ? " p. P." : ""}</span></div></div>`;
+          </div></div>`;
       }).join("") || `<div class="meal"><div class="name muted">Keine Mahlzeiten ausgewählt</div></div>`}
     </article>`;
   }).join("");
@@ -1042,9 +1128,13 @@ function renderList(ev) {
     html += `<div class="cat">${CATS[c]}</div>`;
     for (const it of byCat[c].sort((a, b) => P[a.pid][0].localeCompare(P[b.pid][0]))) {
       const p = prod(it.pid), from = swappedFrom(it.pid), home = !!S.home[it.pid];
+      if (!it.packs) {
+        html += `<div class="line stock"><input type="checkbox" disabled checked aria-label="${esc(p.name)} aus dem Vorrat"><div class="what"><div class="n">${esc(p.name)}</div><div class="meta">${fmtG(it.g)} aus dem Vorrat</div></div><div class="price">Vorrat</div></div>`;
+        continue;
+      }
       html += `<div class="line ${S.checked[it.pid] ? "done" : ""} ${home ? "home" : ""}">
         <input type="checkbox" id="chk-${it.pid}" data-chk="${it.pid}" ${S.checked[it.pid] ? "checked" : ""} ${home ? "disabled" : ""} aria-label="${esc(p.name)} im Wagen">
-        <label class="what" for="chk-${it.pid}"><div class="n">${it.qty} ${esc(p.name)}</div><div class="meta">${p.piece ? `lose, ${eur(it.price)}/kg · ca. ${fmtG(it.packs * p.piece)}` : esc(p.pack)} · brauchst ${fmtG(it.g)}${it.rest >= 30 && !p.piece ? ` · Rest ${fmtG(it.rest)} bleibt im Vorrat` : ""}${from ? ` · <span class="swapped">statt ${esc(P[from][0])}</span>` : ""}</div></label>
+        <label class="what" for="chk-${it.pid}"><div class="n">${it.qty} ${esc(p.name)}</div><div class="meta">${p.piece ? `lose, ${eur(it.price)}/kg · ca. ${fmtG(it.packs * p.piece)}` : esc(p.pack)} · brauchst ${fmtG(it.g)}${it.fromPantry >= 1 ? `, davon ${fmtG(it.fromPantry)} aus dem Vorrat` : ""}${it.rest >= 30 && !p.piece ? ` · Rest ${fmtG(it.rest)} bleibt im Vorrat` : ""}${from ? ` · <span class="swapped">statt ${esc(P[from][0])}</span>` : ""}</div></label>
         <div class="price">${home ? "0,00 €" : eur(it.total)}</div>
         <div class="acts">
           <button class="linkbtn ${home ? "on" : ""}" data-home="${it.pid}">${home ? "Zu Hause ✓" : "Hab ich"}</button>
@@ -1063,10 +1153,27 @@ function renderList(ev) {
     <div><span>Budget</span><span>${eur(S.budget)}</span></div>
     <div class="${rest >= 0 ? "pos" : "neg"}"><span>${rest >= 0 ? "Bleibt übrig" : "Über Budget"}</span><span>${eur(Math.abs(rest))}</span></div>
     <div class="muted small" style="margin-top:6px"><span>Davon diese Woche aufgegessen</span><span>${eur(ev.usedCost)}</span></div>
-    <p class="muted small" style="font-family:var(--font-body)">Die Differenz bleibt als Vorrat, zum Beispiel Reis, Haferflocken oder Erdnussbutter. Hast du etwas davon noch, tippe bei dem Artikel auf „Hab ich“.</p>
-  </div></div>`;
+    <p class="muted small" style="font-family:var(--font-body)">Die Differenz bleibt als Vorrat, zum Beispiel Reis, Haferflocken oder Erdnussbutter.</p>
+    <div style="font-family:var(--font-body);margin-top:8px">${S.shopDone
+      ? `<p class="small"><b>Einkauf erledigt.</b> Haltbare Reste sind im Vorrat und werden nächste Woche zuerst verplant.</p>`
+      : `<button class="btn small" data-act="shopdone">Einkauf erledigt: Reste in den Vorrat</button>`}</div>
+  </div></div>` + pantryPanel();
   $("#view-list").innerHTML = html;
   const ta = $("#shareText"); if (ta) ta.value = shareText(ev);
+}
+function pantryPanel() {
+  const ids = Object.keys(S.pantry || {}).filter(id => P[id]).sort((a, b) => P[a][0].localeCompare(P[b][0]));
+  const all = Object.keys(P).sort((a, b) => P[a][0].localeCompare(P[b][0]));
+  return `<details class="panel fold" id="pantryFold"${openFold.pantry ? " open" : ""}><summary><div><div class="label">Zu Hause</div><h2>Vorrat${ids.length ? ` (${ids.length})` : ""}</h2></div></summary>
+    <p class="small muted">Was du schon zu Hause hast. Die App plant es zuerst ein und kauft nur, was fehlt. Nach „Einkauf erledigt“ landen haltbare Reste wie Reis, Nudeln, Dosen oder Tiefkühlware automatisch hier.</p>
+    ${ids.map(id => `<div class="pantry-row"><span>${esc(P[id][0])}</span><input inputmode="numeric" data-pantry="${id}" value="${Math.round(S.pantry[id])}" aria-label="${esc(P[id][0])} in Gramm"><button class="linkbtn" data-pdrop="${id}" aria-label="${esc(P[id][0])} entfernen">✕</button></div>`).join("") || `<p class="small">Noch leer.</p>`}
+    <div class="pantry-add">
+      <select id="pAddId" aria-label="Produkt">${all.map(id => `<option value="${id}">${esc(P[id][0])}</option>`).join("")}</select>
+      <input id="pAddG" inputmode="numeric" placeholder="Gramm" aria-label="Menge in Gramm">
+      <button class="btn small" data-act="padd2">Dazu</button>
+    </div>
+    ${S.shopDone ? "" : `<p class="small muted">Änderungen am Vorrat gelten sofort für die Einkaufsliste. Für einen Plan, der den Vorrat gezielt aufbraucht, tippe unter „Planen“ auf „Plan erstellen“.</p>`}
+  </details>`;
 }
 function fmtG(g) { return g >= 1000 ? (g / 1000).toLocaleString("de-DE", { maximumFractionDigits: 2 }) + " kg" : Math.round(g) + " g"; }
 function isoWeek(d) { const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())); const n = t.getUTCDay() || 7; t.setUTCDate(t.getUTCDate() + 4 - n); const y = new Date(Date.UTC(t.getUTCFullYear(), 0, 1)); return Math.ceil(((t - y) / 864e5 + 1) / 7); }
@@ -1172,12 +1279,11 @@ async function shareList() {
   catch (e) { if (e && e.name !== "AbortError") copyList(); }
 }
 
-function renderPrices() {
+function pricesPanel() {
   const st = store();
   const ov = S.prices[st.id] || {};
   const ids = Object.keys(P).sort((a, b) => P[a][0].localeCompare(P[b][0]));
-  $("#view-prices").innerHTML = `<div class="panel">
-    <div><div class="label">Preisliste</div><h2>${esc(st.name)}</h2></div>
+  return `<details class="panel fold" id="pricesFold"${openFold.prices ? " open" : ""}><summary><div><div class="label">Preisliste</div><h2>Preise bei ${esc(st.name)}</h2></div></summary>
     <p class="small muted">Richtwerte für Eigenmarken. Steht an der Kasse etwas anderes, trag hier den echten Preis ein. Plan und Einkaufsliste rechnen sofort mit deinem Wert. Den Markt wechselst du unter „Planen“.</p>
     <div class="scroll"><table class="ptable"><thead><tr><th>Produkt</th><th>Packung</th><th style="text-align:right">Preis €</th><th style="text-align:right">€/kg</th></tr></thead><tbody>
     ${ids.map(id => { const pr = priceOf(id); return `<tr><td>${esc(P[id][0])}</td><td class="pk">${esc(P[id][1])}</td>
@@ -1185,7 +1291,7 @@ function renderPrices() {
       <td style="text-align:right" class="num pk">${(pr / P[id][2] * 1000).toFixed(2).replace(".", ",")}</td></tr>`; }).join("")}
     </tbody></table></div>
     ${Object.keys(ov).length ? `<div><button class="btn ghost small" data-act="resetprices">Eigene Preise für ${esc(st.name)} zurücksetzen</button></div>` : ""}
-  </div>
+  </details>
   ${STANDALONE ? `<div class="panel">
     <div><div class="label">Deine Daten</div><h2>Sicherung</h2></div>
     <p class="small muted">Plan, Vorlieben und eigene Preise sind nur auf diesem Handy gespeichert. Lade ab und zu eine Sicherung herunter. Bei einem neuen Handy oder nach dem Löschen der Browserdaten stellst du damit alles wieder her.</p>
@@ -1198,7 +1304,7 @@ function renderPrices() {
 document.addEventListener("click", e => {
   const t = e.target.closest("button"); if (!t) return;
   const d = t.dataset;
-  if (d.tab) { tab = d.tab; openAlt = null; render(); return; }
+  if (d.tab) { tab = d.tab; openAlt = null; swapKey = null; render(); window.scrollTo({ top: 0 }); return; }
   if (d.store) { S.store = d.store; save(); render(); toast(`${store().name} gewählt. Tippe auf „Plan erstellen“.`); return; }
   if (d.goal) { S.goal = d.goal; save(); render(); return; }
   if (d.diet) { S.diet = d.diet; save(); render(); return; }
@@ -1222,6 +1328,7 @@ document.addEventListener("click", e => {
     S.people.push({ id, name: "Person " + (S.people.length + 1), diet: "all", exclude: [], on: true });
     editPerson = id; eatersChanged(before); save(); render(); return;
   }
+  if (d.pon) { const before = householdN(), p = personById(d.pon); p.on = p.on === false; eatersChanged(before); replan(); return; }
   if (d.pedit) { editPerson = editPerson === d.pedit ? null : d.pedit; if (!editPerson) replan(); else render(); return; }
   if (d.pdiet) { personById(d.pdiet).diet = d.v; save(); render(); return; }
   if (d.pex) { const p = personById(d.pex); p.exclude = (p.exclude || []).includes(d.v) ? p.exclude.filter(x => x !== d.v) : [...(p.exclude || []), d.v]; save(); render(); return; }
@@ -1252,6 +1359,29 @@ document.addEventListener("click", e => {
     save(); render(); return;
   }
   if (d.repair) { if (repairSlot(d.repair)) { save(); render(); toast("Passendes Gericht eingesetzt."); } else toast("Kein passendes Gericht gefunden."); return; }
+  if (d.swapmeal) {
+    if (swapKey === d.swapmeal) { swapKey = null; render(); return; }
+    swapKey = d.swapmeal; swapOffset = 0; editKey = null; swapList = candidatesFor(swapKey); render(); return;
+  }
+  if (d.swapmore) { swapOffset = swapList.length > swapOffset + 4 ? swapOffset + 4 : 0; render(); return; }
+  if (d.pickmeal) {
+    const c = swapList.find(x => x.r === d.r); if (!c) return;
+    const before = JSON.stringify(S.plan), old = R[mealsOf(S.plan).find(x => x.day + "-" + x.slot === d.pickmeal).rid].n;
+    S.plan = c.q; swapKey = null; save(); render();
+    toast(`${R[d.r].n} statt ${old}.`, () => { S.plan = JSON.parse(before); save(); render(); });
+    return;
+  }
+  if (d.act === "shopdone") {
+    const added = closeShopping(evaluate(S.plan)); save(); render();
+    toast(added.length ? "Im Vorrat: " + added.slice(0, 3).join(", ") + (added.length > 3 ? " …" : "") : "Einkauf erledigt. Keine haltbaren Reste.");
+    return;
+  }
+  if (d.pdrop) { delete S.pantry[d.pdrop]; save(); render(); return; }
+  if (d.act === "padd2") {
+    const id = $("#pAddId").value, g = parseFloat(($("#pAddG").value || "").replace(",", "."));
+    if (!(g > 0)) { toast("Gib eine Menge in Gramm ein."); return; }
+    S.pantry[id] = Math.round((S.pantry[id] || 0) + g); openFold.pantry = true; save(); render(); toast(`${P[id][0]} im Vorrat.`); return;
+  }
   if (d.act === "nutri") { S.showNutri = !S.showNutri; save(); render(); return; }
   if (d.edit) { editKey = editKey === d.edit ? null : d.edit; render(); return; }
   if (d.mp) {
@@ -1315,10 +1445,14 @@ function budgetMoved(el) {
 document.addEventListener("input", e => {
   if (e.target.id === "budget") budgetMoved(e.target);
 });
+document.addEventListener("toggle", e => {
+  if (e.target.id === "pricesFold") openFold.prices = e.target.open;
+  if (e.target.id === "pantryFold") openFold.pantry = e.target.open;
+}, true);
 document.addEventListener("change", e => {
   const t = e.target;
-  if (t.dataset.pon) { const before = householdN(); personById(t.dataset.pon).on = t.checked; eatersChanged(before); replan(); return; }
   if (t.dataset.pname) { const p = personById(t.dataset.pname); p.name = t.value.trim() || p.name; save(); render(); return; }
+  if (t.dataset.pantry) { const v = parseFloat(t.value.replace(",", ".")); if (v > 0) S.pantry[t.dataset.pantry] = Math.round(v); else delete S.pantry[t.dataset.pantry]; save(); render(); return; }
   if (t.id === "fxDays") { fx.days = t.value; return; }
   if (t.id === "fxSlot") { fx.slot = t.value; render(); return; }
   if (t.id === "fxRid") { fx.rid = t.value; return; }
