@@ -271,7 +271,7 @@ footer.note { margin-top: 28px; font-size: 0.8rem; color: var(--muted); }
   <section id="view-list" class="stack" hidden></section>
   <section id="view-profile" class="stack" hidden></section>
 
-  <footer class="note">Die Preise sind Richtwerte für Eigenmarken (Stand 2026) und können je nach Filiale und Angebot abweichen. Unter „Profil“ trägst du echte Preise vom Kassenbon ein. Danach rechnet die App mit deinen Werten. Öl, Salz, Pfeffer, Gewürze und Brühe setzt der Plan als Grundvorrat voraus.<br><span id="appVersion">Version 29.09.2026 · 7</span></footer>
+  <footer class="note">Die Preise sind Richtwerte für Eigenmarken (Stand 2026) und können je nach Filiale und Angebot abweichen. Unter „Profil“ trägst du echte Preise vom Kassenbon ein. Danach rechnet die App mit deinen Werten. Öl, Salz, Pfeffer, Gewürze und Brühe setzt der Plan als Grundvorrat voraus.<br><span id="appVersion">Version 30.09.2026 · 1</span></footer>
 </div>
 <div class="toast" id="toast" hidden></div>
 
@@ -380,6 +380,16 @@ const P = {
   falafel: ["Falafel, Kühlregal", "250 g", 250, 1.99, 7, 230, "kuehl", "vegan", ["kichererbsen", "tofu"]],
   pizzaTK: ["Steinofen-Pizza Margherita, TK", "1 Stück, 350 g", 350, 1.79, 10, 240, "tk", "veg", ["tortellini"]],
   rotkohl: ["Rotkohl", "Glas, 700 g", 700, 0.99, 1.5, 50, "konserve", "vegan", ["karotten", "brokkoli"]],
+  lauch: ["Lauch", "1 Stange, ca. 300 g", 300, 0.99, 2, 30, "gemuese", "vegan", ["zwiebeln", "zucchini"]],
+  blumenkohl: ["Blumenkohl", "1 Kopf, ca. 800 g", 800, 1.99, 2, 25, "gemuese", "vegan", ["brokkoli", "zucchini"]],
+  aubergine: ["Aubergine", "1 Stück, ca. 300 g", 300, 0.99, 1.2, 24, "gemuese", "vegan", ["zucchini", "champignons"]],
+  kuerbis: ["Hokkaido-Kürbis", "1 Stück, ca. 1 kg", 1000, 1.99, 1.7, 60, "gemuese", "vegan", ["suesskartoffel", "karotten"]],
+  fruehlingszwiebeln: ["Frühlingszwiebeln", "1 Bund, ca. 100 g", 100, 0.59, 2, 30, "gemuese", "vegan", ["zwiebeln", "lauch"]],
+  reisnudeln: ["Reisnudeln", "250 g", 250, 1.29, 7, 360, "trocken", "vegan", ["mie", "spaghetti"]],
+  quinoa: ["Quinoa", "500 g", 500, 2.99, 14, 370, "trocken", "vegan", ["couscous", "bulgur", "reis"]],
+  erdnuesse: ["Erdnüsse, geröstet", "200 g", 200, 1.29, 25, 600, "trocken", "vegan", ["nuesse", "mandeln"]],
+  sauerrahm: ["Saure Sahne", "200 g", 200, 0.69, 3, 115, "kuehl", "veg", ["joghurt", "kochsahne"]],
+  pizzateig: ["Pizzateig, Kühlregal", "400 g", 400, 1.29, 7, 260, "kuehl", "vegan", ["wraps", "fladenbrot"]],
   salat: ["Eisbergsalat", "1 Stück, ca. 500 g", 500, 0.99, 1, 14, "gemuese", "vegan", ["gurke", "spinat"]],
   avocado: ["Avocado", "1 Stück, ca. 200 g", 200, 0.99, 2, 160, "gemuese", "vegan", ["hummus", "frischkaese"]],
   heidelbeeren: ["Heidelbeeren", "250 g", 250, 2.49, 0.7, 45, "gemuese", "vegan", ["beeren", "banane"]],
@@ -448,6 +458,17 @@ const R = {
   joghurtHonig: { t: "bf", n: "Joghurt mit Honig & Nüssen", i: { joghurt: 200, honig: 15, nuesse: 25, apfel: 100 }, s: ["Joghurt mit Honig beträufeln, Nüsse und Apfelstücke drüber."] },
   muesliMilch: { t: "bf", n: "Müsli mit Milch & Banane", i: { muesli: 80, milch: 250, banane: 100 }, s: ["Müsli in eine Schüssel, Milch drüber, Banane dazu."] },
   pfannkuchenBf: { t: "bf", n: "Pfannkuchen mit Apfelmus", i: { mehl: 70, eier: 60, milch: 150, apfelmus: 100 }, s: ["Mehl, Ei, Milch und eine Prise Salz glatt rühren.", "Dünne Pfannkuchen ausbacken, mit Apfelmus essen."] },
+  bircher: { t: "bf", n: "Bircher-Müsli mit Apfel", i: { hafer: 70, joghurt: 150, apfel: 120, milch: 80 }, s: ["Am Vorabend Haferflocken mit Joghurt und Milch verrühren, Apfel reinraspeln.", "Über Nacht in den Kühlschrank."] },
+  kaeseOmelette: { t: "bf", n: "Käse-Omelette mit Toast", i: { eier: 180, gouda: 30, toast: 60 }, s: ["Eier verquirlen, in der Pfanne stocken lassen, Käse drauf, zuklappen.", "Toast dazu."] },
+  schokoPorridge: { t: "bf", n: "Schoko-Porridge mit Banane", i: { hafer: 80, milch: 250, banane: 100, nutella: 15 }, s: ["Haferflocken in Milch 4 Minuten köcheln.", "Nuss-Nougat-Creme einrühren, Banane drauf."] },
+  apfelPorridge: { t: "bf", n: "Apfel-Zimt-Porridge", i: { hafer: 80, milch: 250, apfel: 120 }, s: ["Apfel würfeln und mit Haferflocken und Milch 5 Minuten köcheln.", "Mit Zimt bestreuen."] },
+  hummusBroetchen: { t: "bf", n: "Hummus-Brötchen mit Gurke", i: { broetchen: 120, hummus: 60, gurke: 80 }, s: ["Brötchen aufbacken, mit Hummus bestreichen, Gurke drauf."] },
+  frischkaeseBroetchen: { t: "bf", n: "Frischkäse-Brötchen mit Tomate", i: { broetchen: 120, frischkaese: 50, tomaten: 100 }, s: ["Brötchen aufbacken, mit Frischkäse bestreichen, Tomate drauf, salzen."] },
+  fruehstuecksWrap: { t: "bf", n: "Frühstücks-Wrap mit Rührei & Käse", i: { wraps: 65, eier: 120, reibekaese: 25, paprika: 60 }, s: ["Paprika kurz anbraten, Eier drüber, zu Rührei stocken lassen.", "Mit Käse in den Wrap rollen."] },
+  smoothieBowl: { t: "bf", n: "Beeren-Smoothie-Bowl", i: { beeren: 150, banane: 100, sojajoghurt: 150, hafer: 30 }, s: ["Beeren, Banane und Joghurt pürieren.", "In eine Schüssel, Haferflocken drüber."] },
+  skyrErdnuss: { t: "bf", n: "Skyr mit Erdnussbutter & Banane", i: { skyr: 200, erdnuss: 20, banane: 100 }, s: ["Skyr in eine Schüssel, Banane und Erdnussbutter drauf."] },
+  avocadoToast: { t: "bf", n: "Avocado-Toast mit Tomate", i: { toast: 100, avocado: 100, tomaten: 80 }, s: ["Toast rösten, Avocado zerdrücken und draufstreichen.", "Tomatenscheiben drauf, salzen, pfeffern."] },
+  lachsRuehrei: { t: "bf", n: "Rührei mit Räucherlachs", i: { eier: 180, lachsRaeucher: 40, brot: 80 }, s: ["Eier cremig stocken lassen, vom Herd nehmen.", "Lachs in Streifen unterheben, mit Brot essen."] },
   pancakes: { t: "bf", n: "Protein-Pancakes aus Haferflocken", i: { hafer: 60, eier: 120, banane: 100, quark: 100 }, s: ["Haferflocken, Eier, Banane und Quark mit der Gabel oder im Mixer zu Teig verrühren.", "Kleine Pancakes in wenig Öl von beiden Seiten 2 Minuten backen."] },
 
   skyrApfel: { t: "sn", n: "Skyr mit Apfel", i: { skyr: 200, apfel: 150 }, s: ["Apfel klein schneiden und unter den Skyr heben."] },
@@ -463,6 +484,12 @@ const R = {
   mandelnBeeren: { t: "sn", n: "Mandeln & Heidelbeeren", i: { mandeln: 25, heidelbeeren: 100 }, s: ["Einfach zusammen in eine Dose."] },
   obstsalat: { t: "sn", n: "Obstsalat", i: { apfel: 100, banane: 100, heidelbeeren: 60 }, s: ["Obst klein schneiden und mischen."] },
   quarkApfelmus: { t: "sn", n: "Quark mit Apfelmus", i: { quark: 150, apfelmus: 100 }, s: ["Quark glatt rühren, Apfelmus drüber, etwas Zimt."] },
+  gurkeHummus: { t: "sn", n: "Gurkensticks mit Hummus", i: { gurke: 150, hummus: 60 }, s: ["Gurke in Sticks schneiden, in Hummus dippen."] },
+  capreseSnack: { t: "sn", n: "Mozzarella mit Tomate", i: { mozzarella: 125, tomaten: 150 }, s: ["In Scheiben schneiden, salzen, pfeffern, etwas Öl drüber."] },
+  erdnussBanane: { t: "sn", n: "Erdnüsse & Banane", i: { erdnuesse: 30, banane: 120 }, s: ["Einfach mitnehmen."] },
+  skyrBeeren: { t: "sn", n: "Skyr mit Beeren", i: { skyr: 200, beeren: 80 }, s: ["Beeren antauen lassen und unter den Skyr heben."] },
+  schinkenRollen: { t: "sn", n: "Schinkenröllchen mit Frischkäse", i: { schinken: 60, frischkaese: 40, gurke: 80 }, s: ["Schinken mit Frischkäse bestreichen, Gurkenstreifen drauf, aufrollen."] },
+  apfelErdnuss: { t: "sn", n: "Apfelschnitze mit Erdnussbutter", i: { apfel: 150, erdnuss: 20 }, s: ["Apfel in Schnitze schneiden und in Erdnussbutter dippen."] },
   eierSnack: { t: "sn", n: "Zwei gekochte Eier", i: { eier: 120 }, s: ["Eier 9 Minuten kochen, abschrecken. Halten sich 5 Tage im Kühlschrank."] },
 
   chickenbowl: { t: "main", n: "Hähnchen-Reis-Bowl mit Brokkoli", i: { haehnchen: 160, reis: 90, brokkoli: 150 }, s: ["Reis kochen. Hähnchen in Würfel schneiden, scharf anbraten, würzen.", "Brokkoli 5 Minuten dämpfen oder mitbraten. Alles in eine Schüssel."] },
@@ -536,11 +563,50 @@ const R = {
   friedRice: { t: "main", n: "Gebratener Reis mit Ei", i: { reis: 90, eier: 120, erbsen: 80, mais: 50 }, s: ["Am besten Reis vom Vortag nehmen.", "Gemüse anbraten, Reis dazu, Eier drüber verquirlen, mit Sojasoße würzen."] },
   carbonara: { t: "main", n: "Spaghetti Carbonara", i: { spaghetti: 120, speck: 60, eier: 60, reibekaese: 30 }, s: ["Spaghetti kochen, Speck knusprig braten.", "Eier mit Käse verquirlen, unter die heiße Pasta (nicht mehr auf dem Herd) rühren."] },
   pfannkuchen: { t: "main", n: "Pfannkuchen mit Apfelmus", i: { mehl: 120, eier: 120, milch: 250, apfelmus: 150 }, s: ["Mehl, Eier, Milch und eine Prise Salz zu glattem Teig rühren, 10 Minuten ruhen lassen.", "Pfannkuchen ausbacken, mit Apfelmus und Zimt essen."] },
+  padThai: { t: "main", n: "Pad Thai mit Tofu", i: { reisnudeln: 90, tofu: 150, eier: 60, erdnuesse: 15, fruehlingszwiebeln: 30, karotten: 60 }, s: ["Reisnudeln in heißem Wasser 8 Minuten einweichen.", "Tofu anbraten, Karotte und Ei dazu, Nudeln mit Sojasoße und etwas Zucker unterschwenken. Mit gehackten Erdnüssen und Frühlingszwiebeln bestreuen."] },
+  erdnussNudeln: { t: "main", n: "Erdnuss-Nudeln mit Gemüse", i: { mie: 100, erdnuss: 30, gemuesemix: 200, fruehlingszwiebeln: 20 }, s: ["Erdnussbutter mit Sojasoße und etwas heißem Wasser glatt rühren.", "Gemüse braten, gekochte Nudeln und Soße dazu, Frühlingszwiebeln drüber."] },
+  erdnussHaehnchen: { t: "main", n: "Hähnchen in Erdnusssoße mit Reis", i: { haehnchen: 150, erdnuss: 30, kokosmilch: 60, reis: 80, brokkoli: 100 }, s: ["Reis kochen. Hähnchen würfeln und anbraten.", "Erdnussbutter mit Kokosmilch und Sojasoße einrühren, Brokkoli dazu, 6 Minuten köcheln."] },
+  teriyakiLachs: { t: "main", n: "Teriyaki-Lachs mit Reis & Brokkoli", i: { lachs: 125, reis: 80, brokkoli: 150, honig: 10, fruehlingszwiebeln: 20 }, s: ["Reis kochen, Brokkoli dämpfen.", "Lachs braten, Sojasoße mit Honig dazu und einkochen lassen, bis es glänzt."] },
+  suessSauer: { t: "main", n: "Süß-saures Hähnchen mit Reis", i: { haehnchen: 150, paprika: 100, reis: 80, honig: 10, tomatenDose: 80 }, s: ["Reis kochen. Hähnchen und Paprika anbraten.", "Tomaten, Honig, Essig und Sojasoße dazu, 5 Minuten einkochen."] },
+  bibimbap: { t: "main", n: "Bibimbap-Bowl mit Hack & Spiegelei", i: { rinderhack: 100, reis: 90, spinat: 80, karotten: 60, eier: 60 }, s: ["Reis kochen. Hack mit Sojasoße und Knoblauch braten, Karotten und Spinat separat kurz anbraten.", "Alles auf den Reis, Spiegelei obendrauf."] },
+  reisnudelSalat: { t: "main", n: "Reisnudelsalat mit Hähnchen & Erdnüssen", i: { reisnudeln: 80, haehnchen: 120, gurke: 100, karotten: 60, erdnuesse: 15 }, s: ["Reisnudeln einweichen, abgießen. Hähnchen braten und in Streifen schneiden.", "Mit Gurke, geraspelter Karotte, Sojasoße, Limette oder Essig mischen, Erdnüsse drüber. Gut zum Mitnehmen."] },
+  butterChicken: { t: "main", n: "Butter Chicken mit Reis", i: { haehnchen: 150, passiert: 150, kochsahne: 60, reis: 80 }, s: ["Reis kochen. Hähnchen würfeln, mit Currypulver und Garam Masala anbraten.", "Tomaten und Sahne dazu, 10 Minuten köcheln."] },
+  blumenkohlCurry: { t: "main", n: "Blumenkohl-Kichererbsen-Curry", i: { blumenkohl: 200, kichererbsen: 150, kokosmilch: 80, reis: 70 }, s: ["Blumenkohl in Röschen teilen, mit Currypulver anbraten.", "Kichererbsen, Kokosmilch und etwas Wasser dazu, 12 Minuten köcheln. Mit Reis essen."] },
+  auberginenCurry: { t: "main", n: "Auberginen-Tomaten-Curry mit Reis", i: { aubergine: 200, tomatenDose: 200, kichererbsen: 120, reis: 70 }, s: ["Aubergine würfeln und in Öl kräftig anbraten.", "Tomaten, Kichererbsen und Gewürze dazu, 15 Minuten köcheln."] },
+  falafelBowl: { t: "main", n: "Falafel-Bowl mit Couscous", i: { falafel: 125, couscous: 70, gurke: 80, tomaten: 80, joghurt: 60 }, s: ["Couscous quellen lassen, Falafel erhitzen.", "Mit Gemüse und Joghurt-Knoblauch-Soße anrichten."] },
+  tabouleh: { t: "main", n: "Tabouleh mit Feta", i: { bulgur: 80, tomaten: 120, gurke: 100, feta: 60, fruehlingszwiebeln: 20 }, s: ["Bulgur mit heißem Wasser quellen lassen, abkühlen.", "Gemüse fein würfeln, mit Zitrone oder Essig, Öl und Salz mischen, Feta drüber."] },
+  gefuelltePaprika: { t: "main", n: "Gefüllte Paprika mit Hack & Reis", i: { paprika: 320, rinderhack: 100, reis: 50, passiert: 150, reibekaese: 20 }, s: ["Reis halb gar kochen, mit Hack und Gewürzen mischen, in die ausgehöhlten Paprika füllen.", "In eine Form mit Tomatensoße, Käse drauf, 35 Minuten bei 190 °C backen."] },
+  quesadilla: { t: "main", n: "Quesadillas mit Bohnen & Käse", i: { wraps: 125, kidney: 100, reibekaese: 50, mais: 50, paprika: 60 }, s: ["Bohnen grob zerdrücken, mit Mais und Paprika auf einen Wrap, Käse drüber, zweiten Wrap drauf.", "In der Pfanne von beiden Seiten goldbraun braten."] },
+  enchiladas: { t: "main", n: "Enchiladas mit Hähnchen", i: { wraps: 125, haehnchen: 120, passiert: 150, reibekaese: 40, kidney: 60 }, s: ["Hähnchen braten, mit Bohnen und etwas Tomatensoße in die Wraps rollen.", "In eine Form, restliche Soße und Käse drüber, 20 Minuten bei 200 °C backen."] },
+  tacoBowl: { t: "main", n: "Taco-Bowl mit Soja-Hack", i: { soja: 45, reis: 80, kidney: 80, mais: 60, tomaten: 80, avocado: 60 }, s: ["Soja-Schnetzel einweichen, ausdrücken, mit Paprikapulver und Kreuzkümmel knusprig braten.", "Mit Reis, Bohnen, Mais, Tomate und Avocado anrichten."] },
+  pizzaSalami: { t: "main", n: "Pizza vom Blech mit Salami", i: { pizzateig: 200, passiert: 80, mozzarella: 100, salami: 40 }, s: ["Teig ausrollen, mit gewürzter Tomatensoße bestreichen.", "Mit Mozzarella und Salami belegen, 15 Minuten bei 220 °C backen."] },
+  pizzaGemuese: { t: "main", n: "Gemüsepizza vom Blech", i: { pizzateig: 200, passiert: 80, mozzarella: 100, paprika: 80, champignons: 80 }, s: ["Teig ausrollen, mit Tomatensoße bestreichen.", "Mit Gemüse und Mozzarella belegen, 15 Minuten bei 220 °C backen."] },
+  kuerbisRisotto: { t: "main", n: "Kürbis-Risotto", i: { kuerbis: 200, reis: 90, reibekaese: 30, zwiebeln: 40 }, s: ["Zwiebel und Kürbiswürfel anschwitzen, Reis dazu.", "Nach und nach heiße Brühe angießen und rühren, 20 Minuten. Käse unterrühren."] },
+  minestrone: { t: "main", n: "Minestrone mit Bohnen", i: { tomatenDose: 200, kidney: 80, nudeln: 50, karotten: 80, zucchini: 100 }, s: ["Gemüse würfeln und anschwitzen, Tomaten und 500 ml Brühe dazu.", "Bohnen und Nudeln rein, 12 Minuten köcheln."] },
+  gnocchiTomate: { t: "main", n: "Gnocchi mit Tomatensoße & Mozzarella", i: { gnocchi: 250, passiert: 150, mozzarella: 80 }, s: ["Gnocchi in der Pfanne anbraten.", "Tomatensoße dazu, Mozzarella drauf, mit Deckel schmelzen lassen."] },
+  lachsPasta: { t: "main", n: "Lachs-Sahne-Pasta mit Spinat", i: { spaghetti: 110, lachs: 100, kochsahne: 60, spinat: 80 }, s: ["Pasta kochen. Lachs würfeln und kurz anbraten.", "Spinat und Sahne dazu, mit Zitrone abschmecken, Pasta unterheben."] },
+  zucchiniFeta: { t: "main", n: "Zucchini-Feta-Pasta", i: { nudeln: 110, zucchini: 200, feta: 60 }, s: ["Nudeln kochen. Zucchini in Scheiben goldbraun braten, mit Knoblauch würzen.", "Nudeln unterheben, Feta drüberbröseln."] },
+  kartoffelpuffer: { t: "main", n: "Kartoffelpuffer mit Apfelmus", i: { kartoffeln: 350, eier: 60, mehl: 20, apfelmus: 150 }, s: ["Kartoffeln fein reiben, gut ausdrücken, mit Ei, Mehl und Salz mischen.", "In reichlich Öl flache Puffer goldbraun braten. Mit Apfelmus essen."] },
+  linsenSpaetzle: { t: "main", n: "Linsen mit Spätzle & Würstchen", i: { linsen: 80, spaetzle: 90, bratwurst: 100, karotten: 60 }, s: ["Linsen mit Karottenwürfeln in Brühe 15 Minuten kochen, mit Essig abschmecken.", "Spätzle kochen, Wurst in Scheiben braten."] },
+  flammkuchen: { t: "main", n: "Flammkuchen mit Speck & Zwiebeln", i: { pizzateig: 200, sauerrahm: 80, speck: 50, zwiebeln: 80 }, s: ["Teig dünn ausrollen, mit gewürzter saurer Sahne bestreichen.", "Zwiebelringe und Speck drauf, 12 Minuten bei 230 °C backen."] },
+  flammkuchenVeg: { t: "main", n: "Flammkuchen mit Lauch & Feta", i: { pizzateig: 200, sauerrahm: 80, lauch: 100, feta: 50 }, s: ["Teig dünn ausrollen, mit saurer Sahne bestreichen.", "Lauchringe und Feta drauf, 12 Minuten bei 230 °C backen."] },
+  bauernfruehstueck: { t: "main", n: "Bauernfrühstück", i: { kartoffeln: 350, eier: 120, speck: 40, zwiebeln: 40 }, s: ["Gekochte Kartoffeln in Scheiben mit Zwiebel und Speck knusprig braten.", "Verquirlte Eier drübergießen und stocken lassen."] },
+  haehnchenSuppe: { t: "main", n: "Hühnersuppe mit Nudeln", i: { haehnchen: 120, karotten: 100, lauch: 100, kartoffeln: 150, nudeln: 30 }, s: ["Gemüse klein schneiden, mit Hähnchen in 700 ml Brühe 20 Minuten köcheln.", "Hähnchen zerpflücken, Nudeln 8 Minuten mitkochen."] },
+  kaeseLauchSuppe: { t: "main", n: "Käse-Lauch-Suppe mit Hack", i: { hack: 100, lauch: 200, kochsahne: 60, reibekaese: 40, brot: 60 }, s: ["Hack anbraten, Lauchringe dazu, mit 400 ml Brühe 15 Minuten köcheln.", "Sahne und Käse einrühren, bis er schmilzt. Brot dazu."] },
+  kuerbisSuppe: { t: "main", n: "Kürbissuppe mit Brot", i: { kuerbis: 300, kokosmilch: 60, zwiebeln: 40, brot: 80 }, s: ["Kürbis und Zwiebel würfeln, in 400 ml Brühe 20 Minuten kochen.", "Mit Kokosmilch pürieren, mit Curry abschmecken."] },
+  quinoaBowl: { t: "main", n: "Quinoa-Bowl mit Kichererbsen & Avocado", i: { quinoa: 80, kichererbsen: 120, avocado: 80, tomaten: 80, gurke: 80 }, s: ["Quinoa 15 Minuten kochen. Kichererbsen mit Paprikapulver rösten.", "Alles mit Gemüse und Avocado anrichten, Zitrone und Öl drüber."] },
+  haehnchenSalat: { t: "main", n: "Großer Hähnchen-Salat mit Brot", i: { haehnchen: 130, salat: 150, tomaten: 100, gurke: 80, brot: 80 }, s: ["Hähnchen würzen, braten, in Streifen schneiden.", "Salat und Gemüse mit Essig und Öl anmachen, Hähnchen drauf. Brot dazu."] },
+  thunfischWrap: { t: "main", n: "Thunfisch-Wraps", i: { thunfisch: 130, wraps: 125, mais: 60, salat: 60, joghurt: 40 }, s: ["Thunfisch mit Joghurt, Mais, Salz und Pfeffer mischen.", "Mit Salat in die Wraps rollen."] },
+  blumenkohlOfen: { t: "main", n: "Ofen-Blumenkohl mit Feta & Couscous", i: { blumenkohl: 250, feta: 60, couscous: 70 }, s: ["Blumenkohl-Röschen mit Öl und Gewürzen 30 Minuten bei 200 °C rösten.", "Couscous quellen lassen, Feta drüberbröseln."] },
   kichererbsenCouscous: { t: "main", n: "Kichererbsen-Spinat-Pfanne mit Couscous", i: { kichererbsen: 240, spinat: 150, couscous: 80, tomatenDose: 100 }, s: ["Couscous mit kochendem Wasser quellen lassen.", "Kichererbsen anbraten, Spinat und Tomaten dazu, mit Kreuzkümmel würzen, 8 Minuten köcheln."] },
 };
 
 // Estimated cooking time in minutes
 const MIN = {
+  bircher: 5, kaeseOmelette: 10, schokoPorridge: 10, apfelPorridge: 10, hummusBroetchen: 12, frischkaeseBroetchen: 12, fruehstuecksWrap: 10, smoothieBowl: 5, skyrErdnuss: 5, avocadoToast: 5, lachsRuehrei: 10,
+  padThai: 25, erdnussNudeln: 15, erdnussHaehnchen: 25, teriyakiLachs: 25, suessSauer: 25, bibimbap: 30, reisnudelSalat: 20, butterChicken: 30, blumenkohlCurry: 30, auberginenCurry: 30, falafelBowl: 15, tabouleh: 20,
+  gefuelltePaprika: 50, quesadilla: 15, enchiladas: 35, tacoBowl: 25, pizzaSalami: 30, pizzaGemuese: 30, kuerbisRisotto: 35, minestrone: 30, gnocchiTomate: 15, lachsPasta: 20, zucchiniFeta: 20,
+  kartoffelpuffer: 35, linsenSpaetzle: 35, flammkuchen: 25, flammkuchenVeg: 25, bauernfruehstueck: 30, haehnchenSuppe: 40, kaeseLauchSuppe: 30, kuerbisSuppe: 35, quinoaBowl: 25, haehnchenSalat: 20, thunfischWrap: 10, blumenkohlOfen: 40,
   ruehrei: 10, scramble: 10, pancakes: 20, schinkenToast: 10, porridge: 10, beerenPorridge: 10, avocadoBrot: 10, broetchenKlassik: 12, broetchenSalami: 12, broetchenEi: 15, broetchenNutella: 12, croissantFruehstueck: 10, armeRitter: 15, englisch: 20, pfannkuchenBf: 20,
   chickenbowl: 25, chili: 35, bolo: 30, dal: 25, curry: 25, tunapasta: 20, putewrap: 20, ofenkartoffel: 40, tofupfanne: 20, lachs: 25, bohnenwrap: 15, linsenbolo: 25, omelette: 15, caprese: 20, chickenpan: 20,
   gnocchiPfanne: 15, couscousSalat: 15, bulgurPfanne: 25, fischstaebchen: 30, seelachsReis: 25, kokosCurry: 25, haehnchenCurry: 25, tofuCurry: 25, sojaGeschnetzeltes: 25, sojaBolo: 30, pestoHaehnchen: 20, pestoErbsen: 15,
@@ -560,10 +626,10 @@ const EXCLUDES = [
   { k: "eier", n: "Eier", p: ["eier"] },
   { k: "soja", n: "Soja", p: ["tofu", "soja", "sojadrink", "sojajoghurt"] },
   { k: "huelsen", n: "Hülsenfrüchte", p: ["linsen", "kichererbsen", "kidney", "bohnenTomate", "hummus", "falafel", "edamame"] },
-  { k: "nuesse", n: "Nüsse", p: ["erdnuss", "nuesse", "pesto", "mandeln", "nutella"] },
+  { k: "nuesse", n: "Nüsse", p: ["erdnuss", "nuesse", "pesto", "mandeln", "nutella", "erdnuesse"] },
   { k: "pilze", n: "Pilze", p: ["champignons"] },
   { k: "kokos", n: "Kokos", p: ["kokosmilch"] },
-  { k: "laktose", n: "Milchprodukte", p: ["quark", "skyr", "huettenkaese", "joghurt", "pudding", "milch", "gouda", "reibekaese", "mozzarella", "feta", "frischkaese", "pesto", "butter", "kochsahne", "halloumi", "pizzaTK", "tortellini", "nutella", "croissant"] },
+  { k: "laktose", n: "Milchprodukte", p: ["quark", "skyr", "huettenkaese", "joghurt", "pudding", "milch", "gouda", "reibekaese", "mozzarella", "feta", "frischkaese", "pesto", "butter", "kochsahne", "halloumi", "pizzaTK", "tortellini", "nutella", "croissant", "sauerrahm"] },
 ];
 const DAYS = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"];
 const GOALS = [
@@ -592,7 +658,7 @@ const MEALS = [
 const DEFAULT = {
   store: "lidl", budget: 40, goal: "protein", diet: "all",
   persons: 1, fixed: {}, quick: false, kcal: 2200, meals: { bf: true, lunch: true, dinner: true, snack: false },
-  exclude: [], dislikeP: [], dislikeR: [], likeR: [], shareMissing: false, showNutri: true, mealPersons: {}, people: [], guests: 0, mealEaters: {}, mealGuests: {}, pantry: {}, pantrySnap: {}, shopDone: false, seed: 7, plan: null, swaps: {}, checked: {}, home: {}, prices: {},
+  exclude: [], dislikeP: [], dislikeR: [], likeR: [], shareMissing: false, showNutri: true, mealPersons: {}, people: [], guests: 0, mealEaters: {}, mealGuests: {}, pantry: {}, pantrySnap: {}, shopDone: false, recent: [], seed: 7, plan: null, swaps: {}, checked: {}, home: {}, prices: {},
   createdAt: null, isExample: true,
 };
 let S = JSON.parse(JSON.stringify(DEFAULT));
@@ -780,6 +846,9 @@ function score(plan, ev) {
   else s = ev.protDay * 0.35 + distinct * 2 - under * 1.5;
   s += [...new Set([...plan.batches, ...plan.bf, ...plan.sn])].filter(r => S.likeR.includes(r)).length * 8;
   s -= Math.abs(ev.kcalDay - target) * 0.01;
+  // variety across weeks: dishes from the last two weeks count against a plan (favourites excepted)
+  const recent = new Set(S.recent || []);
+  s -= [...new Set([...plan.batches, ...plan.bf, ...plan.sn])].filter(r => recent.has(r) && !S.likeR.includes(r)).length * 9;
   // weekdays: only quick dishes on the days you cook
   if (S.quick) mainSlots().forEach(([d], idx) => { if (idx % 2 === 0 && d < 5) { const r = plan.batches[idx / 2]; if (r && R[r].m > 25) s -= 5; } });
   // at least 4 different main dishes a week (when enough are allowed)
@@ -850,6 +919,8 @@ function makePlan(newSeed) {
   const age = S.createdAt ? (Date.now() - new Date(S.createdAt)) / 864e5 : 0;
   if (S.plan && !S.isExample && !S.shopDone && age > 4) carried = closeShopping(evaluate(S.plan));
   if (S.shopDone && (age > 4 || carried.length)) { S.shopDone = false; S.pantrySnap = {}; }
+  // remember last week's dishes so the new week brings different ones
+  if (S.plan && !S.isExample && age > 4) S.recent = [...new Set([...S.plan.batches, ...S.plan.bf, ...S.plan.sn])].concat(S.recent || []).slice(0, 24);
   S.swaps = {}; S.checked = {}; S.home = {}; openAlt = null; editKey = null; swapKey = null;
   const { plan, pools } = generate(S.seed);
   S.plan = plan;
