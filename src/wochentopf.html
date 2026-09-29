@@ -127,6 +127,19 @@ header.top { display: flex; align-items: flex-end; justify-content: space-betwee
 .linkbtn.warnb { color: var(--warn); }
 .swapped { color: var(--warn); font-size: 0.78rem; }
 .alts { grid-column: 1 / 4; background: var(--bg); border-radius: 10px; padding: 10px; display: flex; flex-direction: column; gap: 8px; font-family: var(--font-body); }
+.stepper { display: inline-flex; align-items: center; gap: 4px; border: 1px solid var(--line); border-radius: 999px; padding: 3px; background: var(--bg); }
+.stepper button { width: 34px; height: 34px; border-radius: 99px; border: 0; background: var(--surface); font-size: 1.2rem; font-weight: 700; box-shadow: 0 1px 2px rgba(0,0,0,.1); }
+.stepper button:disabled { opacity: .4; }
+.stepper b { min-width: 2.2ch; text-align: center; font-family: var(--font-display); font-size: 1.2rem; }
+.fx-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.fx-form select { width: 100%; min-width: 0; font: inherit; font-size: 0.9rem; padding: 9px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--ink); }
+.fx-form .wide { grid-column: 1 / 3; }
+.fx-list { display: flex; flex-direction: column; gap: 6px; }
+.fx-item { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); font-size: 0.9rem; }
+.fx-item .when { font-weight: 700; font-size: 0.78rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); white-space: nowrap; }
+.fx-item .what { min-width: 0; }
+.pill.fix { background: var(--tag); color: var(--tag-ink); }
+.meal.out .name { color: var(--muted); font-style: italic; }
 .share { display: flex; flex-direction: column; gap: 10px; }
 .seg { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 3px; gap: 3px; background: var(--bg); border: 1px solid var(--line); border-radius: 12px; }
 .seg button { border: 0; background: transparent; border-radius: 9px; padding: 7px 4px; line-height: 1.2; font-weight: 600; font-size: 0.85rem; color: var(--muted); }
@@ -198,7 +211,7 @@ footer.note { margin-top: 28px; font-size: 0.8rem; color: var(--muted); }
   <section id="view-list" class="stack" hidden></section>
   <section id="view-prices" class="stack" hidden></section>
 
-  <footer class="note">Die Preise sind Richtwerte für Eigenmarken (Stand 2026) und können je nach Filiale und Angebot abweichen. Unter „Preise“ trägst du echte Preise vom Kassenbon ein. Danach rechnet die App mit deinen Werten. Öl, Salz, Pfeffer, Gewürze und Brühe setzt der Plan als Grundvorrat voraus.<br><span id="appVersion">Version 29.09.2026 · 2</span></footer>
+  <footer class="note">Die Preise sind Richtwerte für Eigenmarken (Stand 2026) und können je nach Filiale und Angebot abweichen. Unter „Preise“ trägst du echte Preise vom Kassenbon ein. Danach rechnet die App mit deinen Werten. Öl, Salz, Pfeffer, Gewürze und Brühe setzt der Plan als Grundvorrat voraus.<br><span id="appVersion">Version 29.09.2026 · 3</span></footer>
 </div>
 <div class="toast" id="toast" hidden></div>
 
@@ -286,6 +299,27 @@ const P = {
   karotten: ["Karotten", "1 kg", 1000, 0.99, 0.9, 38, "gemuese", "vegan", ["paprika", "zucchini", "gurke"]],
   gurke: ["Salatgurke", "1 Stück, ca. 400 g", 400, 0.69, 0.6, 14, "gemuese", "vegan", ["paprika", "karotten", "tomaten"]],
   zwiebeln: ["Zwiebeln", "1 kg", 1000, 1.19, 1.2, 40, "gemuese", "vegan", []],
+  broetchen: ["Aufback-Brötchen", "6 Stück, 360 g", 360, 0.99, 8, 260, "brot", "vegan", ["toast", "brot", "croissant"]],
+  croissant: ["Croissants", "4 Stück, 240 g", 240, 1.29, 8, 400, "brot", "veg", ["broetchen", "toast"]],
+  fladenbrot: ["Fladenbrot", "1 Stück, 450 g", 450, 1.29, 8, 260, "brot", "vegan", ["wraps", "broetchen"]],
+  butter: ["Butter", "250 g", 250, 1.99, 0.7, 740, "kuehl", "veg", ["frischkaese"]],
+  marmelade: ["Konfitüre Erdbeere", "450 g", 450, 1.29, 0.4, 250, "trocken", "vegan", ["honig", "nutella"]],
+  honig: ["Honig", "500 g", 500, 2.99, 0.4, 310, "trocken", "veg", ["marmelade"]],
+  nutella: ["Nuss-Nougat-Creme", "400 g", 400, 1.99, 6, 540, "trocken", "veg", ["erdnuss", "marmelade"]],
+  salami: ["Salami in Scheiben", "200 g", 200, 1.79, 20, 380, "kuehl", "meat", ["schinken", "haehnchenAufschnitt"]],
+  speck: ["Frühstücksspeck", "150 g", 150, 1.49, 15, 300, "kuehl", "meat", ["schinken"]],
+  orangensaft: ["Orangensaft", "1 l", 1000, 1.49, 0.7, 43, "trocken", "vegan", ["apfel"]],
+  apfelmus: ["Apfelmus", "Glas, 710 g", 710, 0.99, 0.3, 70, "konserve", "vegan", ["apfel", "beeren"]],
+  mehl: ["Weizenmehl", "1 kg", 1000, 0.69, 10, 340, "trocken", "vegan", []],
+  kochsahne: ["Kochsahne 15 %", "200 ml", 200, 0.59, 3, 160, "kuehl", "veg", ["milch", "kokosmilch"]],
+  lasagneplatten: ["Lasagneplatten", "500 g", 500, 0.99, 12, 350, "trocken", "vegan", ["nudeln"]],
+  spaetzle: ["Eierspätzle", "500 g", 500, 1.29, 13, 360, "trocken", "veg", ["nudeln", "gnocchi"]],
+  schnitzel: ["Schweineschnitzel", "500 g", 500, 4.49, 22, 110, "fleisch", "meat", ["pute", "haehnchen"]],
+  bratwurst: ["Bratwurst", "4 Stück, 400 g", 400, 2.99, 14, 280, "fleisch", "meat", ["schnitzel", "haehnchen"]],
+  haehnchenschenkel: ["Hähnchenschenkel", "1 kg", 1000, 3.49, 18, 190, "fleisch", "meat", ["haehnchen", "pute"]],
+  falafel: ["Falafel, Kühlregal", "250 g", 250, 1.99, 7, 230, "kuehl", "vegan", ["kichererbsen", "tofu"]],
+  pizzaTK: ["Steinofen-Pizza Margherita, TK", "1 Stück, 350 g", 350, 1.79, 10, 240, "tk", "veg", ["tortellini"]],
+  rotkohl: ["Rotkohl", "Glas, 700 g", 700, 0.99, 1.5, 50, "konserve", "vegan", ["karotten", "brokkoli"]],
   salat: ["Eisbergsalat", "1 Stück, ca. 500 g", 500, 0.99, 1, 14, "gemuese", "vegan", ["gurke", "spinat"]],
   avocado: ["Avocado", "1 Stück, ca. 200 g", 200, 0.99, 2, 160, "gemuese", "vegan", ["hummus", "frischkaese"]],
   heidelbeeren: ["Heidelbeeren", "250 g", 250, 2.49, 0.7, 45, "gemuese", "vegan", ["beeren", "banane"]],
@@ -344,6 +378,16 @@ const R = {
   avocadoBrot: { t: "bf", n: "Avocado-Brot mit Ei", i: { brot: 120, avocado: 100, eier: 120 }, s: ["Avocado zerdrücken, salzen, aufs Brot streichen.", "2 Eier braten oder 7 Minuten kochen und drauflegen."] },
   lachsBrot: { t: "bf", n: "Räucherlachs-Brot mit Frischkäse", i: { brot: 120, lachsRaeucher: 60, frischkaese: 40, gurke: 60 }, s: ["Brot mit Frischkäse bestreichen, Lachs und Gurke drauf, pfeffern."] },
   skyrPremium: { t: "bf", n: "Skyr-Bowl mit Heidelbeeren & Mandeln", i: { skyr: 250, heidelbeeren: 100, mandeln: 20, hafer: 30 }, s: ["Skyr in eine Schüssel, Heidelbeeren, gehackte Mandeln und Haferflocken darüber."] },
+  broetchenKlassik: { t: "bf", n: "Brötchen mit Butter, Käse & Marmelade", i: { broetchen: 120, butter: 15, gouda: 40, marmelade: 30 }, s: ["Brötchen 8 Minuten aufbacken.", "Eins mit Butter und Käse, eins mit Marmelade."] },
+  broetchenSalami: { t: "bf", n: "Brötchen mit Salami & Gurke", i: { broetchen: 120, butter: 10, salami: 40, gurke: 60 }, s: ["Brötchen aufbacken, mit Butter, Salami und Gurke belegen."] },
+  broetchenEi: { t: "bf", n: "Brötchen mit Rührei & Speck", i: { broetchen: 120, eier: 120, speck: 40 }, s: ["Speck knusprig braten, Eier in derselben Pfanne zu Rührei stocken lassen.", "In die aufgebackenen Brötchen füllen."] },
+  broetchenNutella: { t: "bf", n: "Brötchen mit Nuss-Nougat-Creme & Banane", i: { broetchen: 120, nutella: 30, banane: 100 }, s: ["Brötchen aufbacken, bestreichen, Bananenscheiben drauf."] },
+  croissantFruehstueck: { t: "bf", n: "Croissants mit Marmelade & Orangensaft", i: { croissant: 120, marmelade: 25, orangensaft: 250 }, s: ["Croissants 5 Minuten im Ofen aufwärmen.", "Mit Marmelade und einem Glas Saft."] },
+  armeRitter: { t: "bf", n: "Arme Ritter mit Beeren", i: { toast: 125, eier: 120, milch: 80, beeren: 80 }, s: ["Eier und Milch verquirlen, Toastscheiben darin einweichen.", "In der Pfanne goldbraun braten, warme Beeren drüber."] },
+  englisch: { t: "bf", n: "Englisches Frühstück", i: { eier: 120, bohnenTomate: 150, speck: 40, toast: 60 }, s: ["Speck braten, Spiegeleier in derselben Pfanne.", "Bohnen erwärmen, Toast rösten."] },
+  joghurtHonig: { t: "bf", n: "Joghurt mit Honig & Nüssen", i: { joghurt: 200, honig: 15, nuesse: 25, apfel: 100 }, s: ["Joghurt mit Honig beträufeln, Nüsse und Apfelstücke drüber."] },
+  muesliMilch: { t: "bf", n: "Müsli mit Milch & Banane", i: { muesli: 80, milch: 250, banane: 100 }, s: ["Müsli in eine Schüssel, Milch drüber, Banane dazu."] },
+  pfannkuchenBf: { t: "bf", n: "Pfannkuchen mit Apfelmus", i: { mehl: 70, eier: 60, milch: 150, apfelmus: 100 }, s: ["Mehl, Ei, Milch und eine Prise Salz glatt rühren.", "Dünne Pfannkuchen ausbacken, mit Apfelmus essen."] },
   pancakes: { t: "bf", n: "Protein-Pancakes aus Haferflocken", i: { hafer: 60, eier: 120, banane: 100, quark: 100 }, s: ["Haferflocken, Eier, Banane und Quark mit der Gabel oder im Mixer zu Teig verrühren.", "Kleine Pancakes in wenig Öl von beiden Seiten 2 Minuten backen."] },
 
   skyrApfel: { t: "sn", n: "Skyr mit Apfel", i: { skyr: 200, apfel: 150 }, s: ["Apfel klein schneiden und unter den Skyr heben."] },
@@ -357,6 +401,8 @@ const R = {
   proteinriegel: { t: "sn", n: "Proteinriegel", i: { proteinriegel: 45 }, s: ["Für unterwegs, zum Beispiel nach dem Sport."] },
   edamameSnack: { t: "sn", n: "Edamame mit Meersalz", i: { edamame: 150 }, s: ["Edamame 4 Minuten in Salzwasser kochen, mit grobem Salz bestreuen."] },
   mandelnBeeren: { t: "sn", n: "Mandeln & Heidelbeeren", i: { mandeln: 25, heidelbeeren: 100 }, s: ["Einfach zusammen in eine Dose."] },
+  obstsalat: { t: "sn", n: "Obstsalat", i: { apfel: 100, banane: 100, heidelbeeren: 60 }, s: ["Obst klein schneiden und mischen."] },
+  quarkApfelmus: { t: "sn", n: "Quark mit Apfelmus", i: { quark: 150, apfelmus: 100 }, s: ["Quark glatt rühren, Apfelmus drüber, etwas Zimt."] },
   eierSnack: { t: "sn", n: "Zwei gekochte Eier", i: { eier: 120 }, s: ["Eier 9 Minuten kochen, abschrecken. Halten sich 5 Tage im Kühlschrank."] },
 
   chickenbowl: { t: "main", n: "Hähnchen-Reis-Bowl mit Brokkoli", i: { haehnchen: 160, reis: 90, brokkoli: 150 }, s: ["Reis kochen. Hähnchen in Würfel schneiden, scharf anbraten, würzen.", "Brokkoli 5 Minuten dämpfen oder mitbraten. Alles in eine Schüssel."] },
@@ -412,22 +458,52 @@ const R = {
   halloumiBowl: { t: "main", n: "Halloumi-Couscous-Bowl", i: { halloumi: 110, couscous: 80, paprika: 100, gurke: 100 }, s: ["Couscous mit kochendem Wasser quellen lassen.", "Halloumi in Scheiben goldbraun braten, mit Gemüse auf den Couscous."] },
   tortelliniSpinat: { t: "main", n: "Tortellini in Tomaten-Spinat-Soße", i: { tortellini: 200, passiert: 150, spinat: 80, reibekaese: 30 }, s: ["Passierte Tomaten mit Spinat 5 Minuten köcheln.", "Tortellini nach Packung kochen, unterheben, Käse drüber."] },
   tofuBowl: { t: "main", n: "Crispy-Tofu-Bowl mit Avocado", i: { tofu: 180, reis: 80, avocado: 80, edamame: 80 }, s: ["Tofu würfeln, in Speisestärke wälzen und knusprig braten.", "Mit Reis, Edamame und Avocado anrichten, Sojasoße drüber."] },
+  lasagne: { t: "main", n: "Lasagne", i: { hack: 125, lasagneplatten: 80, passiert: 200, reibekaese: 40, milch: 120, mehl: 10, zwiebeln: 40 }, s: ["Hack mit Zwiebel anbraten, passierte Tomaten dazu, würzen.", "Helle Soße: Mehl in Butter anschwitzen, Milch einrühren. Abwechselnd schichten, Käse drauf, 35 Minuten bei 190 °C backen."] },
+  gemueseLasagne: { t: "main", n: "Gemüse-Lasagne mit Spinat", i: { lasagneplatten: 80, spinat: 150, zucchini: 100, passiert: 150, reibekaese: 40, milch: 120, mehl: 10 }, s: ["Zucchini würfeln und anbraten, mit Tomaten köcheln.", "Mit Spinat, heller Soße und Platten schichten, Käse drauf, 35 Minuten bei 190 °C backen."] },
+  schnitzel: { t: "main", n: "Schnitzel mit Kartoffelsalat", i: { schnitzel: 150, kartoffeln: 300, gurke: 80, joghurt: 40, eier: 30, mehl: 15 }, s: ["Kartoffeln kochen, pellen, in Scheiben schneiden, mit Gurke, Joghurt, Essig und Salz mischen.", "Schnitzel dünn klopfen, in Mehl, Ei und Paniermehl wenden, in Öl je Seite 3 Minuten braten."] },
+  bratwurst: { t: "main", n: "Bratwurst mit Kartoffelpüree & Rotkohl", i: { bratwurst: 200, kartoffeln: 300, milch: 50, rotkohl: 150 }, s: ["Kartoffeln kochen und mit Milch stampfen.", "Bratwurst braten, Rotkohl erwärmen."] },
+  haehnchenschenkel: { t: "main", n: "Ofen-Hähnchenschenkel mit Gemüse", i: { haehnchenschenkel: 300, kartoffeln: 250, paprika: 100, zucchini: 100 }, s: ["Schenkel mit Öl, Salz und Paprikapulver einreiben.", "Mit dem geschnittenen Gemüse aufs Blech, 45 Minuten bei 200 °C backen."] },
+  pizzaAbend: { t: "main", n: "Steinofen-Pizza mit Salat", i: { pizzaTK: 350, salat: 80, tomaten: 60 }, s: ["Pizza nach Packung backen.", "Salat mit Essig und Öl anmachen."] },
+  falafelWrap: { t: "main", n: "Falafel-Wraps mit Hummus", i: { falafel: 125, wraps: 125, hummus: 40, salat: 60, tomaten: 80 }, s: ["Falafel in der Pfanne oder im Ofen erhitzen.", "Wraps mit Hummus bestreichen, mit Salat, Tomate und Falafel füllen."] },
+  kaesespaetzle: { t: "main", n: "Käsespätzle mit Röstzwiebeln", i: { spaetzle: 110, reibekaese: 60, zwiebeln: 80, salat: 60 }, s: ["Zwiebeln in Ringen langsam goldbraun braten.", "Spätzle kochen, mit Käse in der Pfanne schmelzen lassen, Zwiebeln drauf. Salat dazu."] },
+  rahmSpaetzle: { t: "main", n: "Rahm-Champignons mit Spätzle", i: { spaetzle: 110, champignons: 200, kochsahne: 80, zwiebeln: 40 }, s: ["Champignons und Zwiebel anbraten.", "Sahne dazu, einkochen lassen, mit Spätzle servieren."] },
+  sahneHaehnchen: { t: "main", n: "Hähnchen in Champignon-Rahm mit Reis", i: { haehnchen: 150, champignons: 100, kochsahne: 80, reis: 80 }, s: ["Reis kochen. Hähnchen in Streifen anbraten, Pilze dazu.", "Mit Sahne ablöschen, 5 Minuten köcheln."] },
+  gyrosPita: { t: "main", n: "Gyros im Fladenbrot", i: { gyros: 150, fladenbrot: 150, joghurt: 60, tomaten: 60, salat: 40 }, s: ["Gyros scharf anbraten, Fladenbrot kurz aufbacken.", "Mit Joghurtsoße, Tomate und Salat füllen."] },
+  ofengemueseHalloumi: { t: "main", n: "Ofengemüse mit Halloumi", i: { halloumi: 100, kartoffeln: 250, zucchini: 150, paprika: 100 }, s: ["Gemüse und Kartoffeln würfeln, mit Öl und Kräutern 30 Minuten bei 200 °C backen.", "Halloumi in Scheiben die letzten 10 Minuten mitbacken."] },
+  kartoffelsuppe: { t: "main", n: "Kartoffelsuppe mit Würstchen", i: { kartoffeln: 300, karotten: 80, zwiebeln: 40, bratwurst: 100 }, s: ["Gemüse würfeln, mit 500 ml Brühe 20 Minuten kochen, grob pürieren.", "Wurst in Scheiben braten und in die Suppe geben."] },
+  tomatensuppe: { t: "main", n: "Tomatensuppe mit Käsetoast", i: { passiert: 300, zwiebeln: 40, toast: 80, gouda: 40 }, s: ["Zwiebel anschwitzen, Tomaten und 150 ml Brühe dazu, 10 Minuten köcheln.", "Toast mit Käse belegen und in der Pfanne überbacken."] },
+  nudelsuppe: { t: "main", n: "Asia-Nudelsuppe mit Ei", i: { mie: 80, eier: 60, gemuesemix: 150, spinat: 50 }, s: ["500 ml Brühe mit Sojasoße und Ingwer aufkochen, Gemüse 5 Minuten garen.", "Nudeln 3 Minuten mitkochen, Ei verquirlt einrühren."] },
+  friedRice: { t: "main", n: "Gebratener Reis mit Ei", i: { reis: 90, eier: 120, erbsen: 80, mais: 50 }, s: ["Am besten Reis vom Vortag nehmen.", "Gemüse anbraten, Reis dazu, Eier drüber verquirlen, mit Sojasoße würzen."] },
+  carbonara: { t: "main", n: "Spaghetti Carbonara", i: { spaghetti: 120, speck: 60, eier: 60, reibekaese: 30 }, s: ["Spaghetti kochen, Speck knusprig braten.", "Eier mit Käse verquirlen, unter die heiße Pasta (nicht mehr auf dem Herd) rühren."] },
+  pfannkuchen: { t: "main", n: "Pfannkuchen mit Apfelmus", i: { mehl: 120, eier: 120, milch: 250, apfelmus: 150 }, s: ["Mehl, Eier, Milch und eine Prise Salz zu glattem Teig rühren, 10 Minuten ruhen lassen.", "Pfannkuchen ausbacken, mit Apfelmus und Zimt essen."] },
   kichererbsenCouscous: { t: "main", n: "Kichererbsen-Spinat-Pfanne mit Couscous", i: { kichererbsen: 240, spinat: 150, couscous: 80, tomatenDose: 100 }, s: ["Couscous mit kochendem Wasser quellen lassen.", "Kichererbsen anbraten, Spinat und Tomaten dazu, mit Kreuzkümmel würzen, 8 Minuten köcheln."] },
 };
 
+// Estimated cooking time in minutes
+const MIN = {
+  ruehrei: 10, scramble: 10, pancakes: 20, schinkenToast: 10, porridge: 10, beerenPorridge: 10, avocadoBrot: 10, broetchenKlassik: 12, broetchenSalami: 12, broetchenEi: 15, broetchenNutella: 12, croissantFruehstueck: 10, armeRitter: 15, englisch: 20, pfannkuchenBf: 20,
+  chickenbowl: 25, chili: 35, bolo: 30, dal: 25, curry: 25, tunapasta: 20, putewrap: 20, ofenkartoffel: 40, tofupfanne: 20, lachs: 25, bohnenwrap: 15, linsenbolo: 25, omelette: 15, caprese: 20, chickenpan: 20,
+  gnocchiPfanne: 15, couscousSalat: 15, bulgurPfanne: 25, fischstaebchen: 30, seelachsReis: 25, kokosCurry: 25, haehnchenCurry: 25, tofuCurry: 25, sojaGeschnetzeltes: 25, sojaBolo: 30, pestoHaehnchen: 20, pestoErbsen: 15,
+  shakshuka: 25, suessChili: 35, suessFeta: 40, burritoBowl: 25, mieEi: 15, mieTofu: 20, hackPfanne: 30, bohnenEintopf: 35, linsensuppe: 35, putePfanne: 25, thunfischSalat: 20, champignonReis: 25, tortillaPizza: 15, tortillaVeggie: 15,
+  nudelauflauf: 40, kichererbsenCouscous: 20, steak: 35, garnelenPasta: 20, garnelenBowl: 20, lachsBowl: 25, gyros: 20, burger: 20, caesarWrap: 20, puteSuess: 30, halloumiBowl: 15, tortelliniSpinat: 15, tofuBowl: 25,
+  lasagne: 60, gemueseLasagne: 55, schnitzel: 40, bratwurst: 30, haehnchenschenkel: 50, pizzaAbend: 15, falafelWrap: 15, kaesespaetzle: 25, rahmSpaetzle: 20, sahneHaehnchen: 25, gyrosPita: 20, ofengemueseHalloumi: 40,
+  kartoffelsuppe: 35, tomatensuppe: 20, nudelsuppe: 15, friedRice: 15, carbonara: 20, pfannkuchen: 25,
+};
+for (const id in R) R[id].m = MIN[id] || { bf: 5, sn: 2, main: 25 }[R[id].t];
+
 const EXCLUDES = [
-  { k: "haehnchen", n: "Hähnchen", p: ["haehnchen", "haehnchenAufschnitt"] },
+  { k: "haehnchen", n: "Hähnchen", p: ["haehnchen", "haehnchenAufschnitt", "haehnchenschenkel"] },
   { k: "pute", n: "Pute", p: ["pute"] },
-  { k: "schwein", n: "Schwein", p: ["hack", "schinken"] },
+  { k: "schwein", n: "Schwein", p: ["hack", "schinken", "salami", "speck", "schnitzel", "bratwurst", "gyros"] },
   { k: "rind", n: "Rind", p: ["rinderhack", "hack"] },
   { k: "fisch", n: "Fisch", p: ["thunfisch", "lachs", "seelachs", "fischstaebchen"] },
   { k: "eier", n: "Eier", p: ["eier"] },
   { k: "soja", n: "Soja", p: ["tofu", "soja", "sojadrink", "sojajoghurt"] },
-  { k: "huelsen", n: "Hülsenfrüchte", p: ["linsen", "kichererbsen", "kidney", "bohnenTomate", "hummus"] },
-  { k: "nuesse", n: "Nüsse", p: ["erdnuss", "nuesse", "pesto"] },
+  { k: "huelsen", n: "Hülsenfrüchte", p: ["linsen", "kichererbsen", "kidney", "bohnenTomate", "hummus", "falafel", "edamame"] },
+  { k: "nuesse", n: "Nüsse", p: ["erdnuss", "nuesse", "pesto", "mandeln", "nutella"] },
   { k: "pilze", n: "Pilze", p: ["champignons"] },
   { k: "kokos", n: "Kokos", p: ["kokosmilch"] },
-  { k: "laktose", n: "Milchprodukte", p: ["quark", "skyr", "huettenkaese", "joghurt", "pudding", "milch", "gouda", "reibekaese", "mozzarella", "feta", "frischkaese", "pesto"] },
+  { k: "laktose", n: "Milchprodukte", p: ["quark", "skyr", "huettenkaese", "joghurt", "pudding", "milch", "gouda", "reibekaese", "mozzarella", "feta", "frischkaese", "pesto", "butter", "kochsahne", "halloumi", "pizzaTK", "tortellini", "nutella", "croissant"] },
 ];
 const DAYS = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"];
 const GOALS = [
@@ -455,7 +531,7 @@ const MEALS = [
 /* ---------- State ---------- */
 const DEFAULT = {
   store: "lidl", budget: 40, goal: "protein", diet: "all",
-  kcal: 2200, meals: { bf: true, lunch: true, dinner: true, snack: false },
+  persons: 1, fixed: {}, quick: false, kcal: 2200, meals: { bf: true, lunch: true, dinner: true, snack: false },
   exclude: [], dislikeP: [], dislikeR: [], likeR: [], shareMissing: false, seed: 7, plan: null, swaps: {}, checked: {}, home: {}, prices: {},
   createdAt: null, isExample: true,
 };
@@ -501,13 +577,29 @@ function slotsFor(meals) {
   else if (meals.lunch || meals.dinner) { const m = meals.lunch ? "lunch" : "dinner"; for (let d = 0; d < 7; d++) s.push([d, m]); }
   return s;
 }
+const OUT = "__out";
+const fixedAt = (d, slot) => { const r = S.fixed[d + "-" + slot]; return r === OUT || R[r] ? r : null; };
+// main slots the planner fills itself (fixed ones are left out, the rest pair up for cooking twice)
+const mainSlots = () => slotsFor(S.meals).filter(([d, m]) => !fixedAt(d, m));
+// share of the day's energy by meal, used to lower the target when you eat out
+const WEIGHT = { bf: 0.25, lunch: 0.35, dinner: 0.35, snack: 0.1 };
+function kcalTarget() {
+  let total = 0, eaten = 0;
+  for (let d = 0; d < 7; d++) for (const slot of ["bf", "lunch", "dinner", "snack"]) {
+    const f = fixedAt(d, slot);
+    if (!f && !S.meals[slot]) continue;
+    total += WEIGHT[slot];
+    if (f !== OUT) eaten += WEIGHT[slot];
+  }
+  return total ? S.kcal * eaten / total : S.kcal;
+}
 function pick(rng, arr, k) { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rng() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a.slice(0, k); }
 
 function randomPlan(rng, pools) {
   const plan = { bf: [], sn: [], batches: [] };
   if (S.meals.bf && pools.bf.length) { const b = pick(rng, pools.bf, Math.min(2 + Math.floor(rng() * 2), pools.bf.length)); const lb = pools.bf.filter(r => S.likeR.includes(r) && !b.includes(r)); if (lb.length && rng() < 0.8) b[0] = lb[Math.floor(rng() * lb.length)]; for (let d = 0; d < 7; d++) plan.bf.push(b[d % b.length]); }
   if (S.meals.snack && pools.sn.length) { const b = pick(rng, pools.sn, Math.min(2, pools.sn.length)); for (let d = 0; d < 7; d++) plan.sn.push(b[d % b.length]); }
-  const slots = slotsFor(S.meals);
+  const slots = mainSlots();
   const nb = Math.ceil(slots.length / 2);
   if (nb && pools.main.length) {
     const k = Math.min(pools.main.length, 4 + Math.floor(rng() * 4));
@@ -524,21 +616,32 @@ function randomPlan(rng, pools) {
 }
 
 function mealsOf(plan) {
-  // returns [{day, slot, rid, leftover}]
+  // returns [{day, slot, rid, fixed, leftover, cookFor, fromSlot}]
   const out = [];
-  plan.bf.forEach((rid, d) => out.push({ day: d, slot: "bf", rid }));
-  const slots = slotsFor(S.meals);
-  slots.forEach(([d, m], idx) => { const rid = plan.batches[Math.floor(idx / 2)]; if (rid) out.push({ day: d, slot: m, rid, leftover: idx % 2 === 1 }); });
-  plan.sn.forEach((rid, d) => out.push({ day: d, slot: "snack", rid }));
+  for (let d = 0; d < 7; d++) for (const slot of ["bf", "snack"]) {
+    const f = fixedAt(d, slot);
+    if (f) out.push({ day: d, slot, rid: f, fixed: true });
+    else if (S.meals[slot]) { const rid = (slot === "bf" ? plan.bf : plan.sn)[d]; if (rid) out.push({ day: d, slot, rid }); }
+  }
+  for (let d = 0; d < 7; d++) for (const slot of ["lunch", "dinner"]) { const f = fixedAt(d, slot); if (f) out.push({ day: d, slot, rid: f, fixed: true }); }
+  const slots = mainSlots();
+  slots.forEach(([d, m], idx) => {
+    const rid = plan.batches[Math.floor(idx / 2)];
+    if (!rid) return;
+    const partner = idx % 2 === 0 ? slots[idx + 1] : slots[idx - 1];
+    out.push({ day: d, slot: m, rid, leftover: idx % 2 === 1 && !!partner, cookFor: idx % 2 === 0 && partner ? partner : null, fromSlot: idx % 2 === 1 ? partner : null });
+  });
   return out;
 }
 
 function evaluate(plan) {
   const grams = {};
   let prot = 0, kcal = 0;
+  const n = S.persons || 1;
   for (const m of mealsOf(plan)) {
+    if (m.rid === OUT) continue;
     for (const [pid, g] of ingr(m.rid, plan.scale || 1)) {
-      grams[pid] = (grams[pid] || 0) + g;
+      grams[pid] = (grams[pid] || 0) + g * n;
       prot += g * P[pid][4] / 100; kcal += g * P[pid][5] / 100;
     }
   }
@@ -555,6 +658,7 @@ function evaluate(plan) {
 
 function score(plan, ev) {
   const distinct = new Set(plan.batches).size + new Set(plan.bf).size + new Set(plan.sn).size;
+  const target = kcalTarget();
   // spending well below the budget counts against a plan (except when the goal is to save)
   const under = Math.max(0, S.budget * 0.9 - ev.cost);
   let s;
@@ -562,7 +666,9 @@ function score(plan, ev) {
   else if (S.goal === "cheap") s = -ev.cost * 2 + ev.protDay * 0.05 + distinct * 0.2;
   else s = ev.protDay * 0.35 + distinct * 2 - under * 1.5;
   s += [...new Set([...plan.batches, ...plan.bf, ...plan.sn])].filter(r => S.likeR.includes(r)).length * 8;
-  s -= Math.abs(ev.kcalDay - S.kcal) * 0.01;
+  s -= Math.abs(ev.kcalDay - target) * 0.01;
+  // weekdays: only quick dishes on the days you cook
+  if (S.quick) mainSlots().forEach(([d], idx) => { if (idx % 2 === 0 && d < 5) { const r = plan.batches[idx / 2]; if (r && R[r].m > 25) s -= 5; } });
   // at least 4 different main dishes a week (when enough are allowed)
   const mains = new Set(plan.batches).size, want = Math.min(4, plan.batches.length);
   if (mains < want) s -= (want - mains) * 6;
@@ -574,7 +680,7 @@ function score(plan, ev) {
 function sized(p) {
   p.scale = 1;
   const raw = evaluate(p);
-  p.scale = raw.kcalDay ? Math.min(1.4, Math.max(0.8, Math.round(S.kcal / raw.kcalDay * 20) / 20)) : 1;
+  p.scale = raw.kcalDay ? Math.min(1.4, Math.max(0.8, Math.round(kcalTarget() / raw.kcalDay * 20) / 20)) : 1;
   let ev = evaluate(p);
   while (ev.cost > S.budget && p.scale > 0.85) { p.scale = Math.round((p.scale - 0.05) * 100) / 100; ev = evaluate(p); }
   return ev;
@@ -652,7 +758,7 @@ function renderBanner(ev) {
   if (S.isExample) html = `<div class="banner" style="margin-bottom:14px"><div><b>Das ist ein Beispielplan.</b><p class="small">Wähle unter „Planen“ deinen Supermarkt, dein Budget und dein Ziel. Dann tippst du auf „Plan erstellen“.</p></div></div>`;
   else if (age > 6) html = `<div class="banner" style="margin-bottom:14px"><div><b>Neue Woche!</b><p class="small">Bei welchem Supermarkt kaufst du diesmal ein? Wähle ihn unter „Planen“ und erstelle einen neuen Plan.</p></div><button class="btn small" data-act="goplan">Zum Planen</button></div>`;
   else if (ev && ev.cost > S.budget) html = `<div class="banner warn" style="margin-bottom:14px"><div><b>${eur(ev.cost - S.budget)} über Budget.</b><p class="small">Mit diesen Einstellungen passt kein Plan ins Budget. Probiere „Möglichst günstig“, lass weniger weg oder erhöhe das Budget.</p></div></div>`;
-  else if (ev && ev.kcalDay < S.kcal * 0.9) html = `<div class="banner warn" style="margin-bottom:14px"><div><b>Das Budget reicht nicht ganz für ${S.kcal.toLocaleString("de-DE")} kcal am Tag.</b><p class="small">Der Plan kommt auf etwa ${Math.round(ev.kcalDay).toLocaleString("de-DE")} kcal. Mehr Budget oder das Ziel „Möglichst günstig“ helfen, zum Beispiel mit mehr Haferflocken, Reis und Linsen.</p></div></div>`;
+  else if (ev && ev.kcalDay < kcalTarget() * 0.9) html = `<div class="banner warn" style="margin-bottom:14px"><div><b>Das Budget reicht nicht ganz für ${Math.round(kcalTarget()).toLocaleString("de-DE")} kcal am Tag.</b><p class="small">Der Plan kommt auf etwa ${Math.round(ev.kcalDay).toLocaleString("de-DE")} kcal. Mehr Budget oder das Ziel „Möglichst günstig“ helfen, zum Beispiel mit mehr Haferflocken, Reis und Linsen.</p></div></div>`;
   b.innerHTML = html;
 }
 
@@ -661,8 +767,8 @@ function renderSummary(ev) {
   const pct = Math.min(100, ev.cost / S.budget * 100);
   $("#summary").innerHTML = `
     <div class="stat"><div class="v num">${eur(ev.cost)}</div><div class="k">von ${eur(S.budget)} · ${esc(store().name)}</div><div class="meter"><i class="${ev.cost > S.budget ? "over" : ""}" style="width:${pct}%"></i></div></div>
-    <div class="stat"><div class="v num">${Math.round(ev.protDay)} g</div><div class="k">Protein pro Tag</div></div>
-    <div class="stat"><div class="v num">${Math.round(ev.kcalDay).toLocaleString("de-DE")}</div><div class="k">kcal pro Tag</div></div>`;
+    <div class="stat"><div class="v num">${Math.round(ev.protDay)} g</div><div class="k">Protein pro Tag${S.persons > 1 ? " und Person" : ""}</div></div>
+    <div class="stat"><div class="v num">${Math.round(ev.kcalDay).toLocaleString("de-DE")}</div><div class="k">kcal pro Tag${S.persons > 1 ? " und Person" : ""}${Object.values(S.fixed).includes(OUT) ? ", ohne Auswärts-Essen" : ""}</div></div>`;
 }
 
 function renderPlan() {
@@ -672,9 +778,14 @@ function renderPlan() {
       <div class="stores">${STORES.map(s => `<button class="store" id="store-${s.id}" data-store="${s.id}" aria-pressed="${s.id === S.store}"><b>${esc(s.name)}</b><span>${esc(s.note)}</span></button>`).join("")}</div>
     </div>
     <div class="panel">
-      <div><div class="label">Schritt 2</div><h2>Wochenbudget</h2></div>
-      <div class="budget-row"><input type="range" id="budget" min="20" max="90" step="1" value="${S.budget}" aria-label="Wochenbudget in Euro"><span class="bignum num" id="budgetOut">${S.budget} €</span></div>
-      <p class="small muted">Nur Lebensmittel für dich allein. Etwa <span id="perDay">${eur(S.budget / 7)}</span> pro Tag.</p>
+      <div><div class="label">Schritt 2</div><h2>Personen & Wochenbudget</h2></div>
+      <div class="row" style="justify-content:space-between">
+        <span>Du kochst für</span>
+        <div class="stepper" role="group" aria-label="Anzahl Personen"><button data-persons="-1" aria-label="Eine Person weniger" ${S.persons <= 1 ? "disabled" : ""}>−</button><b class="num" id="personsOut">${S.persons}</b><button data-persons="1" aria-label="Eine Person mehr" ${S.persons >= 8 ? "disabled" : ""}>+</button></div>
+        <span>${S.persons === 1 ? "Person" : "Personen"}</span>
+      </div>
+      <div class="budget-row"><input type="range" id="budget" min="${budgetMin()}" max="${budgetMax()}" step="${S.persons > 2 ? 5 : 1}" value="${S.budget}" aria-label="Wochenbudget in Euro"><span class="bignum num" id="budgetOut">${S.budget} €</span></div>
+      <p class="small muted" id="budgetHint">${budgetHint()}</p>
     </div>
     <div class="panel">
       <div><div class="label">Schritt 3</div><h2>Wie willst du essen?</h2></div>
@@ -686,15 +797,53 @@ function renderPlan() {
       <div class="chips" role="group" aria-label="Energiebedarf">${ENERGY.map(e => `<button class="chip" id="kcal-${e.id}" data-kcal="${e.id}" aria-pressed="${S.kcal === e.id}">${e.n} <span style="font-weight:400;opacity:.8">${e.d}</span></button>`).join("")}</div>
       <div class="label" style="margin-top:4px">Mahlzeiten pro Tag</div>
       <div class="chips">${MEALS.map(m => `<button class="chip" id="meal-${m.id}" data-meal="${m.id}" aria-pressed="${!!S.meals[m.id]}">${m.n}</button>`).join("")}</div>
-      <p class="small muted">Mittag und Abend werden als Meal-Prep geplant: Du kochst abends 2 Portionen und nimmst die zweite am nächsten Tag mit.</p>
+      <p class="small muted">Mittag und Abend werden als Meal-Prep geplant: Du kochst die doppelte Menge und isst den Rest bei der nächsten Mahlzeit.</p>
+      <label class="check" for="quick"><input type="checkbox" id="quick" ${S.quick ? "checked" : ""}> Montag bis Freitag nur schnelle Gerichte (bis 25 Min.)</label>
       <div class="label" style="margin-top:4px">Mag ich nicht / vertrage ich nicht</div>
       <div class="chips">${EXCLUDES.map(e => `<button class="chip x" id="ex-${e.k}" data-ex="${e.k}" aria-pressed="${S.exclude.includes(e.k)}">${e.n}</button>`).join("")}</div>
     </div>
+    ${fixedPanel()}
     ${learnedPanel()}
     <div class="row">
       <button class="btn" data-act="make">Plan erstellen</button>
       ${S.plan && !S.isExample ? `<button class="btn ghost" data-act="shuffle">Andere Gerichte</button>` : ""}
     </div>`;
+}
+
+/* ---------- Fixed meals ---------- */
+const DAYSHORT = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
+const DAYSETS = [
+  ...DAYS.map((n, i) => ({ id: String(i), n, days: [i] })),
+  { id: "wd", n: "Montag bis Freitag", days: [0, 1, 2, 3, 4] },
+  { id: "we", n: "Samstag und Sonntag", days: [5, 6] },
+  { id: "all", n: "Jeden Tag", days: [0, 1, 2, 3, 4, 5, 6] },
+];
+let fx = { days: "5", slot: "bf", rid: "broetchenKlassik" };
+const typeOfSlot = slot => slot === "bf" ? "bf" : slot === "snack" ? "sn" : "main";
+function fixedPanel() {
+  const t = typeOfSlot(fx.slot);
+  const opts = Object.keys(R).filter(id => R[id].t === t).sort((a, b) => R[a].n.localeCompare(R[b].n));
+  if (fx.rid !== OUT && !opts.includes(fx.rid)) fx.rid = opts[0];
+  const entries = Object.entries(S.fixed).filter(([k, r]) => r === OUT || R[r])
+    .map(([k, r]) => { const [d, slot] = k.split("-"); return { k, d: +d, slot, r }; })
+    .sort((a, b) => a.d - b.d || ["bf", "lunch", "dinner", "snack"].indexOf(a.slot) - ["bf", "lunch", "dinner", "snack"].indexOf(b.slot));
+  return `<div class="panel">
+    <div><div class="label">Deine Woche</div><h2>Feste Mahlzeiten</h2></div>
+    <p class="small muted">Leg Gerichte für bestimmte Tage fest, zum Beispiel Samstag Brötchen zum Frühstück. Isst du irgendwo auswärts, etwa in der Mensa, trag „Auswärts“ ein. Dann kauft die App dafür nichts ein.</p>
+    ${entries.length ? `<div class="fx-list">${entries.map(e => `<div class="fx-item"><span class="when">${DAYSHORT[e.d]} · ${SLOTNAME[e.slot]}</span><span class="what">${e.r === OUT ? "<i>Auswärts / Mensa</i>" : esc(R[e.r].n)}</span><button class="linkbtn" data-unfix="${e.k}" aria-label="Entfernen">✕</button></div>`).join("")}</div>` : ""}
+    <div class="fx-form">
+      <select id="fxDays" aria-label="Tag">${DAYSETS.map(o => `<option value="${o.id}" ${fx.days === o.id ? "selected" : ""}>${o.n}</option>`).join("")}</select>
+      <select id="fxSlot" aria-label="Mahlzeit">${["bf", "lunch", "dinner", "snack"].map(sl => `<option value="${sl}" ${fx.slot === sl ? "selected" : ""}>${SLOTNAME[sl]}</option>`).join("")}</select>
+      <select id="fxRid" class="wide" aria-label="Gericht"><option value="${OUT}" ${fx.rid === OUT ? "selected" : ""}>Auswärts / Mensa (nichts einkaufen)</option>${opts.map(id => `<option value="${id}" ${fx.rid === id ? "selected" : ""}>${esc(R[id].n)}</option>`).join("")}</select>
+      <button class="btn small wide" data-act="addfix">Festlegen</button>
+    </div>
+  </div>`;
+}
+function replan(msg) {
+  const ex = excludedProducts();
+  for (const k of Object.keys(S.swaps)) if (ex.has(S.swaps[k])) delete S.swaps[k];
+  if (!S.isExample) { S.plan = generate(S.seed).plan; }
+  save(); render(); if (msg) toast(msg);
 }
 
 const SLOTNAME = { bf: "Frühstück", lunch: "Mittag", dinner: "Abend", snack: "Snack" };
@@ -707,24 +856,27 @@ function renderWeek() {
   if (!S.plan) { $("#view-week").innerHTML = `<div class="panel"><p>Noch kein Plan. Erstelle ihn unter „Planen“.</p></div>`; return; }
   const meals = mealsOf(S.plan);
   const order = { bf: 0, lunch: 1, dinner: 2, snack: 3 };
+  const n = S.persons || 1;
+  const where = ([d, m]) => `${DAYSHORT[d]} ${SLOTNAME[m]}`;
   $("#view-week").innerHTML = DAYS.map((dn, d) => {
     const ms = meals.filter(m => m.day === d).sort((a, b) => order[a.slot] - order[b.slot]);
-    const tp = ms.reduce((a, m) => a + recipeLine(m.rid).p, 0);
+    const tp = ms.reduce((a, m) => a + (m.rid === OUT ? 0 : recipeLine(m.rid).p), 0);
     return `<article class="day">
       <div class="day-head"><h3>${dn}</h3><span class="pill num">${Math.round(tp)} g Protein</span></div>
       ${ms.map(m => {
+        if (m.rid === OUT) return `<div class="meal out"><div class="slot">${SLOTNAME[m.slot]}</div><div class="name">Auswärts / Mensa<small>Fest eingeplant, nichts einkaufen</small></div><div><span class="pill fix">Fest</span></div></div>`;
         const r = R[m.rid], x = recipeLine(m.rid);
-        const ing = ingr(m.rid).map(([pid, g, pid0]) => { return `<li>${g} g ${esc(P[pid][0])}${pid !== pid0 ? ` <span class="swapped">(statt ${esc(P[pid0][0])})</span>` : ""}</li>`; }).join("");
+        const ing = ingr(m.rid).map(([pid, g, pid0]) => `<li>${g * n >= 1000 ? fmtG(g * n) : Math.round(g * n) + " g"} ${esc(P[pid][0])}${pid !== pid0 ? ` <span class="swapped">(statt ${esc(P[pid0][0])})</span>` : ""}</li>`).join("");
         let note = "";
-        if (m.slot === "dinner" && S.meals.lunch) note = "2 Portionen kochen, eine für morgen Mittag";
-        if (m.slot === "lunch" && m.leftover) note = d === 0 ? "Reste von Sonntag. In der ersten Woche frisch kochen." : "Reste von gestern Abend";
-        if (!(S.meals.lunch && S.meals.dinner) && (m.slot === "lunch" || m.slot === "dinner")) note = m.leftover ? "Reste vom Vortag" : "2 Portionen kochen";
+        if (m.cookFor) note = `Doppelte Menge kochen, Rest für ${where(m.cookFor)}`;
+        if (m.fromSlot) note = `Reste von ${where(m.fromSlot)}` + (m.fromSlot[0] > d ? " (in der ersten Woche frisch kochen)" : "");
+        if (m.fixed) note = "Fest eingeplant";
         return `<div class="meal"><div class="slot">${SLOTNAME[m.slot]}</div>
-          <div class="name">${esc(r.n)}${note ? `<small>${note}</small>` : ""}
-            <div class="ing">${ingr(m.rid).map(([pid]) => { return `<button data-nop="${pid}" title="${esc(P[pid][0])} nie wieder vorschlagen" aria-label="${esc(P[pid][0])}: mag ich nicht">${esc(P[pid][0])}<i aria-hidden="true">✕</i></button>`; }).join("")}</div>
-            <div class="fb"><button class="linkbtn ${S.likeR.includes(m.rid) ? "liked" : ""}" data-like="${m.rid}">${S.likeR.includes(m.rid) ? "Liebling ✓" : "Öfter bitte"}</button><button class="linkbtn warnb" data-nor="${m.rid}">Nie wieder</button></div>
-            <details><summary>Zutaten & Zubereitung</summary><ul>${ing}</ul><ul>${r.s.map(s => `<li>${esc(s)}</li>`).join("")}</ul></details></div>
-          <div style="text-align:right;display:flex;flex-direction:column;gap:4px;align-items:flex-end"><span class="tag num">${eur(x.c)}</span><span class="small muted num">${Math.round(x.p)} g P · ${Math.round(x.k)} kcal</span></div></div>`;
+          <div class="name">${esc(r.n)}<small>${note ? note + " · " : ""}${m.fromSlot ? "aufwärmen" : r.m + " Min."}</small>
+            <div class="ing">${ingr(m.rid).map(([pid]) => `<button data-nop="${pid}" title="${esc(P[pid][0])} nie wieder vorschlagen" aria-label="${esc(P[pid][0])}: mag ich nicht">${esc(P[pid][0])}<i aria-hidden="true">✕</i></button>`).join("")}</div>
+            <div class="fb"><button class="linkbtn ${S.likeR.includes(m.rid) ? "liked" : ""}" data-like="${m.rid}">${S.likeR.includes(m.rid) ? "Liebling ✓" : "Öfter bitte"}</button>${m.fixed ? "" : `<button class="linkbtn warnb" data-nor="${m.rid}">Nie wieder</button>`}</div>
+            <details><summary>Zutaten${n > 1 ? ` für ${n} Personen` : ""} & Zubereitung</summary><ul>${ing}</ul><ul>${r.s.map(s => `<li>${esc(s)}</li>`).join("")}</ul></details></div>
+          <div style="text-align:right;display:flex;flex-direction:column;gap:4px;align-items:flex-end">${m.fixed ? `<span class="pill fix">Fest</span>` : ""}<span class="tag num">${eur(x.c * n)}</span><span class="small muted num">${Math.round(x.p)} g P · ${Math.round(x.k)} kcal${n > 1 ? " p. P." : ""}</span></div></div>`;
       }).join("") || `<div class="meal"><div class="name muted">Keine Mahlzeiten ausgewählt</div></div>`}
     </article>`;
   }).join("");
@@ -905,6 +1057,17 @@ document.addEventListener("click", e => {
   if (d.goal) { S.goal = d.goal; save(); render(); return; }
   if (d.diet) { S.diet = d.diet; save(); render(); return; }
   if (d.kcal) { S.kcal = +d.kcal; save(); render(); return; }
+  if (d.persons) {
+    const n = Math.min(8, Math.max(1, S.persons + +d.persons));
+    if (n !== S.persons) { S.budget = Math.round(S.budget * n / S.persons); S.persons = n; S.budget = Math.min(budgetMax(), Math.max(budgetMin(), S.budget)); save(); render(); }
+    return;
+  }
+  if (d.act === "addfix") {
+    const set = DAYSETS.find(o => o.id === fx.days);
+    for (const day of set.days) S.fixed[day + "-" + fx.slot] = fx.rid;
+    replan(`${fx.rid === OUT ? "Auswärts" : R[fx.rid].n} ist fest eingeplant: ${set.n}, ${SLOTNAME[fx.slot]}.`); return;
+  }
+  if (d.unfix) { delete S.fixed[d.unfix]; replan("Feste Mahlzeit entfernt."); return; }
   if (d.meal) { S.meals[d.meal] = !S.meals[d.meal]; save(); render(); return; }
   if (d.ex) { S.exclude = S.exclude.includes(d.ex) ? S.exclude.filter(x => x !== d.ex) : [...S.exclude, d.ex]; save(); render(); return; }
   if (d.act === "make") { makePlan(false); tab = "week"; render(); window.scrollTo({ top: 0 }); toast("Plan erstellt"); return; }
@@ -940,11 +1103,18 @@ document.addEventListener("click", e => {
   if (d.unr) { S.dislikeR = S.dislikeR.filter(x => x !== d.unr); save(); render(); toast("Gericht ist wieder erlaubt. Gilt ab dem nächsten Plan."); return; }
   if (d.unl) { S.likeR = S.likeR.filter(x => x !== d.unl); save(); render(); return; }
 });
+const budgetMin = () => 15 * S.persons + 5;
+const budgetMax = () => 90 * S.persons;
+function budgetHint() {
+  return S.persons === 1
+    ? `Nur Lebensmittel für dich allein. Etwa <span id="perDay">${eur(S.budget / 7)}</span> pro Tag.`
+    : `Für ${S.persons} Personen zusammen. Etwa <span id="perDay">${eur(S.budget / 7)}</span> pro Tag, ${eur(S.budget / 7 / S.persons)} pro Person.`;
+}
 function budgetMoved(el) {
   S.budget = +el.value;
-  const out = $("#budgetOut"), per = $("#perDay");
+  const out = $("#budgetOut"), hint = $("#budgetHint");
   if (out) out.textContent = S.budget + " €";
-  if (per) per.textContent = eur(S.budget / 7);
+  if (hint) hint.innerHTML = budgetHint();
   renderSummary(S.plan ? evaluate(S.plan) : null);
   saveSoon();
 }
@@ -953,6 +1123,10 @@ document.addEventListener("input", e => {
 });
 document.addEventListener("change", e => {
   const t = e.target;
+  if (t.id === "fxDays") { fx.days = t.value; return; }
+  if (t.id === "fxSlot") { fx.slot = t.value; render(); return; }
+  if (t.id === "fxRid") { fx.rid = t.value; return; }
+  if (t.id === "quick") { S.quick = t.checked; save(); render(); return; }
   if (t.id === "shareMissing") { S.shareMissing = t.checked; save(); render(); return; }
   if (t.id === "budget") { budgetMoved(t); clearTimeout(saveT); save(); return; }
   if (t.id === "importFile" && t.files && t.files[0]) {
