@@ -2,31 +2,45 @@
 // Runs on GitHub Actions (internet access); see .github/workflows/prices.yml.
 import { writeFile, mkdir } from "node:fs/promises";
 
+const UA = { "User-Agent": "Mozilla/5.0 (compatible; Wochentopf-Preisabruf/0.2; +https://github.com/stigohde-max/Wochentopf)" };
 const report = { startedAt: new Date().toISOString(), probes: [] };
+const get = async (url) => { const r = await fetch(url, { headers: UA }); return { status: r.status, text: await r.text(), type: r.headers.get("content-type") }; };
+async function step(name, fn) { const t0 = Date.now(); try { report.probes.push({ name, ms: 0, ...(await fn()), ms: Date.now() - t0 }); } catch (e) { report.probes.push({ name, error: String(e), ms: Date.now() - t0 }); } }
 
-async function probe(name, url, opts = {}) {
-  const t0 = Date.now();
-  try {
-    const res = await fetch(url, { headers: { "User-Agent": "Wochentopf-Preisabruf/0.1 (+https://github.com/stigohde-max/Wochentopf)", ...(opts.headers || {}) } });
-    const text = await res.text();
-    const entry = { name, url, status: res.status, ms: Date.now() - t0, bytes: text.length, contentType: res.headers.get("content-type") };
-    if (opts.json) { try { const j = JSON.parse(text); entry.keys = Object.keys(j); entry.total = j.total ?? j.count ?? null; entry.sample = JSON.stringify(j.items ? j.items.slice(0, 2) : j).slice(0, 4000); } catch { entry.head = text.slice(0, 600); } }
-    else entry.head = text.slice(0, opts.head || 1500);
-    report.probes.push(entry);
-  } catch (e) {
-    report.probes.push({ name, url, error: String(e), ms: Date.now() - t0 });
-  }
+// 1) Open Prices: which filters exist?
+await step("openprices-openapi", async () => {
+  const r = await get("https://prices.openfoodfacts.org/api/openapi.json");
+  const j = JSON.parse(r.text);
+  const params = p => (j.paths[p]?.get?.parameters || []).map(x => x.name);
+  return { status: r.status, prices: params("/api/v1/prices"), locations: params("/api/v1/locations"), products: params("/api/v1/products") };
+});
+
+// 2) Aldi Süd product sitemap + one product page
+let aldiUrls = [];
+await step("aldi-sued-sitemap", async () => {
+  const r = await get("https://www.aldi-sued.de/sitemap_products.xml");
+  aldiUrls = [...r.text.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
+  return { status: r.status, bytes: r.text.length, count: aldiUrls.length, sample: aldiUrls.slice(0, 5), food: aldiUrls.filter(u => /quark|haferflocken|banane|milch|reis|nudel|spaghetti/i.test(u)).slice(0, 25) };
+});
+for (const kw of ["magerquark", "haferflocken", "spaghetti"]) {
+  await step("aldi-sued-product-" + kw, async () => {
+    const url = aldiUrls.find(u => u.toLowerCase().includes(kw));
+    if (!url) return { note: "no url" };
+    const r = await get(url);
+    const ld = [...r.text.matchAll(/<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)].map(m => m[1].slice(0, 1500));
+    const priceSnips = [...r.text.matchAll(/.{0,120}(?:price|Preis)[^<]{0,120}/gi)].slice(0, 8).map(m => m[0].replace(/\s+/g, " "));
+    return { url, status: r.status, bytes: r.text.length, hasNextData: r.text.includes("__NEXT_DATA__"), hasNuxt: r.text.includes("__NUXT"), ld, priceSnips, title: (r.text.match(/<title>([^<]*)/) || [])[1] };
+  });
 }
 
-const OP = "https://prices.openfoodfacts.org/api/v1/prices";
-await probe("openprices-latest", `${OP}?size=3&order_by=-date`, { json: true });
-await probe("openprices-de-a", `${OP}?size=3&order_by=-date&location_osm_address_country=Deutschland`, { json: true });
-await probe("openprices-de-b", `${OP}?size=3&order_by=-date&location__osm_address_country=Deutschland`, { json: true });
-await probe("openprices-locations-lidl", "https://prices.openfoodfacts.org/api/v1/locations?size=3&osm_brand=Lidl", { json: true });
-for (const [n, u] of [["aldi-sued", "https://www.aldi-sued.de/robots.txt"], ["aldi-nord", "https://www.aldi-nord.de/robots.txt"], ["rewe-shop", "https://shop.rewe.de/robots.txt"], ["lidl", "https://www.lidl.de/robots.txt"], ["kaufland", "https://www.kaufland.de/robots.txt"], ["penny", "https://www.penny.de/robots.txt"]])
-  await probe("robots-" + n, u, { head: 3000 });
+// 3) Aldi Nord sitemap
+await step("aldi-nord-sitemap", async () => {
+  const r = await get("https://www.aldi-nord.de/.aldi-nord-sitemap.xml");
+  const locs = [...r.text.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
+  return { status: r.status, count: locs.length, sample: locs.slice(0, 8), products: locs.filter(u => /produkt/i.test(u)).slice(0, 8) };
+});
 
 report.finishedAt = new Date().toISOString();
 await mkdir("prices", { recursive: true });
 await writeFile("prices/report.json", JSON.stringify(report, null, 2));
-console.log(JSON.stringify(report.probes.map(p => [p.name, p.status ?? p.error, p.total ?? ""]), null, 0));
+console.log(report.probes.map(p => `${p.name}: ${p.status ?? p.error ?? p.note}`).join("\n"));
