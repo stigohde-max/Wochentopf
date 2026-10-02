@@ -1,128 +1,99 @@
 {
-  "startedAt": "2026-10-02T11:27:55.579Z",
+  "startedAt": "2026-10-02T11:29:37.551Z",
   "probes": [
     {
-      "name": "openprices-latest",
-      "url": "https://prices.openfoodfacts.org/api/v1/prices?size=3&order_by=-date",
+      "name": "openprices-openapi",
+      "error": "SyntaxError: Unexpected token '<', \"\n<!doctype \"... is not valid JSON",
+      "ms": 1169
+    },
+    {
+      "name": "aldi-sued-sitemap",
+      "ms": 1104,
       "status": 200,
-      "ms": 1032,
-      "bytes": 9315,
-      "contentType": "application/json",
-      "keys": [
-        "items",
-        "page",
-        "pages",
-        "size",
-        "total"
+      "bytes": 709279,
+      "count": 4897,
+      "sample": [
+        "https://www.aldi-sued.de/produkt/ferrero-maxi-king-105-g-000000000000107055",
+        "https://www.aldi-sued.de/produkt/emmi-caffe-latte-370-ml-cappuccino-000000000111067001",
+        "https://www.aldi-sued.de/produkt/emmi-caffe-latte-370-ml-balance-000000000111067004",
+        "https://www.aldi-sued.de/produkt/emmi-caffe-latte-370-ml-high-protein-000000000111067003",
+        "https://www.aldi-sued.de/produkt/emmi-caffe-latte-370-ml-latte-macchiato-000000000111067002"
       ],
-      "total": 319990,
-      "sample": "[{\"id\":34506,\"product_id\":374336,\"location_id\":1065,\"proof_id\":9052,\"product\":{\"id\":374336,\"code\":\"3560070215713\",\"source\":\"off\",\"source_last_synced\":\"2026-08-12T09:26:20.932094Z\",\"product_name\":\"100% pur jus multifruits\",\"image_url\":\"https://images.openfoodfacts.org/images/products/356/007/021/5713/front_fr.168.400.jpg\",\"product_quantity\":2000,\"product_quantity_unit\":\"ml\",\"quantity\":\"2 l\",\"categories_tags\":[\"en:beverages-and-beverages-preparations\",\"en:plant-based-foods-and-beverages\",\"en:beverages\",\"en:fruit-based-foods-and-beverages\",\"en:non-alcoholic-beverages\",\"en:plant-based-beverages\",\"en:fruit-based-beverages\",\"en:juices-and-nectars\",\"en:fruit-juices\",\"en:multifruit-juices\",\"en:squeezed-fruit-juices\",\"en:squeezed-multifruit-juices\"],\"brands\":\"Carrefour, Carrefour extra\",\"brands_tags\":[\"Carrefour\",\"Carrefour extra\"],\"labels_tags\":[\"en:distributor-labels\",\"en:fsc\",\"en:fsc-mix\",\"en:green-dot\",\"en:made-in-france\",\"en:no-added-sugar\",\"en:nutriscore\",\"en:nutriscore-grade-c\",\"fr:teste-par-le-panel-test-carrefour\",\"fr:100-pur-jus-presse\",\"fr:Eco-emballages\"],\"nutriscore_grade\":\"c\",\"ecoscore_grade\":\"d\",\"nova_group\":1,\"creator\":\"openfoodfacts-contributors\",\"unique_scans_n\":36,\"price_count\":2,\"price_currency_count\":1,\"location_count\":2,\"location_type_osm_country_count\":1,\"user_count\":2,\"proof_count\":2,\"created\":\"2024-01-11T06:08:40.241716Z\",\"updated\":\"2026-08-12T09:26:20.934279Z\"},\"location\":{\"id\":1065,\"osm_brand_logo_url\":\"https://raw.githubusercontent.com/openfoodfacts/brand-images/refs/heads/main/xx/stores/carrefour-market.png\",\"type\":\"OSM\",\"osm_id\":4830942567,\"osm_type\":\"NODE\",\"osm_name\":\"Carrefour Market\",\"osm_display_name\":\"Carrefour Market, Boulevard de la Liane, Ville-Basse, Boulogne-sur-Mer, Pas-de-Calais, Hauts-de-France, France métropolitaine, 62200, France\",\"osm_tag_key\":\"shop\",\"osm_tag_value\":\"supermarket\",\"osm_tags\":[],\"osm_brand\":\"Carrefour Market\",\"osm_address_postcode\":\"62200\",\"osm_address_city\":\"Boulogne-sur-Mer\",\"osm_address_country\":\"France\",\"osm_address_country_code\":\"FR\",\"osm_lat\":50.7199396,\"osm_lon\":1.6048313,\"osm_version\":5,\"osm_version_date\":\"2024-07-20T08:58:16Z\",\"website_url\":null,\"price_count\":4,\"user_count\":1,\"product_count\":4,\"proof_count\":4,\"source\":null,\"created\":\"2024-09-23T16:03:34.621769Z\",\"updated\":\"2024-09-23T16:04:05.614489Z\"},\"proof\":{\"id\":9052,\"location_id\":1065,\"file_path\":\"0010/57uLLQZbsX.jpg\",\"mimetype\":\"image/jpeg\",\"type\":\"PRICE_TAG\",\"image_md5_hash\":\"01642128579a9ff4b64d3f2dc033b345\",\"image_thumb_path\":\"0010/57uLLQZbsX.400.jpg\",\"location_osm_id\":4830942567,\"location_osm_type\":\"NODE\",\"date\":null,\"currency\":null,\"receipt_price_count\":null,\"receipt_price_total\":null,\"receipt_online_delivery_costs\":null,\"ready_for_price_tag_validation\":false,\"owner_consumption\":null,\"owner_comment\":null,\"draft\":false,\"price_count\":1,\"prediction_count\":2,\"owner\":\"mouammar8080ni\",\"source\":\"Smoothie - OpenFoodFacts\",\"tags\":[],\"created\":\"2024-09-23T16:03:34.444685Z\",\"updated\":\"2024-09-30T13:15:38.147158Z\"},\"type\":\"PRODUCT\",\"product_code\":\"3560070215713\",\"product_name\":null,\"category_tag\":null,\"labels_tags\":null,\"origins_tags\":null,\"price\":3.45,\"price_is_discounted\":false,\"price_without_discount\":null,\"discount_type\":null,\"price_per\":null,\"currency\":null,\"location_osm_id\":4830942567,\"location_osm_type\":\"NODE\",\"date\":null,\"receipt_quantity\":null,\"owner_comment\":null,\"owner\":\"mouammar8080ni\",\"source\":\"Smoothie - OpenFoodFacts\",\"tags\":[],\"created\":\"2024-09-23T16:03:34.617004Z\",\"updated\":\"2025-09-09T10:01:03.357196Z\",\"duplicate_of\":null},{\"id\":32946,\"product_id\":1497068,\"location_id\":873,\"proof_id\":8646,\"product\":{\"id\":1497068,\"code\":\"4260229231067\",\"source\":\"off\",\"source_last_synced\":\"2026-09-17T21:02:27.860848Z\",\"product_name\":\"Nüssriegel Rock’o Choc\",\"image_url\":\"https://images.openfoodfacts.org/images/products/426/022/923/1067/front_de.24.400.jpg\",\"product_quantity\":35,\"product_quantity_unit\":\"g\",\"quantity\":\"35g\",\"categories_tags\":[\"en:plant-based-foods-and-beverages\",\"en:plant-based-foods\",\"en:snacks\",\"en:swe"
+      "food": [
+        "https://www.aldi-sued.de/produkt/barilla-spaghetti-no-5-1-kg-000000000000108993",
+        "https://www.aldi-sued.de/produkt/meine-kuchenwelt-milchbroetchen-natur-480-g-000000000000187534",
+        "https://www.aldi-sued.de/produkt/bon-ri-basmati-reis-1-kg-000000000000193967",
+        "https://www.aldi-sued.de/produkt/choceur-schoko-milch-riegel-200-g-000000000000194055",
+        "https://www.aldi-sued.de/produkt/choceur-vollmilch-schokolade-100-g-000000000000194128",
+        "https://www.aldi-sued.de/produkt/milsani-kondensmilch-10-340-g-000000000000202293",
+        "https://www.aldi-sued.de/produkt/milsani-kondensmilch-7-5-340-g-000000000000202302",
+        "https://www.aldi-sued.de/produkt/milsani-reine-buttermilch-500-g-000000000000202666",
+        "https://www.aldi-sued.de/produkt/milsani-kondensmilch-4-340-g-fettreduziert-000000000000203300",
+        "https://www.aldi-sued.de/produkt/weihenstephan-h-milch-3-5-1-l-000000000000203338",
+        "https://www.aldi-sued.de/produkt/milsani-h-milch-1-5-1-l-laktosefrei-fettarm-000000000000329387",
+        "https://www.aldi-sued.de/produkt/choceur-nussknacker-vollmilch-100-g-000000000000434365",
+        "https://www.aldi-sued.de/produkt/bio-frische-bio-milch-1-5-1-l-fettarm-000000000000484942",
+        "https://www.aldi-sued.de/produkt/bio-frische-bio-vollmilch-3-8-1-l-000000000000484957",
+        "https://www.aldi-sued.de/produkt/nur-nur-natur-frische-bio-vollmilch-3-8-1-l-000000000000493388",
+        "https://www.aldi-sued.de/produkt/nur-nur-natur-bio-vollkorn-basmatireis-500-g-000000000000494015",
+        "https://www.aldi-sued.de/produkt/choceur-milchriegel-100-g-000000000000513894",
+        "https://www.aldi-sued.de/produkt/milsani-speisequark-magerstufe-250-g-000000000000548387",
+        "https://www.aldi-sued.de/produkt/bio-bio-h-milch-1-5-fett-1-l-000000000000549571",
+        "https://www.aldi-sued.de/produkt/bio-bio-h-vollmilch-3-8-fett-1-l-000000000000551243",
+        "https://www.aldi-sued.de/produkt/milsani-speisequark-250-g-20-fett-000000000000558448",
+        "https://www.aldi-sued.de/produkt/milsani-speisequark-magerstufe-500-g-0-3-000000000000558481",
+        "https://www.aldi-sued.de/produkt/milsani-speisequark-250-g-40-fett-000000000000558702",
+        "https://www.aldi-sued.de/produkt/speisezeit-huehner-nudeltopf-800-g-000000000000577003",
+        "https://www.aldi-sued.de/produkt/milsani-back-camembert-mit-wildpreiselbeer-dip-350-g-000000000000589034"
+      ]
     },
     {
-      "name": "openprices-de-a",
-      "url": "https://prices.openfoodfacts.org/api/v1/prices?size=3&order_by=-date&location_osm_address_country=Deutschland",
+      "name": "aldi-sued-product-magerquark",
+      "ms": 2,
+      "note": "no url"
+    },
+    {
+      "name": "aldi-sued-product-haferflocken",
+      "ms": 1,
+      "note": "no url"
+    },
+    {
+      "name": "aldi-sued-product-spaghetti",
+      "ms": 1750,
+      "url": "https://www.aldi-sued.de/produkt/barilla-spaghetti-no-5-1-kg-000000000000108993",
       "status": 200,
-      "ms": 276,
-      "bytes": 9268,
-      "contentType": "application/json",
-      "keys": [
-        "items",
-        "page",
-        "pages",
-        "size",
-        "total"
+      "bytes": 895442,
+      "hasNextData": false,
+      "hasNuxt": true,
+      "ld": [
+        "{\"@context\":\"https://schema.org\",\"@type\":\"BreadcrumbList\",\"itemListElement\":[{\"@type\":\"ListItem\",\"position\":1,\"name\":\"Startseite\",\"item\":\"https://www.aldi-sued.de/\"},{\"@type\":\"ListItem\",\"position\":2,\"name\":\"Produkte\",\"item\":\"https://www.aldi-sued.de/produkte\"},{\"@type\":\"ListItem\",\"position\":3,\"name\":\"Nudeln, Reis & Hülsenfrüchte\",\"item\":\"https://www.aldi-sued.de/produkte/nudeln-reis-huelsenfruechte/k/1588161425467115\"},{\"@type\":\"ListItem\",\"position\":4,\"name\":\"Nudeln & Pasta\",\"item\":\"https://www.aldi-sued.de/produkte/nudeln-reis-huelsenfruechte/nudeln-pasta/k/1588161425467116\"},{\"@type\":\"ListItem\",\"position\":5,\"name\":\"Spaghetti No.5 1 kg\",\"item\":\"https://www.aldi-sued.de/produkt/barilla-spaghetti-no-5-1-kg-000000000000108993\"}]}",
+        "{\"offers\":{\"@type\":\"Offer\",\"url\":\"https://www.aldi-sued.de/produkt/barilla-spaghetti-no-5-1-kg-000000000000108993\",\"price\":\"1.69\",\"priceCurrency\":\"EUR\",\"itemCondition\":\"https://schema.org/NewCondition\",\"availability\":\"https://schema.org/InStock\"},\"image\":[\"https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/300/f4ad7edf-e5af-46f2-8b03-80378d0a701f/Spaghetti%20No.5%201%20kg\"],\"@type\":\"Product\",\"name\":\"Spaghetti No.5 1 kg\",\"description\":\"Je 1-kg-Packung. Schnell zubereitet. Ideal zu Fisch, Fleisch und Gemüse. \",\"@context\":\"https://schema.org/\",\"brand\":{\"@type\":\"Brand\",\"name\":\"BARILLA\"}}"
       ],
-      "total": 319990,
-      "sample": "[{\"id\":33325,\"product_id\":2073768,\"location_id\":873,\"proof_id\":8646,\"product\":{\"id\":2073768,\"code\":\"4104420236165\",\"source\":\"off\",\"source_last_synced\":\"2026-02-16T21:26:14.982838Z\",\"product_name\":\"Vollmilch Schokolade\",\"image_url\":\"https://images.openfoodfacts.org/images/products/410/442/023/6165/front_de.26.400.jpg\",\"product_quantity\":100,\"product_quantity_unit\":\"g\",\"quantity\":null,\"categories_tags\":[\"en:snacks\",\"en:sweet-snacks\",\"en:cocoa-and-its-products\",\"en:chocolates\",\"en:milk-chocolates\"],\"brands\":\"Alnatura, Alnatura Projekte\",\"brands_tags\":[\"alnatura\",\"alnatura-projekte\"],\"labels_tags\":[\"en:organic\",\"en:eu-organic\",\"en:ch-bio-006\"],\"nutriscore_grade\":\"e\",\"ecoscore_grade\":\"d\",\"nova_group\":3,\"creator\":null,\"unique_scans_n\":7,\"price_count\":1,\"price_currency_count\":1,\"location_count\":1,\"location_type_osm_country_count\":1,\"user_count\":1,\"proof_count\":1,\"created\":\"2024-01-11T06:30:20.965978Z\",\"updated\":\"2026-02-16T21:26:14.985956Z\"},\"location\":{\"id\":873,\"osm_brand_logo_url\":\"https://raw.githubusercontent.com/openfoodfacts/brand-images/refs/heads/main/xx/stores/rossmann.png\",\"type\":\"OSM\",\"osm_id\":1769180285,\"osm_type\":\"NODE\",\"osm_name\":\"Rossmann\",\"osm_display_name\":\"Rossmann, 2-4, Straße der Nationen, Zentrum, Chemnitz, Lichtenau, Sachsen, 09111, Deutschland\",\"osm_tag_key\":\"shop\",\"osm_tag_value\":\"chemist\",\"osm_tags\":[],\"osm_brand\":\"Rossmann\",\"osm_address_postcode\":\"09111\",\"osm_address_city\":\"Chemnitz\",\"osm_address_country\":\"Deutschland\",\"osm_address_country_code\":\"DE\",\"osm_lat\":50.8333006,\"osm_lon\":12.9219331,\"osm_version\":12,\"osm_version_date\":\"2021-12-08T20:20:00Z\",\"website_url\":null,\"price_count\":95,\"user_count\":1,\"product_count\":95,\"proof_count\":10,\"source\":null,\"created\":\"2024-08-26T14:37:32.107141Z\",\"updated\":\"2026-09-16T08:44:06.820469Z\"},\"proof\":{\"id\":8646,\"location_id\":873,\"file_path\":\"0009/5eAt8B18H5.jpg\",\"mimetype\":\"image/jpeg\",\"type\":\"PRICE_TAG\",\"image_md5_hash\":\"791bae2610ef26c59050dab5705278cb\",\"image_thumb_path\":\"0009/5eAt8B18H5.400.jpg\",\"location_osm_id\":1769180285,\"location_osm_type\":\"NODE\",\"date\":null,\"currency\":\"EUR\",\"receipt_price_count\":null,\"receipt_price_total\":null,\"receipt_online_delivery_costs\":null,\"ready_for_price_tag_validation\":false,\"owner_consumption\":null,\"owner_comment\":null,\"draft\":false,\"price_count\":45,\"prediction_count\":2,\"owner\":\"danlauch\",\"source\":\"Smoothie - OpenFoodFacts\",\"tags\":[],\"created\":\"2024-09-02T14:44:44.174013Z\",\"updated\":\"2024-09-12T07:33:08.534363Z\"},\"type\":\"PRODUCT\",\"product_code\":\"4104420236165\",\"product_name\":null,\"category_tag\":null,\"labels_tags\":null,\"origins_tags\":null,\"price\":1.99,\"price_is_discounted\":false,\"price_without_discount\":null,\"discount_type\":null,\"price_per\":null,\"currency\":\"EUR\",\"location_osm_id\":1769180285,\"location_osm_type\":\"NODE\",\"date\":null,\"receipt_quantity\":null,\"owner_comment\":null,\"owner\":\"danlauch\",\"source\":\"Open Prices Web App\",\"tags\":[],\"created\":\"2024-09-09T14:32:42.467846Z\",\"updated\":\"2025-09-09T09:51:55.911218Z\",\"duplicate_of\":null},{\"id\":33324,\"product_id\":1129603,\"location_id\":873,\"proof_id\":8646,\"product\":{\"id\":1129603,\"code\":\"4104420222625\",\"source\":\"off\",\"source_last_synced\":\"2026-09-08T19:56:56.217754Z\",\"product_name\":\"Nougat Schokolade Bio\",\"image_url\":\"https://images.openfoodfacts.org/images/products/410/442/022/2625/front_en.25.400.jpg\",\"product_quantity\":100,\"product_quantity_unit\":\"g\",\"quantity\":\"100 g\",\"categories_tags\":[\"en:snacks\",\"en:sweet-snacks\",\"en:cocoa-and-its-products\",\"en:confectioneries\",\"en:chocolate-candies\",\"en:chocolates\",\"en:filled-chocolates\",\"en:milk-chocolates\",\"en:filled-milk-chocolates\",\"en:nougats\",\"de:Schokoladentafeln VM\"],\"brands\":\"Alnatura, Alnatura GmbH\",\"brands_tags\":[\"Alnatura\",\"Alnatura GmbH\"],\"labels_tags\":[\"en:organic\",\"en:eu-agriculture\",\"en:eu-organic\",\"en:non-eu-agriculture\",\"de:bio-7-initiative\",\"de:eg-öko-verordnung\",\"en:de-oko-013\",\"en:eu-non-eu-agriculture\",\"fr:triman\"],\"nutriscore_grade\":\"e\",\"ecoscore_grade\":\"c\",\"nova_group\":3,\"creator\":\"moon-rabbit\",\"unique_scans_n\":5,\"price_count\":2,\"pr"
-    },
-    {
-      "name": "openprices-de-b",
-      "url": "https://prices.openfoodfacts.org/api/v1/prices?size=3&order_by=-date&location__osm_address_country=Deutschland",
-      "status": 200,
-      "ms": 263,
-      "bytes": 9600,
-      "contentType": "application/json",
-      "keys": [
-        "items",
-        "page",
-        "pages",
-        "size",
-        "total"
+      "priceSnips": [
+        "oduct-listing-page__title,mdcc12=ap[class^^^e^dqproduct-details^dq],mdcc13=ah1.product-details__title,mdcc14=aspan.base-price__regular,mdcc15=bdigitalData.product.sku,mdcc17=a[data-nr^e^dqproduct-search-count^dq],mdcc19=adiv.toast-overflow__noti",
+        "og:title\" content=\"Spaghetti No.5 1 kg\"><meta property=\"og:description\" content=\"So viel Spaß macht Qualität zu kleinen Preisen. Spaghetti No.5 1 kg zum günstigen ALDI Preis ➔ Jetzt bei ALDI SÜD kaufen!\">",
+        "tle\" content=\"Spaghetti No.5 1 kg\"><meta property=\"twitter:description\" content=\"So viel Spaß macht Qualität zu kleinen Preisen. Spaghetti No.5 1 kg zum günstigen ALDI Preis ➔ Jetzt bei ALDI SÜD kaufen!\">",
+        "2-8b03-80378d0a701f/Spaghetti%20No.5%201%20kg\"><meta name=\"description\" content=\"So viel Spaß macht Qualität zu kleinen Preisen. Spaghetti No.5 1 kg zum günstigen ALDI Preis ➔ Jetzt bei ALDI SÜD kaufen!\">",
+        "on\">{\"offers\":{\"@type\":\"Offer\",\"url\":\"https://www.aldi-sued.de/produkt/barilla-spaghetti-no-5-1-kg-000000000000108993\",\"price\":\"1.69\",\"priceCurrency\":\"EUR\",\"itemCondition\":\"https://schema.org/NewCondition\",\"availability\":\"https://schema.org/InSt",
+        "s__sticky-interaction\"><div class=\"product-details__sticky-interaction-content\"><div class=\"product-details__weight-and-price\">",
+        "<!--[--><!----><div class=\"base-price base-price--product-details price-section product-details--initializing\">",
+        "<!----><div class=\"\"><!----></div><span class=\"base-price__regular\"><span>1,69 €</span><span class=\"base-price__superscript\" data-test=\"superscript-special-buy\">¹ "
       ],
-      "total": 319990,
-      "sample": "[{\"id\":36328,\"product_id\":1470,\"location_id\":1105,\"proof_id\":9511,\"product\":{\"id\":1470,\"code\":\"3038350054203\",\"source\":\"off\",\"source_last_synced\":\"2026-08-28T19:43:48.506967Z\",\"product_name\":\"Panzani pates creat tagliatelle 500g\",\"image_url\":\"https://images.openfoodfacts.org/images/products/303/835/005/4203/front_fr.136.400.jpg\",\"product_quantity\":500,\"product_quantity_unit\":\"g\",\"quantity\":\"500 g\",\"categories_tags\":[\"en:plant-based-foods-and-beverages\",\"en:plant-based-foods\",\"en:cereals-and-potatoes\",\"en:cereals-and-their-products\",\"en:pastas\",\"en:cereal-pastas\",\"en:dry-pastas\",\"en:durum-wheat-pasta\",\"en:tagliatelle\",\"fr:Tagliatelles au blé dur\"],\"brands\":\"Panzani\",\"brands_tags\":[\"Panzani\"],\"labels_tags\":[\"en:vegetarian\",\"en:green-dot\",\"en:nutriscore\",\"en:nutriscore-grade-a\",\"fr:Eco-Emballages\",\"fr:Garantie Qualité Or\"],\"nutriscore_grade\":\"a\",\"ecoscore_grade\":\"unknown\",\"nova_group\":1,\"creator\":\"openfoodfacts-contributors\",\"unique_scans_n\":38,\"price_count\":12,\"price_currency_count\":1,\"location_count\":11,\"location_type_osm_country_count\":1,\"user_count\":6,\"proof_count\":12,\"created\":\"2024-01-07T09:45:44.442764Z\",\"updated\":\"2026-08-28T19:43:48.510179Z\"},\"location\":{\"id\":1105,\"osm_brand_logo_url\":\"https://raw.githubusercontent.com/openfoodfacts/brand-images/refs/heads/main/xx/stores/cora.png\",\"type\":\"OSM\",\"osm_id\":145131721,\"osm_type\":\"WAY\",\"osm_name\":\"Cora\",\"osm_display_name\":\"Cora, Chemin de Vaujours, Poudrerie, Livry-Gargan, Le Raincy, Seine-Saint-Denis, Île-de-France, France métropolitaine, 93190, France\",\"osm_tag_key\":\"shop\",\"osm_tag_value\":\"supermarket\",\"osm_tags\":[],\"osm_brand\":\"Cora\",\"osm_address_postcode\":\"93190\",\"osm_address_city\":\"Livry-Gargan\",\"osm_address_country\":\"France\",\"osm_address_country_code\":\"FR\",\"osm_lat\":48.9275145,\"osm_lon\":2.554537,\"osm_version\":7,\"osm_version_date\":\"2024-02-24T13:53:07Z\",\"website_url\":null,\"price_count\":145,\"user_count\":1,\"product_count\":136,\"proof_count\":146,\"source\":null,\"created\":\"2024-09-29T10:22:50.969377Z\",\"updated\":\"2024-09-29T10:22:51.405174Z\"},\"proof\":{\"id\":9511,\"location_id\":1105,\"file_path\":\"0010/DcSq6VKVfT.jpg\",\"mimetype\":\"image/jpeg\",\"type\":\"PRICE_TAG\",\"image_md5_hash\":\"8db0038e028fc31e8412d346fde145b5\",\"image_thumb_path\":\"0010/DcSq6VKVfT.400.jpg\",\"location_osm_id\":145131721,\"location_osm_type\":\"WAY\",\"date\":null,\"currency\":null,\"receipt_price_count\":null,\"receipt_price_total\":null,\"receipt_online_delivery_costs\":null,\"ready_for_price_tag_validation\":false,\"owner_consumption\":null,\"owner_comment\":null,\"draft\":false,\"price_count\":1,\"prediction_count\":2,\"owner\":\"laureote\",\"source\":\"API\",\"tags\":[],\"created\":\"2024-09-29T10:23:07.633935Z\",\"updated\":\"2024-09-30T13:15:41.777370Z\"},\"type\":\"PRODUCT\",\"product_code\":\"3038350054203\",\"product_name\":null,\"category_tag\":null,\"labels_tags\":null,\"origins_tags\":null,\"price\":1.72,\"price_is_discounted\":false,\"price_without_discount\":null,\"discount_type\":null,\"price_per\":null,\"currency\":null,\"location_osm_id\":145131721,\"location_osm_type\":\"WAY\",\"date\":null,\"receipt_quantity\":null,\"owner_comment\":null,\"owner\":\"laureote\",\"source\":\"API\",\"tags\":[],\"created\":\"2024-09-29T10:23:07.843359Z\",\"updated\":\"2025-09-09T10:23:36.846489Z\",\"duplicate_of\":null},{\"id\":34557,\"product_id\":964455,\"location_id\":1065,\"proof_id\":9065,\"product\":{\"id\":964455,\"code\":\"3560071180768\",\"source\":\"off\",\"source_last_synced\":\"2026-02-16T21:53:25.838841Z\",\"product_name\":\"Pur Jus ORANGE MANGUE & PASSION\",\"image_url\":\"https://images.openfoodfacts.org/images/products/356/007/118/0768/front_fr.21.400.jpg\",\"product_quantity\":1000,\"product_quantity_unit\":\"ml\",\"quantity\":null,\"categories_tags\":[\"en:beverages-and-beverages-preparations\",\"en:plant-based-foods-and-beverages\",\"en:beverages\",\"en:plant-based-beverages\",\"en:fruit-based-beverages\",\"en:juices-and-nectars\",\"en:fruit-juices\",\"en:multifruit-juices\",\"en:squeezed-fruit-juices\",\"en:squeezed-multifruit-juices\"],\"brands\":\"Carrefour,Carrefour Sélection\",\"brands_tags\":[\"carrefour\",\"carrefour-selection\"],\"labels_tags\":[\"en:green-dot\"],\"nutriscore"
+      "title": "Spaghetti No.5 1 kg"
     },
     {
-      "name": "openprices-locations-lidl",
-      "url": "https://prices.openfoodfacts.org/api/v1/locations?size=3&osm_brand=Lidl",
+      "name": "aldi-nord-sitemap",
+      "ms": 192,
       "status": 200,
-      "ms": 104,
-      "bytes": 2579,
-      "contentType": "application/json",
-      "keys": [
-        "items",
-        "page",
-        "pages",
-        "size",
-        "total"
+      "count": 4,
+      "sample": [
+        "https://www.aldi-nord.de/sitemaps/.aldi-nord-sitemap-pages.xml",
+        "https://www.aldi-nord.de/sitemaps/.aldi-nord-sitemap-products.xml",
+        "https://www.aldi-nord.de/sitemaps/.aldi-nord-sitemap-stores.xml",
+        "https://www.aldi-nord.de/sitemaps/.aldi-nord-sitemap-faq.xml"
       ],
-      "total": 7434,
-      "sample": "[{\"id\":1,\"osm_brand_logo_url\":null,\"type\":\"OSM\",\"osm_id\":1392117416,\"osm_type\":\"NODE\",\"osm_name\":\"L'Éléfàn\",\"osm_display_name\":\"L'Éléfàn, 32, Avenue Marcelin Berthelot, Capuche, Secteur 4, Grenoble, Isère, Auvergne-Rhône-Alpes, France métropolitaine, 38100, France\",\"osm_tag_key\":\"shop\",\"osm_tag_value\":\"supermarket\",\"osm_tags\":[\"bulk_purchase:yes\",\"organic:yes\"],\"osm_brand\":null,\"osm_address_postcode\":\"38100\",\"osm_address_city\":\"Grenoble\",\"osm_address_country\":\"France\",\"osm_address_country_code\":\"FR\",\"osm_lat\":45.1750672,\"osm_lon\":5.7304083,\"osm_version\":20,\"osm_version_date\":\"2023-11-20T22:15:30Z\",\"website_url\":null,\"price_count\":4052,\"user_count\":4,\"product_count\":2126,\"proof_count\":93,\"source\":null,\"created\":\"2023-11-27T11:37:14.059085Z\",\"updated\":\"2026-09-16T10:27:56.736101Z\"},{\"id\":2,\"osm_brand_logo_url\":\"https://raw.githubusercontent.com/openfoodfacts/brand-images/refs/heads/main/xx/stores/naturalia.png\",\"type\":\"OSM\",\"osm_id\":2685586034,\"osm_type\":\"NODE\",\"osm_name\":\"Naturalia\",\"osm_display_name\":\"Naturalia, Rue de la Verrerie, Quartier Saint-Merri, Paris 4e Arrondissement, Paris, Île-de-France, France métropolitaine, 75004, France\",\"osm_tag_key\":\"shop\",\"osm_tag_value\":\"supermarket\",\"osm_tags\":[\"organic:only\"],\"osm_brand\":\"Naturalia\",\"osm_address_postcode\":\"75004\",\"osm_address_city\":\"Paris\",\"osm_address_country\":\"France\",\"osm_address_country_code\":\"FR\",\"osm_lat\":48.8585959,\"osm_lon\":2.3511475,\"osm_version\":11,\"osm_version_date\":\"2022-11-26T09:48:12Z\",\"website_url\":null,\"price_count\":304,\"user_count\":5,\"product_count\":250,\"proof_count\":67,\"source\":null,\"created\":\"2023-12-18T15:41:07.584317Z\",\"updated\":\"2026-09-16T08:58:57.210144Z\"}]"
-    },
-    {
-      "name": "robots-aldi-sued",
-      "url": "https://www.aldi-sued.de/robots.txt",
-      "status": 200,
-      "ms": 391,
-      "bytes": 698,
-      "contentType": "text/plain",
-      "head": "User-agent: *\nDisallow: /tools\nDisallow: /*?q=\nAllow: /*?page=*\n\nSitemap: https://www.aldi-sued.de/sitemap.xml\nSitemap: https://www.aldi-sued.de/sitemap_categories.xml\nSitemap: https://www.aldi-sued.de/sitemap_products.xml\nSitemap: https://www.aldi-sued.de/sitemap_stores.xml\n\nUser-Agent: GPTBot\nAllow: /\nUser-Agent: ChatGPT-User\nAllow: /\nUser-Agent: OAI-SearchBot\nAllow: /\nUser-Agent: Google-Extended\nAllow: /\nUser-Agent: Cohere-Ai\nAllow: /\nUser-Agent: OmgiliBot\nAllow: /\nUser-Agent: Omgili\nAllow: /\nUser-Agent: Claude-Web\nAllow: /\nUser-Agent: ClaudeBot\nAllow: /\nUser-Agent: PerplexityBot\nAllow: /\nUser-agent: CCBot\nAllow: /\nUser-agent: anthropic-ai\nAllow: /\nUser-agent: applebot-extended\nAllow: /"
-    },
-    {
-      "name": "robots-aldi-nord",
-      "url": "https://www.aldi-nord.de/robots.txt",
-      "status": 200,
-      "ms": 147,
-      "bytes": 337,
-      "contentType": "text/plain; charset=utf-8",
-      "head": "User-agent: * \n\nSitemap: https://www.aldi-nord.de/.aldi-nord-sitemap.xml\n\nDisallow: /reg-cat.html\nDisallow: /reg-bal.html\nDisallow: /reg-can.html \nDisallow: /ua-bot.html\n\nDisallow: /can/\nDisallow: /can.html\nDisallow: /can$\n\nDisallow: /bal/\nDisallow: /bal.html\nDisallow: /bal$\n\nDisallow: /mds/\n\nDisallow: /*?*filters\nDisallow: /*?*jobId=\n"
-    },
-    {
-      "name": "robots-rewe-shop",
-      "url": "https://shop.rewe.de/robots.txt",
-      "status": 403,
-      "ms": 227,
-      "bytes": 251823,
-      "contentType": "text/html; charset=UTF-8",
-      "head": "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><title>REWE Onlineshop: Lebensmittel &amp; mehr im Online-Supermarkt!</title><style>/*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */html{line-height:1.15;-webkit-text-size-adjust:100%}body{margin:0}main{display:block}h1{font-size:2em;margin:.67em 0}hr{box-sizing:content-box;height:0;overflow:visible}pre{font-family:monospace,monospace;font-size:1em}a{background-color:transparent}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}b,strong{font-weight:bolder}code,kbd,samp{font-family:monospace,monospace;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}img{border-style:none}button,input,optgroup,select,textarea{font-family:inherit;font-size:100%;line-height:1.15;margin:0}button,input{overflow:visible}button,select{text-transform:none}[type=button],[type=reset],[type=submit],button{-webkit-appearance:button}[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner,button::-moz-focus-inner{border-style:none;padding:0}[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring,button:-moz-focusring{outline:1px dotted ButtonText}fieldset{padding:.35em .75em .625em}legend{box-sizing:border-box;color:inherit;display:table;max-width:100%;padding:0;white-space:normal}progress{vertical-align:baseline}textarea{overflow:auto}[type=checkbox],[type=radio]{box-sizing:border-box;padding:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}details{display:block}summary{display:list-item}[hidden],template{display:none}\n/*# sourceMappingURL=normalize.02b6c58e.css.map */</style><style>/* !!!deprecated --- Special (old) Colors --- deprecated!!!*/@font-face{font-family:ReweMato;font-style:normal;font-weight:700;src:url(data:font/woff;base64,d09GRgABAAAAAMBDABEAAAABVpQAAAAAAAC9MAAAAxMAAAX5AAAAAAAAAABHREVGAAABgAAAAEgAAABQBasGI0dQT1MAAAHIAAAT/wAAMryk6CVqT1MvMgAAFcgAAABUAAAAYGeKhk5WRE1YAAAWHAAAA1oAAAXgcM54SmNtYXAAABl4AAACyQAAA3ytYM4IY3Z0IAAAHEQAAABqAAAAtBLBDw1mcGdtAAAcsAAABBcAAAbuXffeAmdhc3AAACDIAAAACAAAAAgAAAAQZ2x5ZgAAINAAAJJWAAECFpIdzW9oZWFkAACzKAAAADYAAAA2D/YP6WhoZWEAALNgAAAAIAAAACQIHAjtaG10eAAAs4AAAAJUAAAD2K9YBS9sb2NhAAC11AAAAfgAAAH407UUgm1heHAAALfMAAAAIAAAACADuQTFbmFtZQAAt+wAAAKjAAAFLbq+aZpwb3N0AAC6kAAAABMAAAAg/58AMnByZXAAALqkAAACiQAAA1DGU3XveNoVyDEOgCAUg+H/AYOD1zEhTJ7FeAQjYfKqbDAyO1Ha5EtaDNhZOXFsBA6MqBqJS9488iXLwicrHc/gl06tNL1r2wQzRwvPeNrFWwuQVNWZ/u+9/bq3e2Z6unuePdMMODAzYBQDIijRoIiJYogsmzUGUwpi2I0hJiExq1VSleBrxRirdq1Kds2yKQTjZi0f2S0FkrUU8IUDGkVmSCCOIaXQGFDo2UXC2e9893T3naHnpVTt/HUffR/n8T"
-    },
-    {
-      "name": "robots-lidl",
-      "url": "https://www.lidl.de/robots.txt",
-      "status": 200,
-      "ms": 144,
-      "bytes": 312,
-      "contentType": "text/plain",
-      "head": "User-agent: *\nDisallow: /cc.js*\nDisallow: /cdn/assets/cwv/\nDisallow: /user-api/*\nDisallow: /cqe/*\nDisallow: *search?q=*\nDisallow: *?offset=*\nDisallow: *idsOnly=*\nDisallow: *productsOnly=*\nDisallow: *id=*\nDisallow: *pageId=*\nDisallow: *advisor=*\nDisallow: *sort=*\n\nSitemap: https://www.lidl.de/static/sitemap.xml\n"
-    },
-    {
-      "name": "robots-kaufland",
-      "url": "https://www.kaufland.de/robots.txt",
-      "status": 403,
-      "ms": 236,
-      "bytes": 10983,
-      "contentType": "text/html; charset=UTF-8",
-      "head": "<!DOCTYPE html><html><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"><title>Kaufland.de - Verifizierung erforderlich</title><style>.tech-info[data-v-616788af]{flex-direction:row;justify-content:center;gap:1rem;font-size:small}.copy-btn[data-v-616788af],.tech-info[data-v-616788af]{align-items:center;display:flex}.copy-btn[data-v-616788af]{cursor:pointer;color:#888;background:#fff;border:none;border-radius:50%;outline:none;padding:.4rem;transition:color .2s,box-shadow .2s;box-shadow:0 2px 8px #0000001f}.copy-btn[data-v-616788af]:focus,.copy-btn[data-v-616788af]:hover{color:#333;box-shadow:0 4px 16px #0000002e}.copy-btn svg[data-v-616788af]{display:block}</style><style>header[data-v-a34e8876]{border-bottom:1px solid #f0f0f0;justify-content:space-between;padding-bottom:11px;display:flex}</style><style>footer[data-v-67c0c2e8]{border-top:1px solid #f0f0f0;padding-top:11px}</style><style>body{color:#424242;max-width:1200px;margin:0 auto;padding:0 33px;font-family:sans-serif}main{padding:11px 0}.page-content{max-width:100%;min-height:50vh}.subpage-content{flex-direction:column;margin-bottom:1em;display:flex}@media (width>=768px){.subpage-content{justify-content:center;align-items:center}}</style><style>.container[data-v-02602438]{gap:2rem;display:flex}@media (width<=767px){.container[data-v-02602438]{flex-direction:column;gap:1rem}}.column[data-v-02602438]{flex:1}</style><style>.container[data-v-02602438]{gap:2rem;display:flex}@media (width<=767px){.container[data-v-02602438]{flex-direction:column;gap:1rem}}.column[data-v-02602438]{flex:1}\n</style><meta http-equiv=\"refresh\" content=\"360\"></head><body><div id=\"__nuxt\"><!--[--><header data-v-a34e8876><img src=\"data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeD0iMCIgeT0iMCIgdmlld0JveD0iMCAwIDI3MDggMjcwOCINCiAgICAgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PHN0eWxlPi5zdDF7ZmlsbDojZTEwOTE1fTwvc3R5bGU+DQogICAgPHBhdGggZD0iTTAgMGgyNzA4djI3MDhIMFYweiIgZmlsbD0iI2ZmZiIvPg0KICAgIDxwYXRoIGNsYXNzPSJzdDEiIGQ9Ik0xMDMuMiAyNjA0LjhoMjUwMS43VjEwMy4ySDEwMy4ydjI1MDEuNnptMjM5OC41LTEwMy4xSDIwNi4zVjIwNi4zaDIyOTUuM3YyMjk1LjR6Ii8+DQogICAgPHBhdGggY2xhc3M9InN0MSINCiAgICAgICAgICBkPSJNODkwLjcgMTA4NC44aDQ1Ny41djQ1Ny41SDg5MC43ek0xNDE3IDEwODQuNnY0NTcuN2g0NTcuOHpNODkwLjcgNTU4LjZoNDU3LjV2NDU3LjVIODkwLjd6TTE0MTcgNTU4LjZ2NDU3LjdsNDU3LjgtNDU3Ljd6TTY3Ni4xIDE4MTIuOGgtODQuNGwtMTA5IDE1Mi4ydi0xNTIuMmgtNzQuNHYzMzEuOWg3NC40di0xNDkuNGwxMDkgMTQ5LjRINjc4bC0xMjgtMTY5Ljh6TTExMDYuMSAyMDY4LjhhNTkuOSA1OS45IDAgMDEtNDcuNCAyNS4xYy0yNyAwLTQzLjEtMTcuNS00My4xLTQ2LjV2LTEyMy44aC02NXYxMzYuNmMwIDUyLjIgMjkuOSA4OS4xIDg0LjkgODkuMWE5NCA5NCAwIDAwNzAuNi0zMS4zdjI2LjZoNjR2LTIyMWgtNjR2MTQ1LjJ6TTE2OTUuMSAxOTIzLjd2MjMuM2E5Ny4zIDk3LjMgMCAwMC02Ny44LTI4Yy02MS42IDAtMTA0LjMgNTEuMi0xMDQuMyAxMTYuMiAwIDY0IDQyLjIgMTE0LjMgMTA0LjMgMTE0LjNhOTQuNiA5NC42IDAgMDA2Ny44LTI3LjV2MjIuOGg2NHYtMjIxaC02NHptMCAxNTAuM2E2MiA2MiAwIDAxLTQ3IDIwLjljLTM0LjIgMC01OC4zLTI0LjYtNTguMy02MC43IDAtMzYgMjQuMi02MC43IDU4LjMtNjAuN2E2MiA2MiA"
-    },
-    {
-      "name": "robots-penny",
-      "url": "https://www.penny.de/robots.txt",
-      "status": 200,
-      "ms": 652,
-      "bytes": 66,
-      "contentType": "text/plain;charset=UTF-8",
-      "head": "User-agent: *\nAllow: /\n\nSitemap: https://www.penny.de/sitemap.xml\n"
+      "products": []
     }
   ],
-  "finishedAt": "2026-10-02T11:27:59.052Z"
+  "finishedAt": "2026-10-02T11:29:41.769Z"
 }
