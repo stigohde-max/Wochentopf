@@ -5,7 +5,7 @@ on:
     - cron: "17 3 * * 1"   # jeden Montag früh
   push:
     branches: [main]
-    paths: ["scripts/update-prices.mjs", "prices/sources.json", ".github/workflows/prices.yml"]
+    paths: ["scripts/update-prices.mjs", "prices/sources.json", "prices/catalog.json", ".github/workflows/prices.yml"]
 permissions:
   contents: write
 jobs:

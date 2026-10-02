@@ -1,0 +1,562 @@
+{
+"hafer": {
+"name": "Haferflocken",
+"size": 500,
+"base": 0.79
+},
+"muesli": {
+"name": "Müsli ohne Zuckerzusatz",
+"size": 750,
+"base": 1.79
+},
+"quark": {
+"name": "Magerquark",
+"size": 500,
+"base": 1.19
+},
+"skyr": {
+"name": "Skyr natur",
+"size": 450,
+"base": 1.29
+},
+"huettenkaese": {
+"name": "Hüttenkäse",
+"size": 200,
+"base": 0.99
+},
+"joghurt": {
+"name": "Naturjoghurt 3,5 %",
+"size": 500,
+"base": 0.69
+},
+"sojajoghurt": {
+"name": "Soja-Joghurt natur",
+"size": 500,
+"base": 1.29
+},
+"pudding": {
+"name": "High-Protein-Pudding",
+"size": 200,
+"base": 0.99
+},
+"eier": {
+"name": "Eier Bodenhaltung",
+"size": 600,
+"base": 2.19
+},
+"milch": {
+"name": "H-Milch 1,5 %",
+"size": 1000,
+"base": 0.99
+},
+"sojadrink": {
+"name": "Sojadrink",
+"size": 1000,
+"base": 1.19
+},
+"gouda": {
+"name": "Gouda in Scheiben",
+"size": 400,
+"base": 2.99
+},
+"reibekaese": {
+"name": "Reibekäse Gouda",
+"size": 200,
+"base": 1.49
+},
+"mozzarella": {
+"name": "Mozzarella",
+"size": 125,
+"base": 0.89
+},
+"feta": {
+"name": "Hirtenkäse",
+"size": 200,
+"base": 1.29
+},
+"frischkaese": {
+"name": "Frischkäse leicht",
+"size": 200,
+"base": 0.99
+},
+"hummus": {
+"name": "Hummus",
+"size": 200,
+"base": 1.29
+},
+"schinken": {
+"name": "Kochschinken",
+"size": 200,
+"base": 1.79
+},
+"haehnchenAufschnitt": {
+"name": "Hähnchenbrust-Aufschnitt",
+"size": 150,
+"base": 1.49
+},
+"haehnchen": {
+"name": "Hähnchenbrustfilet, TK",
+"size": 1000,
+"base": 7.49
+},
+"pute": {
+"name": "Putenbrustfilet",
+"size": 400,
+"base": 3.99
+},
+"hack": {
+"name": "Hackfleisch gemischt",
+"size": 500,
+"base": 3.99
+},
+"rinderhack": {
+"name": "Rinderhackfleisch",
+"size": 500,
+"base": 4.99
+},
+"thunfisch": {
+"name": "Thunfisch im eigenen Saft",
+"size": 130,
+"base": 1.29
+},
+"lachs": {
+"name": "Lachsfilet, TK",
+"size": 250,
+"base": 3.99
+},
+"seelachs": {
+"name": "Alaska-Seelachsfilet, TK",
+"size": 400,
+"base": 3.29
+},
+"fischstaebchen": {
+"name": "Fischstäbchen, TK",
+"size": 450,
+"base": 2.29
+},
+"tofu": {
+"name": "Tofu natur",
+"size": 400,
+"base": 2.29
+},
+"soja": {
+"name": "Soja-Schnetzel, trocken",
+"size": 150,
+"base": 1.79
+},
+"linsen": {
+"name": "Rote Linsen",
+"size": 500,
+"base": 1.49
+},
+"kichererbsen": {
+"name": "Kichererbsen",
+"size": 240,
+"base": 0.79
+},
+"kidney": {
+"name": "Kidneybohnen",
+"size": 240,
+"base": 0.69
+},
+"bohnenTomate": {
+"name": "Weiße Bohnen in Tomatensoße",
+"size": 420,
+"base": 0.79
+},
+"mais": {
+"name": "Gemüsemais",
+"size": 285,
+"base": 0.79
+},
+"tomatenDose": {
+"name": "Gehackte Tomaten",
+"size": 400,
+"base": 0.59
+},
+"passiert": {
+"name": "Passierte Tomaten",
+"size": 500,
+"base": 0.59
+},
+"kokosmilch": {
+"name": "Kokosmilch",
+"size": 400,
+"base": 1.29
+},
+"pesto": {
+"name": "Pesto Basilico",
+"size": 190,
+"base": 1.29
+},
+"reis": {
+"name": "Langkornreis",
+"size": 1000,
+"base": 1.49
+},
+"bulgur": {
+"name": "Bulgur",
+"size": 500,
+"base": 1.19
+},
+"couscous": {
+"name": "Couscous",
+"size": 500,
+"base": 1.29
+},
+"nudeln": {
+"name": "Vollkornnudeln",
+"size": 500,
+"base": 0.99
+},
+"spaghetti": {
+"name": "Spaghetti",
+"size": 500,
+"base": 0.79
+},
+"mie": {
+"name": "Mie-Nudeln",
+"size": 250,
+"base": 0.89
+},
+"gnocchi": {
+"name": "Gnocchi",
+"size": 500,
+"base": 1.19
+},
+"kartoffeln": {
+"name": "Kartoffeln, festkochend",
+"size": 2000,
+"base": 2.29
+},
+"suesskartoffel": {
+"name": "Süßkartoffeln",
+"size": 1000,
+"base": 2.49
+},
+"brot": {
+"name": "Vollkornbrot",
+"size": 500,
+"base": 1.29
+},
+"toast": {
+"name": "Vollkorntoast",
+"size": 500,
+"base": 1.09
+},
+"knaecke": {
+"name": "Vollkorn-Knäckebrot",
+"size": 250,
+"base": 0.99
+},
+"wraps": {
+"name": "Weizen-Tortillas",
+"size": 370,
+"base": 1.49
+},
+"erdnuss": {
+"name": "Erdnussbutter",
+"size": 350,
+"base": 2.29
+},
+"nuesse": {
+"name": "Nussmischung",
+"size": 200,
+"base": 2.49
+},
+"banane": {
+"name": "Bananen",
+"size": 1000,
+"base": 1.39
+},
+"apfel": {
+"name": "Äpfel",
+"size": 1000,
+"base": 1.99
+},
+"beeren": {
+"name": "Beerenmischung, TK",
+"size": 750,
+"base": 3.49
+},
+"brokkoli": {
+"name": "Brokkoli, TK",
+"size": 1000,
+"base": 2.19
+},
+"erbsen": {
+"name": "Erbsen, TK",
+"size": 1000,
+"base": 1.99
+},
+"gemuesemix": {
+"name": "Pfannengemüse, TK",
+"size": 750,
+"base": 1.99
+},
+"spinat": {
+"name": "Blattspinat, TK",
+"size": 450,
+"base": 1.19
+},
+"paprika": {
+"name": "Paprika",
+"size": 160,
+"base": 0.79
+},
+"zucchini": {
+"name": "Zucchini",
+"size": 300,
+"base": 0.79
+},
+"champignons": {
+"name": "Champignons",
+"size": 400,
+"base": 1.79
+},
+"tomaten": {
+"name": "Rispentomaten",
+"size": 500,
+"base": 1.49
+},
+"karotten": {
+"name": "Karotten",
+"size": 1000,
+"base": 0.99
+},
+"gurke": {
+"name": "Salatgurke",
+"size": 400,
+"base": 0.69
+},
+"zwiebeln": {
+"name": "Zwiebeln",
+"size": 1000,
+"base": 1.19
+},
+"broetchen": {
+"name": "Aufback-Brötchen",
+"size": 360,
+"base": 0.99
+},
+"croissant": {
+"name": "Croissants",
+"size": 240,
+"base": 1.29
+},
+"fladenbrot": {
+"name": "Fladenbrot",
+"size": 450,
+"base": 1.29
+},
+"butter": {
+"name": "Butter",
+"size": 250,
+"base": 1.99
+},
+"marmelade": {
+"name": "Konfitüre Erdbeere",
+"size": 450,
+"base": 1.29
+},
+"honig": {
+"name": "Honig",
+"size": 500,
+"base": 2.99
+},
+"nutella": {
+"name": "Nuss-Nougat-Creme",
+"size": 400,
+"base": 1.99
+},
+"salami": {
+"name": "Salami in Scheiben",
+"size": 200,
+"base": 1.79
+},
+"speck": {
+"name": "Frühstücksspeck",
+"size": 150,
+"base": 1.49
+},
+"orangensaft": {
+"name": "Orangensaft",
+"size": 1000,
+"base": 1.49
+},
+"apfelmus": {
+"name": "Apfelmus",
+"size": 710,
+"base": 0.99
+},
+"mehl": {
+"name": "Weizenmehl",
+"size": 1000,
+"base": 0.69
+},
+"kochsahne": {
+"name": "Kochsahne 15 %",
+"size": 200,
+"base": 0.59
+},
+"lasagneplatten": {
+"name": "Lasagneplatten",
+"size": 500,
+"base": 0.99
+},
+"spaetzle": {
+"name": "Eierspätzle",
+"size": 500,
+"base": 1.29
+},
+"schnitzel": {
+"name": "Schweineschnitzel",
+"size": 500,
+"base": 4.49
+},
+"bratwurst": {
+"name": "Bratwurst",
+"size": 400,
+"base": 2.99
+},
+"haehnchenschenkel": {
+"name": "Hähnchenschenkel",
+"size": 1000,
+"base": 3.49
+},
+"falafel": {
+"name": "Falafel, Kühlregal",
+"size": 250,
+"base": 1.99
+},
+"pizzaTK": {
+"name": "Steinofen-Pizza Margherita, TK",
+"size": 350,
+"base": 1.79
+},
+"rotkohl": {
+"name": "Rotkohl",
+"size": 700,
+"base": 0.99
+},
+"lauch": {
+"name": "Lauch",
+"size": 300,
+"base": 0.99
+},
+"blumenkohl": {
+"name": "Blumenkohl",
+"size": 800,
+"base": 1.99
+},
+"aubergine": {
+"name": "Aubergine",
+"size": 300,
+"base": 0.99
+},
+"kuerbis": {
+"name": "Hokkaido-Kürbis",
+"size": 1000,
+"base": 1.99
+},
+"fruehlingszwiebeln": {
+"name": "Frühlingszwiebeln",
+"size": 100,
+"base": 0.59
+},
+"reisnudeln": {
+"name": "Reisnudeln",
+"size": 250,
+"base": 1.29
+},
+"quinoa": {
+"name": "Quinoa",
+"size": 500,
+"base": 2.99
+},
+"erdnuesse": {
+"name": "Erdnüsse, geröstet",
+"size": 200,
+"base": 1.29
+},
+"sauerrahm": {
+"name": "Saure Sahne",
+"size": 200,
+"base": 0.69
+},
+"pizzateig": {
+"name": "Pizzateig, Kühlregal",
+"size": 400,
+"base": 1.29
+},
+"salat": {
+"name": "Eisbergsalat",
+"size": 500,
+"base": 0.99
+},
+"avocado": {
+"name": "Avocado",
+"size": 200,
+"base": 0.99
+},
+"heidelbeeren": {
+"name": "Heidelbeeren",
+"size": 250,
+"base": 2.49
+},
+"rindersteak": {
+"name": "Rinderhüftsteak",
+"size": 400,
+"base": 7.99
+},
+"gyros": {
+"name": "Gyros-Geschnetzeltes, gewürzt",
+"size": 500,
+"base": 3.99
+},
+"burgerPatties": {
+"name": "Rinder-Burger-Patties",
+"size": 360,
+"base": 4.49
+},
+"burgerBrot": {
+"name": "Burger-Brötchen",
+"size": 300,
+"base": 1.29
+},
+"garnelen": {
+"name": "Garnelen, TK",
+"size": 250,
+"base": 4.49
+},
+"lachsRaeucher": {
+"name": "Räucherlachs",
+"size": 200,
+"base": 3.99
+},
+"halloumi": {
+"name": "Grillkäse Halloumi",
+"size": 225,
+"base": 2.49
+},
+"tortellini": {
+"name": "Tortellini mit Käsefüllung",
+"size": 400,
+"base": 1.79
+},
+"edamame": {
+"name": "Edamame, TK",
+"size": 500,
+"base": 2.49
+},
+"mandeln": {
+"name": "Mandeln",
+"size": 200,
+"base": 2.49
+},
+"proteinriegel": {
+"name": "Proteinriegel",
+"size": 45,
+"base": 1.29
+}
+}
