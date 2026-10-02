@@ -1,13 +1,12 @@
 {
-  "at": "2026-10-02T11:30:56.299Z",
-  "sued": 4897,
-  "nord": 2235,
-  "nordStatus": 200,
-  "nordProbe": {
-    "url": "https://www.aldi-nord.de/produkt/kernige-haferflocken-8620.html",
-    "status": 200,
-    "bytes": 75866,
-    "ld": [],
-    "priceSnips": []
-  }
+  "at": "2026-10-02T11:34:46.775Z",
+  "found": 58,
+  "of": 61,
+  "log": [
+    "haehnchen: kein Preis auf https://www.aldi-sued.de/produkt/meine-metzgerei-haehnchenbrustfilet-teilstueck-1-kg-000000000000211078",
+    "haehnchen: nicht gefunden (1 Kandidaten)",
+    "kichererbsen: kein Preis auf https://www.aldi-sued.de/produkt/king-s-crown-kichererbsen-265-g-000000000000625269",
+    "kichererbsen: nicht gefunden (1 Kandidaten)",
+    "speck: verworfen, 4.04 € statt etwa 1.49 € (Bacon-Streifen 100 g)"
+  ]
 }
