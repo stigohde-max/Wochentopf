@@ -307,7 +307,7 @@ footer.note { margin-top: 28px; font-size: 0.8rem; color: var(--muted); }
   <section id="view-list" class="stack" hidden></section>
   <section id="view-profile" class="stack" hidden></section>
 
-  <footer class="note">Viele Preise kommen jede Woche frisch von den Produktseiten bei Aldi Süd, der Rest sind Richtwerte. Angebote und Filialpreise können abweichen. Unter „Profil“ trägst du Preise vom Kassenbon ein, die dann immer gelten. Öl, Salz, Pfeffer, Gewürze und Brühe setzt der Plan als Grundvorrat voraus.<br><a href="info/" class="flink">Über Wochentopf, Installation & Datenschutz</a><br><span id="appVersion">Version 02.10.2026 · 3</span></footer>
+  <footer class="note">Viele Preise kommen jede Woche frisch von den Produktseiten bei Aldi Süd, der Rest sind Richtwerte. Angebote und Filialpreise können abweichen. Unter „Profil“ trägst du Preise vom Kassenbon ein, die dann immer gelten. Öl, Salz, Pfeffer, Gewürze und Brühe setzt der Plan als Grundvorrat voraus.<br><a href="info/" class="flink">Über Wochentopf, Installation & Datenschutz</a><br><span id="appVersion">Version 02.10.2026 · 4</span></footer>
 </div>
 <div class="toast" id="toast" hidden></div>
 
@@ -315,7 +315,7 @@ footer.note { margin-top: 28px; font-size: 0.8rem; color: var(--muted); }
 /* ---------- Settings for the test phase ---------- */
 // goatcounter: your GoatCounter code (e.g. "wochentopf" for wochentopf.goatcounter.com) — counts visits anonymously, no cookies.
 // feedbackUrl: a Tally or Google form link; empty = feedback is sent via the phone's share menu or copied.
-const CONFIG = { goatcounter: "", feedbackUrl: "" };
+const CONFIG = { goatcounter: "wochentopf", feedbackUrl: "" };
 
 // Current prices, collected every Monday from aldi-sued.de (scripts/update-prices.mjs). The build puts the latest
 // copy in here; the app also loads prices/prices.json on start and keeps the newest one.
@@ -350,7 +350,7 @@ function track(event) {
   if (!CONFIG.goatcounter || (window.claude && window.claude.use)) return;
   try {
     const u = `https://${CONFIG.goatcounter}.goatcounter.com/count?p=${encodeURIComponent(event === "open" ? "/" : "/" + event)}${event === "open" ? "" : "&e=true"}&s=${screen.width}&rnd=${Math.random().toString(36).slice(2)}`;
-    if (navigator.sendBeacon) navigator.sendBeacon(u); else new Image().src = u;
+    new Image().src = u; // the same GET request as GoatCounter's own tracking pixel
   } catch (e) {}
 }
 
