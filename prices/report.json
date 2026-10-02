@@ -1,99 +1,13 @@
 {
-  "startedAt": "2026-10-02T11:29:37.551Z",
-  "probes": [
-    {
-      "name": "openprices-openapi",
-      "error": "SyntaxError: Unexpected token '<', \"\n<!doctype \"... is not valid JSON",
-      "ms": 1169
-    },
-    {
-      "name": "aldi-sued-sitemap",
-      "ms": 1104,
-      "status": 200,
-      "bytes": 709279,
-      "count": 4897,
-      "sample": [
-        "https://www.aldi-sued.de/produkt/ferrero-maxi-king-105-g-000000000000107055",
-        "https://www.aldi-sued.de/produkt/emmi-caffe-latte-370-ml-cappuccino-000000000111067001",
-        "https://www.aldi-sued.de/produkt/emmi-caffe-latte-370-ml-balance-000000000111067004",
-        "https://www.aldi-sued.de/produkt/emmi-caffe-latte-370-ml-high-protein-000000000111067003",
-        "https://www.aldi-sued.de/produkt/emmi-caffe-latte-370-ml-latte-macchiato-000000000111067002"
-      ],
-      "food": [
-        "https://www.aldi-sued.de/produkt/barilla-spaghetti-no-5-1-kg-000000000000108993",
-        "https://www.aldi-sued.de/produkt/meine-kuchenwelt-milchbroetchen-natur-480-g-000000000000187534",
-        "https://www.aldi-sued.de/produkt/bon-ri-basmati-reis-1-kg-000000000000193967",
-        "https://www.aldi-sued.de/produkt/choceur-schoko-milch-riegel-200-g-000000000000194055",
-        "https://www.aldi-sued.de/produkt/choceur-vollmilch-schokolade-100-g-000000000000194128",
-        "https://www.aldi-sued.de/produkt/milsani-kondensmilch-10-340-g-000000000000202293",
-        "https://www.aldi-sued.de/produkt/milsani-kondensmilch-7-5-340-g-000000000000202302",
-        "https://www.aldi-sued.de/produkt/milsani-reine-buttermilch-500-g-000000000000202666",
-        "https://www.aldi-sued.de/produkt/milsani-kondensmilch-4-340-g-fettreduziert-000000000000203300",
-        "https://www.aldi-sued.de/produkt/weihenstephan-h-milch-3-5-1-l-000000000000203338",
-        "https://www.aldi-sued.de/produkt/milsani-h-milch-1-5-1-l-laktosefrei-fettarm-000000000000329387",
-        "https://www.aldi-sued.de/produkt/choceur-nussknacker-vollmilch-100-g-000000000000434365",
-        "https://www.aldi-sued.de/produkt/bio-frische-bio-milch-1-5-1-l-fettarm-000000000000484942",
-        "https://www.aldi-sued.de/produkt/bio-frische-bio-vollmilch-3-8-1-l-000000000000484957",
-        "https://www.aldi-sued.de/produkt/nur-nur-natur-frische-bio-vollmilch-3-8-1-l-000000000000493388",
-        "https://www.aldi-sued.de/produkt/nur-nur-natur-bio-vollkorn-basmatireis-500-g-000000000000494015",
-        "https://www.aldi-sued.de/produkt/choceur-milchriegel-100-g-000000000000513894",
-        "https://www.aldi-sued.de/produkt/milsani-speisequark-magerstufe-250-g-000000000000548387",
-        "https://www.aldi-sued.de/produkt/bio-bio-h-milch-1-5-fett-1-l-000000000000549571",
-        "https://www.aldi-sued.de/produkt/bio-bio-h-vollmilch-3-8-fett-1-l-000000000000551243",
-        "https://www.aldi-sued.de/produkt/milsani-speisequark-250-g-20-fett-000000000000558448",
-        "https://www.aldi-sued.de/produkt/milsani-speisequark-magerstufe-500-g-0-3-000000000000558481",
-        "https://www.aldi-sued.de/produkt/milsani-speisequark-250-g-40-fett-000000000000558702",
-        "https://www.aldi-sued.de/produkt/speisezeit-huehner-nudeltopf-800-g-000000000000577003",
-        "https://www.aldi-sued.de/produkt/milsani-back-camembert-mit-wildpreiselbeer-dip-350-g-000000000000589034"
-      ]
-    },
-    {
-      "name": "aldi-sued-product-magerquark",
-      "ms": 2,
-      "note": "no url"
-    },
-    {
-      "name": "aldi-sued-product-haferflocken",
-      "ms": 1,
-      "note": "no url"
-    },
-    {
-      "name": "aldi-sued-product-spaghetti",
-      "ms": 1750,
-      "url": "https://www.aldi-sued.de/produkt/barilla-spaghetti-no-5-1-kg-000000000000108993",
-      "status": 200,
-      "bytes": 895442,
-      "hasNextData": false,
-      "hasNuxt": true,
-      "ld": [
-        "{\"@context\":\"https://schema.org\",\"@type\":\"BreadcrumbList\",\"itemListElement\":[{\"@type\":\"ListItem\",\"position\":1,\"name\":\"Startseite\",\"item\":\"https://www.aldi-sued.de/\"},{\"@type\":\"ListItem\",\"position\":2,\"name\":\"Produkte\",\"item\":\"https://www.aldi-sued.de/produkte\"},{\"@type\":\"ListItem\",\"position\":3,\"name\":\"Nudeln, Reis & Hülsenfrüchte\",\"item\":\"https://www.aldi-sued.de/produkte/nudeln-reis-huelsenfruechte/k/1588161425467115\"},{\"@type\":\"ListItem\",\"position\":4,\"name\":\"Nudeln & Pasta\",\"item\":\"https://www.aldi-sued.de/produkte/nudeln-reis-huelsenfruechte/nudeln-pasta/k/1588161425467116\"},{\"@type\":\"ListItem\",\"position\":5,\"name\":\"Spaghetti No.5 1 kg\",\"item\":\"https://www.aldi-sued.de/produkt/barilla-spaghetti-no-5-1-kg-000000000000108993\"}]}",
-        "{\"offers\":{\"@type\":\"Offer\",\"url\":\"https://www.aldi-sued.de/produkt/barilla-spaghetti-no-5-1-kg-000000000000108993\",\"price\":\"1.69\",\"priceCurrency\":\"EUR\",\"itemCondition\":\"https://schema.org/NewCondition\",\"availability\":\"https://schema.org/InStock\"},\"image\":[\"https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/300/f4ad7edf-e5af-46f2-8b03-80378d0a701f/Spaghetti%20No.5%201%20kg\"],\"@type\":\"Product\",\"name\":\"Spaghetti No.5 1 kg\",\"description\":\"Je 1-kg-Packung. Schnell zubereitet. Ideal zu Fisch, Fleisch und Gemüse. \",\"@context\":\"https://schema.org/\",\"brand\":{\"@type\":\"Brand\",\"name\":\"BARILLA\"}}"
-      ],
-      "priceSnips": [
-        "oduct-listing-page__title,mdcc12=ap[class^^^e^dqproduct-details^dq],mdcc13=ah1.product-details__title,mdcc14=aspan.base-price__regular,mdcc15=bdigitalData.product.sku,mdcc17=a[data-nr^e^dqproduct-search-count^dq],mdcc19=adiv.toast-overflow__noti",
-        "og:title\" content=\"Spaghetti No.5 1 kg\"><meta property=\"og:description\" content=\"So viel Spaß macht Qualität zu kleinen Preisen. Spaghetti No.5 1 kg zum günstigen ALDI Preis ➔ Jetzt bei ALDI SÜD kaufen!\">",
-        "tle\" content=\"Spaghetti No.5 1 kg\"><meta property=\"twitter:description\" content=\"So viel Spaß macht Qualität zu kleinen Preisen. Spaghetti No.5 1 kg zum günstigen ALDI Preis ➔ Jetzt bei ALDI SÜD kaufen!\">",
-        "2-8b03-80378d0a701f/Spaghetti%20No.5%201%20kg\"><meta name=\"description\" content=\"So viel Spaß macht Qualität zu kleinen Preisen. Spaghetti No.5 1 kg zum günstigen ALDI Preis ➔ Jetzt bei ALDI SÜD kaufen!\">",
-        "on\">{\"offers\":{\"@type\":\"Offer\",\"url\":\"https://www.aldi-sued.de/produkt/barilla-spaghetti-no-5-1-kg-000000000000108993\",\"price\":\"1.69\",\"priceCurrency\":\"EUR\",\"itemCondition\":\"https://schema.org/NewCondition\",\"availability\":\"https://schema.org/InSt",
-        "s__sticky-interaction\"><div class=\"product-details__sticky-interaction-content\"><div class=\"product-details__weight-and-price\">",
-        "<!--[--><!----><div class=\"base-price base-price--product-details price-section product-details--initializing\">",
-        "<!----><div class=\"\"><!----></div><span class=\"base-price__regular\"><span>1,69 €</span><span class=\"base-price__superscript\" data-test=\"superscript-special-buy\">¹ "
-      ],
-      "title": "Spaghetti No.5 1 kg"
-    },
-    {
-      "name": "aldi-nord-sitemap",
-      "ms": 192,
-      "status": 200,
-      "count": 4,
-      "sample": [
-        "https://www.aldi-nord.de/sitemaps/.aldi-nord-sitemap-pages.xml",
-        "https://www.aldi-nord.de/sitemaps/.aldi-nord-sitemap-products.xml",
-        "https://www.aldi-nord.de/sitemaps/.aldi-nord-sitemap-stores.xml",
-        "https://www.aldi-nord.de/sitemaps/.aldi-nord-sitemap-faq.xml"
-      ],
-      "products": []
-    }
-  ],
-  "finishedAt": "2026-10-02T11:29:41.769Z"
+  "at": "2026-10-02T11:30:56.299Z",
+  "sued": 4897,
+  "nord": 2235,
+  "nordStatus": 200,
+  "nordProbe": {
+    "url": "https://www.aldi-nord.de/produkt/kernige-haferflocken-8620.html",
+    "status": 200,
+    "bytes": 75866,
+    "ld": [],
+    "priceSnips": []
+  }
 }
