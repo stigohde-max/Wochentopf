@@ -287,7 +287,7 @@ footer.note { margin-top: 28px; font-size: 0.8rem; color: var(--muted); }
   <section id="view-list" class="stack" hidden></section>
   <section id="view-profile" class="stack" hidden></section>
 
-  <footer class="note">Viele Preise kommen jede Woche frisch von den Produktseiten bei Aldi Süd, der Rest sind Richtwerte. Angebote und Filialpreise können abweichen. Unter „Profil“ trägst du Preise vom Kassenbon ein, die dann immer gelten. Öl, Salz, Pfeffer, Gewürze und Brühe setzt der Plan als Grundvorrat voraus.<br><a href="info/" class="flink">Über Wochentopf, Installation & Datenschutz</a><br><span id="appVersion">Version 02.10.2026 · 2</span></footer>
+  <footer class="note">Viele Preise kommen jede Woche frisch von den Produktseiten bei Aldi Süd, der Rest sind Richtwerte. Angebote und Filialpreise können abweichen. Unter „Profil“ trägst du Preise vom Kassenbon ein, die dann immer gelten. Öl, Salz, Pfeffer, Gewürze und Brühe setzt der Plan als Grundvorrat voraus.<br><a href="info/" class="flink">Über Wochentopf, Installation & Datenschutz</a><br><span id="appVersion">Version 02.10.2026 · 3</span></footer>
 </div>
 <div class="toast" id="toast" hidden></div>
 
@@ -818,7 +818,8 @@ function randomPlan(rng, pools) {
   const slots = mainSlots();
   const nb = Math.ceil(slots.length / 2);
   if (nb && pools.main.length) {
-    const k = Math.min(pools.main.length, 4 + Math.floor(rng() * 4));
+    // one dish per cooking slot: cooked in the evening, the rest the next lunch, then not again this week
+    const k = Math.min(pools.main.length, nb);
     const chosen = pick(rng, pools.main, k);
     const liked = pools.main.filter(r => S.likeR.includes(r) && !chosen.includes(r));
     if (liked.length && rng() < 0.8) chosen[chosen.length - 1] = liked[Math.floor(rng() * liked.length)];
@@ -912,8 +913,8 @@ function score(plan, ev) {
   // weekdays: only quick dishes on the days you cook
   if (S.quick) mainSlots().forEach(([d], idx) => { if (idx % 2 === 0 && d < 5) { const r = plan.batches[idx / 2]; if (r && R[r].m > 25) s -= 5; } });
   // at least 4 different main dishes a week (when enough are allowed)
-  const mains = new Set(plan.batches).size, want = Math.min(4, plan.batches.length);
-  if (mains < want) s -= (want - mains) * 6;
+  // a dish only once a week (evening + the next lunch); repeats only when too few dishes are allowed
+  s -= (plan.batches.length - new Set(plan.batches).size) * 15;
   s += (ev.pantryValue || 0) * 1.5;
   if (peopleMode()) for (const m of mealsOf(plan)) if (!m.fixed && m.rid !== OUT && !okFor(m.rid, eatersOf(m.day + "-" + m.slot))) s -= 60;
   if (ev.cost > S.budget) s -= 1000 + (ev.cost - S.budget) * 10;
@@ -924,7 +925,7 @@ function score(plan, ev) {
 function sized(p) {
   p.scale = 1;
   const raw = evaluate(p);
-  p.scale = raw.kcalDay ? Math.min(1.4, Math.max(0.8, Math.round(kcalTarget() / raw.kcalDay * 20) / 20)) : 1;
+  p.scale = raw.kcalDay ? Math.min(2, Math.max(0.8, Math.round(kcalTarget() / raw.kcalDay * 20) / 20)) : 1;
   let ev = evaluate(p);
   while (ev.cost > S.budget && p.scale > 0.85) { p.scale = Math.round((p.scale - 0.05) * 100) / 100; ev = evaluate(p); }
   return ev;
@@ -1015,7 +1016,9 @@ function renderBanner(ev) {
   if (S.isExample) html = `<div class="banner" style="margin-bottom:14px"><div><b>Das ist ein Beispielplan.</b><p class="small">Wähle unter „Planen“ deinen Supermarkt, dein Budget und dein Ziel. Dann tippst du auf „Plan erstellen“.</p></div></div>`;
   else if (age > 6) html = `<div class="banner" style="margin-bottom:14px"><div><b>Neue Woche!</b><p class="small">Bei welchem Supermarkt kaufst du diesmal ein? Wähle ihn unter „Planen“ und erstelle einen neuen Plan.</p></div><button class="btn small" data-act="goplan">Zum Planen</button></div>`;
   else if (ev && ev.cost > S.budget) html = `<div class="banner warn" style="margin-bottom:14px"><div><b>${eur(ev.cost - S.budget)} über Budget.</b><p class="small">Mit diesen Einstellungen passt kein Plan ins Budget. Probiere „Möglichst günstig“, lass weniger weg oder erhöhe das Budget.</p></div></div>`;
-  else if (ev && ev.kcalDay < kcalTarget() * 0.9 && S.showNutri) html = `<div class="banner warn" style="margin-bottom:14px"><div><b>Das Budget reicht nicht ganz für ${Math.round(kcalTarget()).toLocaleString("de-DE")} kcal am Tag.</b><p class="small">Der Plan kommt auf etwa ${Math.round(ev.kcalDay).toLocaleString("de-DE")} kcal. Mehr Budget oder das Ziel „Möglichst günstig“ helfen, zum Beispiel mit mehr Haferflocken, Reis und Linsen.</p></div></div>`;
+  else if (ev && ev.kcalDay < kcalTarget() * 0.9 && S.showNutri) html = ev.cost >= S.budget * planShare() * 0.95
+    ? `<div class="banner warn" style="margin-bottom:14px"><div><b>Das Budget reicht nicht ganz für ${Math.round(kcalTarget()).toLocaleString("de-DE")} kcal am Tag.</b><p class="small">Der Plan nutzt ${eur(ev.cost)} und kommt auf etwa ${Math.round(ev.kcalDay).toLocaleString("de-DE")} kcal. Mehr Budget oder das Ziel „Möglichst günstig“ helfen, zum Beispiel mit mehr Haferflocken, Reis und Linsen.</p></div></div>`
+    : `<div class="banner warn" style="margin-bottom:14px"><div><b>Der Plan kommt nur auf etwa ${Math.round(ev.kcalDay).toLocaleString("de-DE")} kcal am Tag.</b><p class="small">Die Portionen sind schon doppelt so groß wie normal. Nimm einen Snack dazu oder plan mehr Mahlzeiten, um auf ${Math.round(kcalTarget()).toLocaleString("de-DE")} kcal zu kommen.</p></div></div>`;
   b.innerHTML = html;
 }
 
