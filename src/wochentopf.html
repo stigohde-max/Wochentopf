@@ -330,7 +330,8 @@ function track(event) {
   if (!CONFIG.goatcounter || (window.claude && window.claude.use)) return;
   try {
     const u = `https://${CONFIG.goatcounter}.goatcounter.com/count?p=${encodeURIComponent(event === "open" ? "/" : "/" + event)}${event === "open" ? "" : "&e=true"}&s=${screen.width}&rnd=${Math.random().toString(36).slice(2)}`;
-    new Image().src = u; // the same GET request as GoatCounter's own tracking pixel
+    // the same GET request as GoatCounter's own tracking pixel; keepalive lets it finish even if the app closes
+    fetch(u, { mode: "no-cors", keepalive: true, credentials: "omit" }).catch(() => {});
   } catch (e) {}
 }
 

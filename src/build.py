@@ -80,6 +80,7 @@ self.addEventListener("activate", e => {{
 self.addEventListener("fetch", e => {{
   if (e.request.method !== "GET") return;
   const url = new URL(e.request.url);
+  if (url.origin !== location.origin) return; // other sites (e.g. the visit counter) go straight to the network
   const isPage = e.request.mode === "navigate" || url.pathname.endsWith("/") || url.pathname.endsWith(".html") || url.pathname.endsWith("prices.json");
   if (isPage) {{
     // the app itself: always try the newest version first, fall back to the saved copy offline
