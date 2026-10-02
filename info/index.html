@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Wochentopf</title>
+<meta name="description" content="Essensplan und Einkaufsliste für dein Wochenbudget, passend zu Aldi, Lidl, Rewe & Co. Kostenlos, ohne Anmeldung.">
+<meta name="theme-color" content="#2C6A43">
+<link rel="icon" href="../icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="../icons/icon-180.png">
+<style>
+@font-face { font-family: "Bricolage Grotesque"; font-weight: 200 800; font-display: swap; src: url(../fonts/bricolage.woff2) format("woff2"); }
+@font-face { font-family: "Figtree"; font-weight: 300 900; font-display: swap; src: url(../fonts/figtree.woff2) format("woff2"); }
+/* Layout: one reading column; screenshots in a row that wraps on phones */
+:root { --bg: #EEF2EC; --surface: #FFFFFF; --ink: #17221B; --muted: #5B6A60; --line: #D5DDD3; --accent: #2C6A43; --accent-soft: #DCEBDF; --accent-ink: #FFFFFF; --tag: #F3D35B; --tag-ink: #221D07;
+  --display: "Bricolage Grotesque", "Figtree", system-ui, sans-serif; --body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif; color-scheme: light; }
+@media (prefers-color-scheme: dark) { :root { --bg: #0F1511; --surface: #172019; --ink: #E5ECE5; --muted: #98A89C; --line: #2A372E; --accent: #72C08D; --accent-soft: #1F3527; --accent-ink: #0B140E; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--body); }
+main { max-width: 760px; margin: 0 auto; padding-inline: 18px; padding-block: 28px 64px; }
+h1, h2, h3 { font-family: var(--display); line-height: 1.12; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(2.2rem, 7vw, 3.4rem); font-weight: 800; letter-spacing: -0.02em; }
+h2 { font-size: 1.45rem; font-weight: 800; margin-top: 44px; margin-bottom: 12px; }
+h3 { font-size: 1.05rem; }
+p { margin: 0 0 12px; max-width: 62ch; }
+.lead { font-size: 1.15rem; color: var(--muted); margin-top: 12px; }
+.tag { display: inline-block; background: var(--tag); color: var(--tag-ink); font-weight: 700; padding: 2px 9px; border-radius: 5px; transform: rotate(-2deg); }
+.cta { display: inline-flex; align-items: center; gap: 8px; margin-top: 18px; background: var(--accent); color: var(--accent-ink); text-decoration: none; font-weight: 700; padding: 13px 20px; border-radius: 12px; }
+.cta:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.shots { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 28px; }
+.shots figure { margin: 0; }
+.shots img { width: 100%; border-radius: 14px; border: 1px solid var(--line); display: block; }
+.shots figcaption { font-size: 0.85rem; color: var(--muted); margin-top: 6px; }
+.features { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.features div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+.features p { font-size: 0.95rem; color: var(--muted); margin: 4px 0 0; }
+.steps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.steps div { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+.steps ol { margin: 8px 0 0; padding-left: 20px; }
+.note { font-size: 0.9rem; color: var(--muted); }
+footer { margin-top: 48px; font-size: 0.85rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 16px; }
+a { color: var(--accent); }
+@media (max-width: 560px) { .shots { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; } .features, .steps { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<main>
+  <p><span class="tag">Testphase</span></p>
+  <h1>Wochentopf</h1>
+  <p class="lead">Dein Wochenbudget rein, dein Supermarkt rein: Wochentopf plant dir eine Woche Essen und schreibt die Einkaufsliste dazu. Kostenlos, ohne Anmeldung, auch offline.</p>
+  <a class="cta" href="../">App öffnen</a>
+
+  <div class="shots">
+    <figure><img src="shot-plan.png" alt="Planen: Supermarkt, Budget und Mahlzeiten wählen" loading="lazy"><figcaption>Markt und Budget wählen</figcaption></figure>
+    <figure><img src="shot-woche.png" alt="Woche: alle Gerichte mit Preis pro Portion" loading="lazy"><figcaption>Gerichte der Woche</figcaption></figure>
+    <figure><img src="shot-einkauf.png" alt="Einkauf: Einkaufsliste als Kassenbon" loading="lazy"><figcaption>Einkaufsliste zum Abhaken</figcaption></figure>
+  </div>
+
+  <h2>Was Wochentopf kann</h2>
+  <div class="features">
+    <div><h3>Passt zu deinem Budget</h3><p>Ob 30 oder 90 € die Woche: Der Plan nutzt dein Geld, ohne drüber zu gehen.</p></div>
+    <div><h3>Für deinen Supermarkt</h3><p>Aldi, Lidl, Penny, Netto, Kaufland, Rewe oder Edeka, mit Preisen der Eigenmarken.</p></div>
+    <div><h3>Proteinreich, vegetarisch, vegan</h3><p>Über 160 Gerichte. Was du nicht magst oder verträgst, kommt nicht vor.</p></div>
+    <div><h3>Für WG und Familie</h3><p>Personen anlegen, bei jeder Mahlzeit wählen, wer mitisst. Die Mengen passen sich an.</p></div>
+    <div><h3>Meal-Prep eingebaut</h3><p>Abends doppelt kochen, mittags die Reste mitnehmen. Weniger Aufwand, weniger Kosten.</p></div>
+    <div><h3>Nichts mehr wegwerfen</h3><p>Reste wie Reis oder Nudeln landen im Vorrat und werden nächste Woche zuerst verplant.</p></div>
+  </div>
+
+  <h2>So kommt die App auf dein Handy</h2>
+  <div class="steps">
+    <div><h3>iPhone</h3><ol><li>Diese Seite in <b>Safari</b> öffnen und auf „App öffnen“ tippen</li><li>Unten auf das Teilen-Symbol tippen</li><li>„Zum Home-Bildschirm“ wählen</li></ol></div>
+    <div><h3>Android</h3><ol><li>Diese Seite in <b>Chrome</b> öffnen und auf „App öffnen“ tippen</li><li>Oben rechts auf die drei Punkte tippen</li><li>„App installieren“ oder „Zum Startbildschirm hinzufügen“</li></ol></div>
+  </div>
+  <p class="note" style="margin-top:12px">Danach startet Wochentopf wie eine normale App und funktioniert auch im Supermarkt ohne Empfang.</p>
+
+  <h2>Hilf beim Testen</h2>
+  <p>Wochentopf ist neu. Nutze die App ein paar Wochen und sag ehrlich, was taugt und was nicht: Oben in der App gibt es dafür den Knopf <b>„Feedback“</b>. Jede Rückmeldung fließt direkt in die nächste Version.</p>
+
+  <h2 id="datenschutz">Datenschutz</h2>
+  <p>Deine Pläne, Vorlieben, Personen und Preise werden nur auf deinem Handy gespeichert. Es gibt kein Konto und keinen Server, der deine Daten sieht.</p>
+  <p>Um zu sehen, ob die App genutzt wird, zählt Wochentopf anonym, wie oft sie geöffnet wird und welche Funktionen benutzt werden, zum Beispiel „Plan erstellt“. Dafür wird der Dienst GoatCounter genutzt. Er setzt keine Cookies, speichert keine IP-Adressen und erkennt dich nicht wieder. Inhalte wie deine Gerichte, Personen oder Preise werden nie übertragen.</p>
+  <p>Die Preise in der App kommen aus öffentlich zugänglichen Quellen. Sie werden einmal pro Woche aktualisiert und mit deiner App geladen. Dabei werden keine Daten von dir übertragen.</p>
+  <p class="note">Gehostet bei GitHub Pages (GitHub Inc.). Beim Aufruf verarbeitet GitHub technisch notwendige Verbindungsdaten wie deine IP-Adresse, siehe die Datenschutzerklärung von GitHub.</p>
+
+  <footer>Wochentopf ist ein privates Projekt in der Testphase. Preise sind Richtwerte und können je nach Filiale abweichen. Aldi, Lidl, Penny, Netto, Kaufland, Rewe und Edeka sind Marken ihrer jeweiligen Inhaber. Wochentopf steht in keiner Verbindung zu ihnen.</footer>
+</main>
+</body>
+</html>

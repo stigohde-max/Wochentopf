@@ -6,6 +6,15 @@ repo = root.parent
 src = (root / "wochentopf.html").read_text()
 app = repo
 
+# latest prices go straight into the page, so it has them even on the very first offline start
+feed_path = repo / "prices" / "prices.json"
+if feed_path.exists():
+    src = src.replace("/*PRICE_FEED*/null", feed_path.read_text().replace("\n", "").replace("</", "<\\/"))
+# product sizes for the price job
+cat = {}
+for m in re.finditer(r'^  (\w+): \["([^"]+)", "([^"]+)", (\d+), ([\d.]+)', src[src.index("const P = {"):src.index("const prod = id =>")], re.M):
+    cat[m.group(1)] = {"name": m.group(2), "size": int(m.group(4)), "base": float(m.group(5))}
+(repo / "prices" / "catalog.json").write_text(json.dumps(cat, ensure_ascii=False, indent=0))
 title = re.search(r"<title>(.*?)</title>", src).group(1)
 body = re.sub(r"<title>.*?</title>\n", "", src, count=1)
 # swap Google Fonts for the bundled files so the app looks right offline
@@ -71,14 +80,14 @@ self.addEventListener("activate", e => {{
 self.addEventListener("fetch", e => {{
   if (e.request.method !== "GET") return;
   const url = new URL(e.request.url);
-  const isPage = e.request.mode === "navigate" || url.pathname.endsWith("/") || url.pathname.endsWith(".html");
+  const isPage = e.request.mode === "navigate" || url.pathname.endsWith("/") || url.pathname.endsWith(".html") || url.pathname.endsWith("prices.json");
   if (isPage) {{
     // the app itself: always try the newest version first, fall back to the saved copy offline
     e.respondWith(
       fetch(e.request, {{ cache: "no-store" }}).then(res => {{
-        if (res.ok) {{ const copy = res.clone(); caches.open(CACHE).then(c => c.put("index.html", copy)); }}
+        if (res.ok) {{ const copy = res.clone(); caches.open(CACHE).then(c => c.put(e.request, copy)); }}
         return res;
-      }}).catch(() => caches.match("index.html"))
+      }}).catch(() => caches.match(e.request, {{ ignoreSearch: true }}).then(hit => hit || caches.match("index.html")))
     );
     return;
   }}

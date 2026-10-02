@@ -136,6 +136,13 @@ details.fold[open] > summary::after { content: "Schließen"; }
 .editor { margin-top: 8px; padding: 10px 12px; border-radius: 10px; background: var(--bg); border: 1px solid var(--line); display: flex; flex-direction: column; gap: 8px; font-size: 0.9rem; }
 .editor .row { justify-content: space-between; }
 .pill.who { background: var(--surface); color: var(--ink); border: 1px solid var(--line); }
+.fbk { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 6px 12px; font-weight: 600; font-size: 0.85rem; }
+.fbk[aria-expanded="true"] { border-color: var(--accent); color: var(--accent); }
+.flink { color: var(--accent); font-weight: 600; }
+.stars { display: flex; gap: 6px; }
+.stars button { width: 40px; height: 40px; border-radius: 10px; border: 1px solid var(--line); background: var(--bg); font-weight: 700; }
+.stars button[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+#fbText { width: 100%; min-height: 90px; font: inherit; padding: 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg); color: var(--ink); resize: vertical; }
 .tabs { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; padding: 4px; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; margin-bottom: 18px; }
 .tabs button { border: 0; background: transparent; padding: 9px 6px; border-radius: 999px; font-weight: 600; font-size: 0.9rem; color: var(--muted); }
 .tabs button[aria-selected="true"] { background: var(--accent); color: var(--accent-ink); }
@@ -246,6 +253,7 @@ details.fold[open] > summary::after { content: "Schließen"; }
 .ptable input { width: 5.5em; font: inherit; font-variant-numeric: tabular-nums; padding: 5px 6px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--ink); text-align: right; }
 .ptable input.changed { border-color: var(--accent); background: var(--accent-soft); }
 .ptable .pk { color: var(--muted); font-size: 0.8rem; }
+.ptable .pk.live { color: var(--accent); }
 .scroll { overflow-x: auto; }
 footer.note { margin-top: 28px; font-size: 0.8rem; color: var(--muted); }
 .ing { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
@@ -275,7 +283,10 @@ footer.note { margin-top: 28px; font-size: 0.8rem; color: var(--muted); }
       <p>Budget, Supermarkt, Essensplan.</p>
     </div>
     <div class="top-tools">
-      <button class="toggle" id="nutriToggle" data-act="nutri" aria-pressed="true"><span class="sw" aria-hidden="true"></span>Nährwerte</button>
+      <div class="row" style="gap:6px;justify-content:flex-end">
+        <button class="fbk" data-act="feedback" aria-expanded="false">Feedback</button>
+        <button class="toggle" id="nutriToggle" data-act="nutri" aria-pressed="true"><span class="sw" aria-hidden="true"></span>Nährwerte</button>
+      </div>
       <span class="small muted" id="syncState"></span>
     </div>
   </header>
@@ -287,6 +298,7 @@ footer.note { margin-top: 28px; font-size: 0.8rem; color: var(--muted); }
     <button role="tab" id="tab-profile" data-tab="profile" aria-selected="false">Profil</button>
   </nav>
 
+  <div id="feedbackBox"></div>
   <div id="banner"></div>
   <div class="summary" id="summary" style="margin-bottom:16px"></div>
 
@@ -295,11 +307,53 @@ footer.note { margin-top: 28px; font-size: 0.8rem; color: var(--muted); }
   <section id="view-list" class="stack" hidden></section>
   <section id="view-profile" class="stack" hidden></section>
 
-  <footer class="note">Die Preise sind Richtwerte für Eigenmarken (Stand 2026) und können je nach Filiale und Angebot abweichen. Unter „Profil“ trägst du echte Preise vom Kassenbon ein. Danach rechnet die App mit deinen Werten. Öl, Salz, Pfeffer, Gewürze und Brühe setzt der Plan als Grundvorrat voraus.<br><span id="appVersion">Version 30.09.2026 · 2</span></footer>
+  <footer class="note">Viele Preise kommen jede Woche frisch von den Produktseiten bei Aldi Süd, der Rest sind Richtwerte. Angebote und Filialpreise können abweichen. Unter „Profil“ trägst du Preise vom Kassenbon ein, die dann immer gelten. Öl, Salz, Pfeffer, Gewürze und Brühe setzt der Plan als Grundvorrat voraus.<br><a href="info/" class="flink">Über Wochentopf, Installation & Datenschutz</a><br><span id="appVersion">Version 02.10.2026 · 2</span></footer>
 </div>
 <div class="toast" id="toast" hidden></div>
 
 <script>
+/* ---------- Settings for the test phase ---------- */
+// goatcounter: your GoatCounter code (e.g. "wochentopf" for wochentopf.goatcounter.com) — counts visits anonymously, no cookies.
+// feedbackUrl: a Tally or Google form link; empty = feedback is sent via the phone's share menu or copied.
+const CONFIG = { goatcounter: "", feedbackUrl: "" };
+
+// Current prices, collected every Monday from aldi-sued.de (scripts/update-prices.mjs). The build puts the latest
+// copy in here; the app also loads prices/prices.json on start and keeps the newest one.
+let FEED = { "updated": "2026-10-02T11:34:46.775Z", "source": "Aldi Süd, Produktseiten auf aldi-sued.de", "count": 58, "items": {  "quark": {   "price": 1.19,   "aldi": {    "name": "Speisequark Magerstufe 500 g, 0,3 %",    "price": 1.19,    "url": "https://www.aldi-sued.de/produkt/milsani-speisequark-magerstufe-500-g-0-3-000000000000558481"   }  },  "skyr": {   "price": 1.16,   "aldi": {    "name": "Skyr 500 g",    "price": 1.29,    "url": "https://www.aldi-sued.de/produkt/milsani-skyr-500-g-000000000000203092"   }  },  "huettenkaese": {   "price": 1.11,   "aldi": {    "name": "Hüttenkäse 400 g",    "price": 2.22,    "url": "https://www.aldi-sued.de/produkt/gervais-huettenkaese-400-g-000000000000204788"   }  },  "joghurt": {   "price": 0.9,   "aldi": {    "name": "Naturjoghurt 1 kg, 3,5 % Fett",    "price": 1.79,    "url": "https://www.aldi-sued.de/produkt/milsani-naturjoghurt-1-kg-3-5-fett-000000000415545001"   }  },  "sojajoghurt": {   "price": 0.99,   "aldi": {    "name": "Sojaghurt 0,5 kg, Natur ungesüßt",    "price": 0.99,    "url": "https://www.aldi-sued.de/produkt/my-vay-sojaghurt-0-5-kg-natur-ungesuesst-000000000318014005"   }  },  "pudding": {   "price": 0.59,   "aldi": {    "name": "High Protein Pudding 200 g, Schokolade",    "price": 0.59,    "url": "https://www.aldi-sued.de/produkt/milsani-high-protein-pudding-200-g-schokolade-000000000205159001"   }  },  "eier": {   "price": 2.33,   "aldi": {    "name": "Eier aus Bodenhaltung, 18er-Packung",    "price": 4.19,    "url": "https://www.aldi-sued.de/produkt/landfreude-eier-aus-bodenhaltung-18er-packung-000000000000294938"   }  },  "milch": {   "price": 0.85,   "aldi": {    "name": "H-Milch 1,5 % haltbare fettarme Milch 1 l",    "price": 0.85,    "url": "https://www.aldi-sued.de/produkt/milsani-h-milch-1-5-haltbare-fettarme-milch-1-l-000000000000329344"   }  },  "gouda": {   "price": 2.45,   "aldi": {    "name": "Gouda Scheiben, 400 g",    "price": 2.45,    "url": "https://www.aldi-sued.de/produkt/milsani-gouda-scheiben-400-g-000000000000554730"   }  },  "reibekaese": {   "price": 1.43,   "aldi": {    "name": "Gouda 250 g, gerieben",    "price": 1.79,    "url": "https://www.aldi-sued.de/produkt/hofburger-gouda-250-g-gerieben-000000000000474280"   }  },  "mozzarella": {   "price": 0.85,   "aldi": {    "name": "Mozzarella 125 g, Classic",    "price": 0.85,    "url": "https://www.aldi-sued.de/produkt/cucina-nobile-mozzarella-125-g-classic-000000000202689001"   }  },  "feta": {   "price": 1.19,   "aldi": {    "name": "Hirtenkäse, 250 g",    "price": 1.49,    "url": "https://www.aldi-sued.de/produkt/lyttos-hirtenkaese-250-g-000000000204547002"   }  },  "hummus": {   "price": 0.99,   "aldi": {    "name": "Hummus 200 g, Natur",    "price": 0.99,    "url": "https://www.aldi-sued.de/produkt/wonnemeyer-hummus-200-g-natur-000000000202835002"   }  },  "schinken": {   "price": 2.65,   "aldi": {    "name": "Buffet-Kochschinken 150 g",    "price": 1.99,    "url": "https://www.aldi-sued.de/produkt/gut-drei-eichen-buffet-kochschinken-150-g-000000000203701002"   }  },  "haehnchenAufschnitt": {   "price": 2.09,   "aldi": {    "name": "Aufschnitt-Spezialitäten 200 g, Hähnchenbrust",    "price": 2.79,    "url": "https://www.aldi-sued.de/produkt/no-brand-aufschnitt-spezialitaeten-200-g-haehnchenbrust-000000000642894002"   }  },  "pute": {   "price": 5,   "aldi": {    "name": "Putenbrustfilet 800 g",    "price": 9.99,    "url": "https://www.aldi-sued.de/produkt/meine-metzgerei-putenbrustfilet-800-g-000000000000488109"   }  },  "hack": {   "price": 3.5,   "aldi": {    "name": "Hackfleisch gemischt 1 kg",    "price": 6.99,    "url": "https://www.aldi-sued.de/produkt/meine-metzgerei-hackfleisch-gemischt-1-kg-000000000000730931"   }  },  "rinderhack": {   "price": 5.49,   "aldi": {    "name": "Hackfleisch vom Rind 800 g",    "price": 8.79,    "url": "https://www.aldi-sued.de/produkt/meine-metzgerei-hackfleisch-vom-rind-800-g-000000000000550926"   }  },  "thunfisch": {   "price": 1.29,   "aldi": {    "name": "Thunfischfilets in Sonnenblumenöl 185 g",    "price": 1.29,    "url": "https://www.aldi-sued.de/produkt/almare-seafood-thunfischfilets-in-sonnenblumenoel-185-g-000000000000634091"   }  },  "lachs": {   "price": 4.75,   "aldi": {    "name": "Norwegische Lachsfiletportionen 500 g",    "price": 9.49,    "url": "https://www.aldi-sued.de/produkt/golden-seafood-norwegische-lachsfiletportionen-500-g-000000000000211003"   }  },  "fischstaebchen": {   "price": 2.99,   "aldi": {    "name": "Fischstäbchen 450 g",    "price": 2.99,    "url": "https://www.aldi-sued.de/produkt/golden-seafood-fischstaebchen-450-g-000000000000191386"   }  },  "garnelen": {   "price": 2.77,   "aldi": {    "name": "Garnelen 720 g",    "price": 7.99,    "url": "https://www.aldi-sued.de/produkt/golden-seafood-garnelen-720-g-000000000000191673"   }  },  "lachsRaeucher": {   "price": 4.29,   "aldi": {    "name": "Räucherlachs 200 g",    "price": 4.29,    "url": "https://www.aldi-sued.de/produkt/almare-raeucherlachs-200-g-000000000000107223"   }  },  "kidney": {   "price": 0.69,   "aldi": {    "name": "Rote Kidney Bohnen 255 g",    "price": 0.69,    "url": "https://www.aldi-sued.de/produkt/king-s-crown-rote-kidney-bohnen-255-g-000000000000622583"   }  },  "mais": {   "price": 0.89,   "aldi": {    "name": "Sonnenmais 285 g",    "price": 0.89,    "url": "https://www.aldi-sued.de/produkt/king-s-crown-sonnenmais-285-g-000000000000192131"   }  },  "tomatenDose": {   "price": 0.59,   "aldi": {    "name": "Tomaten gehackt 400 g",    "price": 0.59,    "url": "https://www.aldi-sued.de/produkt/king-s-crown-tomaten-gehackt-400-g-000000000000193761"   }  },  "passiert": {   "price": 0.65,   "aldi": {    "name": "Passierte Tomaten 500 g",    "price": 0.65,    "url": "https://www.aldi-sued.de/produkt/king-s-crown-passierte-tomaten-500-g-000000000000263580"   }  },  "kokosmilch": {   "price": 1.19,   "aldi": {    "name": "Kokosnussmilch 400 ml",    "price": 1.19,    "url": "https://www.aldi-sued.de/produkt/asia-green-garden-kokosnussmilch-400-ml-000000000191455001"   }  },  "pesto": {   "price": 0.99,   "aldi": {    "name": "Pesto 190 g, Genovese",    "price": 0.99,    "url": "https://www.aldi-sued.de/produkt/cucina-pesto-190-g-genovese-000000000603835002"   }  },  "spaghetti": {   "price": 0.69,   "aldi": {    "name": "Spaghetti 500 g",    "price": 0.69,    "url": "https://www.aldi-sued.de/produkt/cucina-spaghetti-500-g-000000000000631119"   }  },  "mie": {   "price": 0.89,   "aldi": {    "name": "Mie-Nudeln 250 g",    "price": 0.89,    "url": "https://www.aldi-sued.de/produkt/asia-green-garden-mie-nudeln-250-g-000000000000664473"   }  },  "gnocchi": {   "price": 0.99,   "aldi": {    "name": "Gnocchi 500 g",    "price": 0.99,    "url": "https://www.aldi-sued.de/produkt/cucina-gnocchi-500-g-000000000635994003"   }  },  "lasagneplatten": {   "price": 1.19,   "aldi": {    "name": "Lasagneblätter 500 g",    "price": 1.19,    "url": "https://www.aldi-sued.de/produkt/cucina-lasagneblaetter-500-g-000000000000635511"   }  },  "spaetzle": {   "price": 1.89,   "aldi": {    "name": "Eierspätzle 500 g",    "price": 1.89,    "url": "https://www.aldi-sued.de/produkt/landfreude-eierspaetzle-500-g-000000000211588001"   }  },  "reisnudeln": {   "price": 0.99,   "aldi": {    "name": "Reisnudeln 250 g, Breit",    "price": 0.99,    "url": "https://www.aldi-sued.de/produkt/asia-green-garden-reisnudeln-250-g-breit-000000000581131002"   }  },  "brot": {   "price": 1.61,   "aldi": {    "name": "Rheinisches Vollkornbrot, fein 400 g",    "price": 1.29,    "url": "https://www.aldi-sued.de/produkt/zitterwaelder-rheinisches-vollkornbrot-fein-400-g-000000000000187722"   }  },  "toast": {   "price": 0.89,   "aldi": {    "name": "Vollkorntoast 500 g",    "price": 0.89,    "url": "https://www.aldi-sued.de/produkt/goldaehren-vollkorntoast-500-g-000000000000188682"   }  },  "knaecke": {   "price": 1.29,   "aldi": {    "name": "Knäckebrot 250 g, Vollkorn",    "price": 1.29,    "url": "https://www.aldi-sued.de/produkt/goldaehren-knaeckebrot-250-g-vollkorn-000000000187193001"   }  },  "broetchen": {   "price": 0.76,   "aldi": {    "name": "Sonntagsbrötchen 560 g, Weizen",    "price": 1.19,    "url": "https://www.aldi-sued.de/produkt/goldaehren-sonntagsbroetchen-560-g-weizen-000000000000187167"   }  },  "nuesse": {   "price": 2.99,   "aldi": {    "name": "Premium Nuss-Mix 200 g, Fein",    "price": 2.99,    "url": "https://www.aldi-sued.de/produkt/farmer-naturals-premium-nuss-mix-200-g-fein-000000000184814001"   }  },  "mandeln": {   "price": 2.49,   "aldi": {    "name": "Mandeln 200 g, natur",    "price": 2.49,    "url": "https://www.aldi-sued.de/produkt/back-family-mandeln-200-g-natur-000000000000448033"   }  },  "erdnuesse": {   "price": 0.79,   "aldi": {    "name": "Erdnüsse 200 g",    "price": 0.79,    "url": "https://www.aldi-sued.de/produkt/farmer-erdnuesse-200-g-000000000000537829"   }  },  "beeren": {   "price": 3.29,   "aldi": {    "name": "TK Obst-Sortiment, Sommerfrucht 750 g",    "price": 3.29,    "url": "https://www.aldi-sued.de/produkt/all-seasons-tk-obst-sortiment-sommerfrucht-750-g-000000000286598003"   }  },  "gemuesemix": {   "price": 1.99,   "aldi": {    "name": "Pfannengemüse 750 g, Italienische Art",    "price": 1.99,    "url": "https://www.aldi-sued.de/produkt/all-seasons-pfannengemuese-750-g-italienische-art-000000000577449001"   }  },  "blumenkohl": {   "price": 0.99,   "aldi": {    "name": "Blumenkohl, Stück",    "price": 0.99,    "url": "https://www.aldi-sued.de/produkt/no-brand-blumenkohl-stueck-000000000000229113"   }  },  "marmelade": {   "price": 1.19,   "aldi": {    "name": "Erdbeerkonfitüre 450 g",    "price": 1.19,    "url": "https://www.aldi-sued.de/produkt/grandessa-erdbeerkonfituere-450-g-000000000000649385"   }  },  "nutella": {   "price": 1.99,   "aldi": {    "name": "Nuss-Nougat-Creme 400 g",    "price": 1.99,    "url": "https://www.aldi-sued.de/produkt/nusskati-nuss-nougat-creme-400-g-000000000000549987"   }  },  "salami": {   "price": 1.85,   "aldi": {    "name": "Herzhafte Edelsalami 150 g",    "price": 1.39,    "url": "https://www.aldi-sued.de/produkt/gut-drei-eichen-herzhafte-edelsalami-150-g-000000000000620333"   }  },  "bratwurst": {   "price": 2.59,   "aldi": {    "name": "Grobe Schweine-Bratwurst 400 g",    "price": 2.59,    "url": "https://www.aldi-sued.de/produkt/meine-metzgerei-grobe-schweine-bratwurst-400-g-000000000000211584"   }  },  "schnitzel": {   "price": 4.69,   "aldi": {    "name": "Schweine Schnitzel 400 g",    "price": 3.75,    "url": "https://www.aldi-sued.de/produkt/meine-metzgerei-schweine-schnitzel-400-g-000000000000341864"   }  },  "haehnchenschenkel": {   "price": 6.65,   "aldi": {    "name": "Hähnchen-Unterkeulen 600 g",    "price": 3.99,    "url": "https://www.aldi-sued.de/produkt/meine-metzgerei-haehnchen-unterkeulen-600-g-000000000000211363"   }  },  "falafel": {   "price": 2.24,   "aldi": {    "name": "Vegane Falafel 200 g",    "price": 1.79,    "url": "https://www.aldi-sued.de/produkt/my-vay-vegane-falafel-200-g-000000000505846001"   }  },  "pizzaTK": {   "price": 2.99,   "aldi": {    "name": "Holzofen Pizza, Tricolore 350 g",    "price": 2.99,    "url": "https://www.aldi-sued.de/produkt/pizz-ah-holzofen-pizza-tricolore-350-g-000000000191556001"   }  },  "rotkohl": {   "price": 1.56,   "aldi": {    "name": "Rotkohl-Mix 400 g, Rotkohl",    "price": 0.89,    "url": "https://www.aldi-sued.de/produkt/king-s-crown-rotkohl-mix-400-g-rotkohl-000000000679753001"   }  },  "mehl": {   "price": 0.59,   "aldi": {    "name": "Qualitäts-Weizenmehl Type 405 1 kg",    "price": 0.59,    "url": "https://www.aldi-sued.de/produkt/back-family-qualitaets-weizenmehl-type-405-1-kg-000000000000188687"   }  },  "sauerrahm": {   "price": 0.59,   "aldi": {    "name": "Saure Sahne 200 g",    "price": 0.59,    "url": "https://www.aldi-sued.de/produkt/milsani-saure-sahne-200-g-000000000000202485"   }  },  "pizzateig": {   "price": 0.94,   "aldi": {    "name": "XXL-Pizzateig 550 g",    "price": 1.29,    "url": "https://www.aldi-sued.de/produkt/cucina-xxl-pizzateig-550-g-000000000000211639"   }  },  "proteinriegel": {   "price": 0.93,   "aldi": {    "name": "High Protein Riegel 3 x 45 g, Nougat",    "price": 2.79,    "url": "https://www.aldi-sued.de/produkt/aldi-sports-high-protein-riegel-3-x-45-g-nougat-000000000659476001"   }  } }};
+try { const c = JSON.parse(localStorage.getItem("wochentopf-prices") || "null"); if (c && (!FEED || c.updated > FEED.updated)) FEED = c; } catch (e) {}
+const feedDate = () => FEED ? new Date(FEED.updated).toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit", year: "numeric" }) : "";
+const feedHas = pid => !!(FEED && FEED.items && FEED.items[pid]);
+async function loadFeed() {
+  if (!STANDALONE) return;
+  try {
+    const r = await fetch("prices/prices.json", { cache: "no-store" });
+    if (!r.ok) return;
+    const j = await r.json();
+    if (j && j.items && (!FEED || j.updated > FEED.updated)) {
+      FEED = j;
+      try { localStorage.setItem("wochentopf-prices", JSON.stringify(j)); } catch (e) {}
+      render();
+    }
+  } catch (e) {}
+}
+function priceNote() {
+  if (!FEED) return "Alle Preise sind Richtwerte für Eigenmarken.";
+  const st = store(), n = Object.keys(FEED.items).length, total = Object.keys(P).length;
+  const aldi = st.id.startsWith("aldi");
+  return `${n} von ${total} Preisen sind echte Preise von Aldi Süd, Stand ${feedDate()}. ` +
+    (aldi ? "" : `Für ${st.name} rechnet die App mit diesen Preisen${st.f > 1 ? ", etwas aufgeschlagen" : ""}, weil Eigenmarken-Grundprodukte bei den Märkten meist ähnlich viel kosten. `) +
+    "Der Rest, vor allem frisches Obst und Gemüse, sind Richtwerte.";
+}
+
+// anonymous usage counter: page opens and a few actions, nothing personal, no cookies
+function track(event) {
+  if (!CONFIG.goatcounter || (window.claude && window.claude.use)) return;
+  try {
+    const u = `https://${CONFIG.goatcounter}.goatcounter.com/count?p=${encodeURIComponent(event === "open" ? "/" : "/" + event)}${event === "open" ? "" : "&e=true"}&s=${screen.width}&rnd=${Math.random().toString(36).slice(2)}`;
+    if (navigator.sendBeacon) navigator.sendBeacon(u); else new Image().src = u;
+  } catch (e) {}
+}
+
 /* ---------- Data ---------- */
 const STORES = [
   { id: "aldi-sued", name: "Aldi Süd", f: 1.00, note: "Discounter" },
@@ -702,8 +756,9 @@ function priceOf(pid, storeId = S.store) {
   const o = S.prices[storeId] && S.prices[storeId][pid];
   if (typeof o === "number" && o > 0) return o;
   const st = STORES.find(s => s.id === storeId) || STORES[2];
-  const raw = P[pid][3] * st.f;
-  if (st.f === 1) return P[pid][3];
+  const base = feedHas(pid) ? FEED.items[pid].price : P[pid][3];
+  const raw = base * st.f;
+  if (st.f === 1) return base;
   return Math.max(0.19, Math.ceil(raw * 10) / 10 - 0.01);
 }
 const dietRank = { vegan: 0, veg: 1, fish: 2, meat: 2 };
@@ -938,6 +993,7 @@ function generate(seed) {
 }
 
 function makePlan(newSeed) {
+  track(newSeed ? "plan-andere-gerichte" : "plan-erstellt");
   if (newSeed) S.seed = Math.floor(Math.random() * 1e9);
   if (S.createdAt && (Date.now() - new Date(S.createdAt)) / 864e5 > 6) { S.mealPersons = {}; S.mealEaters = {}; S.mealGuests = {}; }
   let carried = [];
@@ -1016,6 +1072,7 @@ function renderPlan() {
     <div class="panel">
       <div><div class="label">Schritt 1</div><h2>Wo kaufst du diese Woche ein?</h2></div>
       <div class="stores">${STORES.map(s => `<button class="store" id="store-${s.id}" data-store="${s.id}" aria-pressed="${s.id === S.store}"><b>${esc(s.name)}</b><span>${esc(s.note)}</span></button>`).join("")}</div>
+      <p class="small muted">${priceNote()}</p>
     </div>
     <div class="panel">
       <div><div class="label">Schritt 2</div><h2>Wer isst mit? Wie viel Budget?</h2></div>
@@ -1277,7 +1334,7 @@ function renderList(ev) {
   const inCart = ev.items.filter(it => S.checked[it.pid] && !S.home[it.pid]).reduce((a, b) => a + b.total, 0);
   const d = new Date(S.createdAt || Date.now());
   const swappedFrom = pid => Object.keys(S.swaps).find(k => S.swaps[k] === pid);
-  let html = sharePanel(ev) + `<div class="receipt"><div class="rh"><b>${esc(store().name.toUpperCase())}</b><span class="small">EINKAUFSLISTE · KW ${isoWeek(d)}</span><span class="small muted">Abhaken im Laden. „Nicht da?“ zeigt Alternativen.</span></div>`;
+  let html = sharePanel(ev) + `<div class="receipt"><div class="rh"><b>${esc(store().name.toUpperCase())}</b><span class="small">EINKAUFSLISTE · KW ${isoWeek(d)}</span><span class="small muted">Abhaken im Laden. „Nicht da?“ zeigt Alternativen.</span>${FEED ? `<span class="small muted">${ev.items.filter(it => feedHas(it.pid)).length} von ${ev.items.length} Preisen aktuell (Aldi Süd, ${feedDate()})</span>` : ""}</div>`;
   for (const c of Object.keys(CATS)) {
     if (!byCat[c]) continue;
     html += `<div class="cat">${CATS[c]}</div>`;
@@ -1352,6 +1409,42 @@ function altPanel(it) {
     <div class="row" id="aiRow" ${sampleFn ? "" : "hidden"}><button class="btn ghost small" data-ai="${it.pid}">Claude nach einer Idee fragen</button></div>
     <div class="ai-out" id="aiOut"></div>
   </div>`;
+}
+
+/* ---------- Feedback ---------- */
+const fb = { open: false, stars: 0, pay: "", text: "" };
+function renderFeedback() {
+  const box = $("#feedbackBox"), btn = document.querySelector('[data-act="feedback"]');
+  if (btn) btn.setAttribute("aria-expanded", String(fb.open));
+  if (!fb.open) { box.innerHTML = ""; return; }
+  const cur = $("#fbText"); if (cur) fb.text = cur.value;
+  box.innerHTML = `<div class="panel" style="margin-bottom:14px">
+    <div class="row" style="justify-content:space-between"><div><div class="label">Testphase</div><h2>Wie findest du Wochentopf?</h2></div><button class="linkbtn" data-act="feedback">Schließen</button></div>
+    <div class="stars" role="group" aria-label="Bewertung 1 bis 5">${[1, 2, 3, 4, 5].map(n => `<button data-fbstar="${n}" aria-pressed="${fb.stars >= n}" aria-label="${n} von 5">${n}</button>`).join("")}</div>
+    <label for="fbText" class="small">Was fehlt, was nervt, was gefällt dir?</label>
+    <textarea id="fbText" placeholder="Zum Beispiel: Die Preise bei meinem Rewe sind höher, mir fehlen asiatische Gerichte …">${esc(fb.text)}</textarea>
+    <div class="small">Würdest du für mehr Funktionen etwa 1 € im Monat zahlen?</div>
+    <div class="chips">${["Ja", "Vielleicht", "Nein"].map(v => `<button class="chip" data-fbpay="${v}" aria-pressed="${fb.pay === v}">${v}</button>`).join("")}</div>
+    <div class="row"><button class="btn" data-act="fbsend">Feedback senden</button></div>
+    <p class="small muted">${CONFIG.feedbackUrl ? "Es öffnet sich ein kurzes Formular, deine Antworten sind schon eingetragen." : "Es öffnet sich das Teilen-Menü deines Handys. Schick das Feedback an die Person, von der du den Link hast."}</p>
+  </div>`;
+}
+async function sendFeedback() {
+  const ta = $("#fbText"); if (ta) fb.text = ta.value.trim();
+  if (!fb.stars && !fb.text && !fb.pay) { toast("Gib eine Bewertung oder ein paar Worte ein."); return; }
+  track("feedback-gesendet");
+  const lines = [`Wochentopf-Feedback: ${fb.stars ? fb.stars + " von 5" : "ohne Bewertung"}`, fb.pay ? `1 € im Monat zahlen: ${fb.pay}` : "", fb.text].filter(Boolean);
+  const text = lines.join("\n");
+  if (CONFIG.feedbackUrl) {
+    const u = `${CONFIG.feedbackUrl}${CONFIG.feedbackUrl.includes("?") ? "&" : "?"}bewertung=${fb.stars}&zahlen=${encodeURIComponent(fb.pay)}&text=${encodeURIComponent(fb.text)}`;
+    const a = document.createElement("a"); a.href = u; a.target = "_blank"; a.rel = "noopener"; document.body.appendChild(a); a.click(); a.remove();
+  } else if (navigator.share && STANDALONE) {
+    try { await navigator.share({ title: "Wochentopf-Feedback", text }); } catch (e) { return; }
+  } else {
+    try { await navigator.clipboard.writeText(text); toast("Feedback kopiert. Schick es an die Person, von der du den Link hast."); } catch (e) { toast("Kopieren ging nicht. Markiere den Text und kopiere ihn selbst."); return; }
+  }
+  fb.open = false; fb.stars = 0; fb.pay = ""; fb.text = ""; renderFeedback();
+  toast("Danke für dein Feedback!");
 }
 
 /* ---------- Share ---------- */
@@ -1439,9 +1532,9 @@ function pricesPanel() {
   const ov = S.prices[st.id] || {};
   const ids = Object.keys(P).sort((a, b) => P[a][0].localeCompare(P[b][0]));
   return `<details class="panel fold" id="pricesFold"${openFold.prices ? " open" : ""}><summary><div><div class="label">Preisliste</div><h2>Preise bei ${esc(st.name)}</h2></div></summary>
-    <p class="small muted">Richtwerte für Eigenmarken. Steht an der Kasse etwas anderes, trag hier den echten Preis ein. Plan und Einkaufsliste rechnen sofort mit deinem Wert. Den Markt wechselst du unter „Planen“.</p>
+    <p class="small muted">${priceNote()} Steht an der Kasse etwas anderes, trag hier den Preis ein. Dein Wert gilt dann immer, auch nach dem nächsten Preis-Update.</p>
     <div class="scroll"><table class="ptable"><thead><tr><th>Produkt</th><th>Packung</th><th style="text-align:right">Preis €</th><th style="text-align:right">€/kg</th></tr></thead><tbody>
-    ${ids.map(id => { const pr = priceOf(id); return `<tr><td>${esc(P[id][0])}</td><td class="pk">${esc(P[id][1])}</td>
+    ${ids.map(id => { const pr = priceOf(id); const src = ov[id] ? "Dein Preis" : feedHas(id) ? `Aldi Süd: ${esc(FEED.items[id].aldi.name)}` : "Richtwert"; return `<tr><td>${esc(P[id][0])}<div class="pk ${feedHas(id) && !ov[id] ? "live" : ""}">${src}</div></td><td class="pk">${esc(P[id][1])}</td>
       <td style="text-align:right"><input inputmode="decimal" id="price-${id}" data-price="${id}" value="${pr.toFixed(2).replace(".", ",")}" class="${ov[id] ? "changed" : ""}" aria-label="Preis ${esc(P[id][0])}"></td>
       <td style="text-align:right" class="num pk">${(pr / P[id][2] * 1000).toFixed(2).replace(".", ",")}</td></tr>`; }).join("")}
     </tbody></table></div>
@@ -1459,7 +1552,7 @@ function pricesPanel() {
 document.addEventListener("click", e => {
   const t = e.target.closest("button"); if (!t) return;
   const d = t.dataset;
-  if (d.tab) { tab = d.tab; openAlt = null; swapKey = null; render(); window.scrollTo({ top: 0 }); return; }
+  if (d.tab) { if (d.tab !== tab) track("tab-" + d.tab); tab = d.tab; openAlt = null; swapKey = null; render(); window.scrollTo({ top: 0 }); return; }
   if (d.store) { S.store = d.store; save(); render(); toast(`${store().name} gewählt. Tippe auf „Plan erstellen“.`); return; }
   if (d.goal) { S.goal = d.goal; save(); render(); return; }
   if (d.diet) { S.diet = d.diet; save(); render(); return; }
@@ -1523,6 +1616,7 @@ document.addEventListener("click", e => {
   }
   if (d.swapmore) { swapOffset = swapList.length > swapOffset + 4 ? swapOffset + 4 : 0; render(); return; }
   if (d.pickmeal) {
+    track("gericht-getauscht");
     const c = swapList.find(x => x.r === d.r); if (!c) return;
     const before = JSON.stringify(S.plan), old = R[mealsOf(S.plan).find(x => x.day + "-" + x.slot === d.pickmeal).rid].n;
     S.plan = c.q; swapKey = null; save(); render();
@@ -1530,6 +1624,7 @@ document.addEventListener("click", e => {
     return;
   }
   if (d.act === "shopdone") {
+    track("einkauf-erledigt");
     const added = closeShopping(evaluate(S.plan)); save(); render();
     toast(added.length ? "Im Vorrat: " + added.slice(0, 3).join(", ") + (added.length > 3 ? " …" : "") : "Einkauf erledigt. Keine haltbaren Reste.");
     return;
@@ -1540,6 +1635,10 @@ document.addEventListener("click", e => {
     if (!(g > 0)) { toast("Gib eine Menge in Gramm ein."); return; }
     S.pantry[id] = Math.round((S.pantry[id] || 0) + g); openFold.pantry = true; save(); render(); toast(`${P[id][0]} im Vorrat.`); return;
   }
+  if (d.act === "feedback") { fb.open = !fb.open; renderFeedback(); if (fb.open) { track("feedback-geoeffnet"); window.scrollTo({ top: 0, behavior: "smooth" }); } return; }
+  if (d.fbstar) { fb.stars = +d.fbstar; renderFeedback(); return; }
+  if (d.fbpay) { fb.pay = d.fbpay; renderFeedback(); return; }
+  if (d.act === "fbsend") { sendFeedback(); return; }
   if (d.act === "nutri") { S.showNutri = !S.showNutri; save(); render(); return; }
   if (d.edit) { editKey = editKey === d.edit ? null : d.edit; render(); return; }
   if (d.mp) {
@@ -1559,7 +1658,7 @@ document.addEventListener("click", e => {
   if (d.act === "goplan") { tab = "plan"; render(); return; }
   if (d.act === "shareToggle") { shareOpen = !shareOpen; render(); return; }
   if (d.fmt) { shareFmt = d.fmt; render(); return; }
-  if (d.act === "copyList") { copyList(t); return; }
+  if (d.act === "copyList") { track("liste-kopiert"); copyList(t); return; }
   if (d.act === "shareList") { shareList(); return; }
   if (d.act === "export") {
     const blob = new Blob([JSON.stringify(snapshot(), null, 1)], { type: "application/json" });
@@ -1706,6 +1805,7 @@ function apply(obj) {
 }
 
 const STANDALONE = !(window.claude && window.claude.use);
+track("open");
 (function boot() {
   if (STANDALONE && "serviceWorker" in navigator && /^https:|^http:\/\/localhost/.test(location.href)) {
     navigator.serviceWorker.register("sw.js", { updateViaCache: "none" }).catch(() => {});
@@ -1713,6 +1813,7 @@ const STANDALONE = !(window.claude && window.claude.use);
   try { const raw = localStorage.getItem(LS); if (raw) apply(JSON.parse(raw)); } catch (e) {}
   if (!S.plan) S.plan = generate(S.seed).plan;
   render();
+  loadFeed();
   if (window.claude && window.claude.use) {
     claude.use("db").then(async db => {
       if (!db) return;
