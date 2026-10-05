@@ -1,7 +1,7 @@
 {
- "updated": "2026-10-02T11:34:46.775Z",
+ "updated": "2026-10-05T03:37:53.424Z",
  "source": "Aldi Süd, Produktseiten auf aldi-sued.de",
- "count": 58,
+ "count": 57,
  "items": {
   "quark": {
    "price": 1.19,
@@ -44,12 +44,13 @@
    }
   },
   "pudding": {
-   "price": 0.59,
+   "price": 0.89,
    "aldi": {
     "name": "High Protein Pudding 200 g, Schokolade",
-    "price": 0.59,
+    "price": 0.89,
     "url": "https://www.aldi-sued.de/produkt/milsani-high-protein-pudding-200-g-schokolade-000000000205159001"
-   }
+   },
+   "changed": 0.59
   },
   "eier": {
    "price": 2.33,
@@ -332,12 +333,13 @@
    }
   },
   "erdnuesse": {
-   "price": 0.79,
+   "price": 0.59,
    "aldi": {
     "name": "Erdnüsse 200 g",
-    "price": 0.79,
+    "price": 0.59,
     "url": "https://www.aldi-sued.de/produkt/farmer-erdnuesse-200-g-000000000000537829"
-   }
+   },
+   "changed": 0.79
   },
   "beeren": {
    "price": 3.29,
@@ -355,21 +357,14 @@
     "url": "https://www.aldi-sued.de/produkt/all-seasons-pfannengemuese-750-g-italienische-art-000000000577449001"
    }
   },
-  "blumenkohl": {
-   "price": 0.99,
-   "aldi": {
-    "name": "Blumenkohl, Stück",
-    "price": 0.99,
-    "url": "https://www.aldi-sued.de/produkt/no-brand-blumenkohl-stueck-000000000000229113"
-   }
-  },
   "marmelade": {
-   "price": 1.19,
+   "price": 1.59,
    "aldi": {
     "name": "Erdbeerkonfitüre 450 g",
-    "price": 1.19,
+    "price": 1.59,
     "url": "https://www.aldi-sued.de/produkt/grandessa-erdbeerkonfituere-450-g-000000000000649385"
-   }
+   },
+   "changed": 1.19
   },
   "nutella": {
    "price": 1.99,
