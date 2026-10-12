@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-05T03:37:53.424Z",
+ "updated": "2026-10-12T03:41:59.495Z",
  "source": "Aldi Süd, Produktseiten auf aldi-sued.de",
  "count": 57,
  "items": {
@@ -49,8 +49,7 @@
     "name": "High Protein Pudding 200 g, Schokolade",
     "price": 0.89,
     "url": "https://www.aldi-sued.de/produkt/milsani-high-protein-pudding-200-g-schokolade-000000000205159001"
-   },
-   "changed": 0.59
+   }
   },
   "eier": {
    "price": 2.33,
@@ -117,12 +116,13 @@
    }
   },
   "haehnchenAufschnitt": {
-   "price": 2.09,
+   "price": 1.99,
    "aldi": {
     "name": "Aufschnitt-Spezialitäten 200 g, Hähnchenbrust",
-    "price": 2.79,
+    "price": 2.65,
     "url": "https://www.aldi-sued.de/produkt/no-brand-aufschnitt-spezialitaeten-200-g-haehnchenbrust-000000000642894002"
-   }
+   },
+   "changed": 2.09
   },
   "pute": {
    "price": 5,
@@ -141,12 +141,13 @@
    }
   },
   "rinderhack": {
-   "price": 5.49,
+   "price": 4.49,
    "aldi": {
     "name": "Hackfleisch vom Rind 800 g",
-    "price": 8.79,
+    "price": 7.19,
     "url": "https://www.aldi-sued.de/produkt/meine-metzgerei-hackfleisch-vom-rind-800-g-000000000000550926"
-   }
+   },
+   "changed": 5.49
   },
   "thunfisch": {
    "price": 1.29,
@@ -157,12 +158,13 @@
    }
   },
   "lachs": {
-   "price": 4.75,
+   "price": 3.75,
    "aldi": {
     "name": "Norwegische Lachsfiletportionen 500 g",
-    "price": 9.49,
+    "price": 7.49,
     "url": "https://www.aldi-sued.de/produkt/golden-seafood-norwegische-lachsfiletportionen-500-g-000000000000211003"
-   }
+   },
+   "changed": 4.75
   },
   "fischstaebchen": {
    "price": 2.99,
@@ -333,13 +335,13 @@
    }
   },
   "erdnuesse": {
-   "price": 0.59,
+   "price": 0.79,
    "aldi": {
     "name": "Erdnüsse 200 g",
-    "price": 0.59,
+    "price": 0.79,
     "url": "https://www.aldi-sued.de/produkt/farmer-erdnuesse-200-g-000000000000537829"
    },
-   "changed": 0.79
+   "changed": 0.59
   },
   "beeren": {
    "price": 3.29,
@@ -363,8 +365,7 @@
     "name": "Erdbeerkonfitüre 450 g",
     "price": 1.59,
     "url": "https://www.aldi-sued.de/produkt/grandessa-erdbeerkonfituere-450-g-000000000000649385"
-   },
-   "changed": 1.19
+   }
   },
   "nutella": {
    "price": 1.99,
