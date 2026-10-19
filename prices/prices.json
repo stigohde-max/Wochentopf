@@ -1,7 +1,7 @@
 {
- "updated": "2026-10-12T03:41:59.495Z",
+ "updated": "2026-10-19T03:55:44.242Z",
  "source": "Aldi Süd, Produktseiten auf aldi-sued.de",
- "count": 57,
+ "count": 56,
  "items": {
   "quark": {
    "price": 1.19,
@@ -100,12 +100,13 @@
    }
   },
   "hummus": {
-   "price": 0.99,
+   "price": 0.79,
    "aldi": {
     "name": "Hummus 200 g, Natur",
-    "price": 0.99,
+    "price": 0.79,
     "url": "https://www.aldi-sued.de/produkt/wonnemeyer-hummus-200-g-natur-000000000202835002"
-   }
+   },
+   "changed": 0.99
   },
   "schinken": {
    "price": 2.65,
@@ -121,8 +122,7 @@
     "name": "Aufschnitt-Spezialitäten 200 g, Hähnchenbrust",
     "price": 2.65,
     "url": "https://www.aldi-sued.de/produkt/no-brand-aufschnitt-spezialitaeten-200-g-haehnchenbrust-000000000642894002"
-   },
-   "changed": 2.09
+   }
   },
   "pute": {
    "price": 5,
@@ -141,13 +141,13 @@
    }
   },
   "rinderhack": {
-   "price": 4.49,
+   "price": 5.49,
    "aldi": {
     "name": "Hackfleisch vom Rind 800 g",
-    "price": 7.19,
+    "price": 8.79,
     "url": "https://www.aldi-sued.de/produkt/meine-metzgerei-hackfleisch-vom-rind-800-g-000000000000550926"
    },
-   "changed": 5.49
+   "changed": 4.49
   },
   "thunfisch": {
    "price": 1.29,
@@ -158,13 +158,13 @@
    }
   },
   "lachs": {
-   "price": 3.75,
+   "price": 4.75,
    "aldi": {
     "name": "Norwegische Lachsfiletportionen 500 g",
-    "price": 7.49,
+    "price": 9.49,
     "url": "https://www.aldi-sued.de/produkt/golden-seafood-norwegische-lachsfiletportionen-500-g-000000000000211003"
    },
-   "changed": 4.75
+   "changed": 3.75
   },
   "fischstaebchen": {
    "price": 2.99,
@@ -223,12 +223,13 @@
    }
   },
   "kokosmilch": {
-   "price": 1.19,
+   "price": 1,
    "aldi": {
     "name": "Kokosnussmilch 400 ml",
-    "price": 1.19,
+    "price": 1,
     "url": "https://www.aldi-sued.de/produkt/asia-green-garden-kokosnussmilch-400-ml-000000000191455001"
-   }
+   },
+   "changed": 1.19
   },
   "pesto": {
    "price": 0.99,
@@ -271,12 +272,13 @@
    }
   },
   "spaetzle": {
-   "price": 1.89,
+   "price": 1.69,
    "aldi": {
     "name": "Eierspätzle 500 g",
-    "price": 1.89,
+    "price": 1.69,
     "url": "https://www.aldi-sued.de/produkt/landfreude-eierspaetzle-500-g-000000000211588001"
-   }
+   },
+   "changed": 1.89
   },
   "reisnudeln": {
    "price": 0.99,
@@ -287,12 +289,13 @@
    }
   },
   "brot": {
-   "price": 1.61,
+   "price": 1.49,
    "aldi": {
     "name": "Rheinisches Vollkornbrot, fein 400 g",
-    "price": 1.29,
+    "price": 1.19,
     "url": "https://www.aldi-sued.de/produkt/zitterwaelder-rheinisches-vollkornbrot-fein-400-g-000000000000187722"
-   }
+   },
+   "changed": 1.61
   },
   "toast": {
    "price": 0.89,
@@ -340,15 +343,6 @@
     "name": "Erdnüsse 200 g",
     "price": 0.79,
     "url": "https://www.aldi-sued.de/produkt/farmer-erdnuesse-200-g-000000000000537829"
-   },
-   "changed": 0.59
-  },
-  "beeren": {
-   "price": 3.29,
-   "aldi": {
-    "name": "TK Obst-Sortiment, Sommerfrucht 750 g",
-    "price": 3.29,
-    "url": "https://www.aldi-sued.de/produkt/all-seasons-tk-obst-sortiment-sommerfrucht-750-g-000000000286598003"
    }
   },
   "gemuesemix": {
