@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-19T03:55:44.242Z",
+ "updated": "2026-10-26T03:56:14.669Z",
  "source": "Aldi Süd, Produktseiten auf aldi-sued.de",
  "count": 56,
  "items": {
@@ -105,8 +105,7 @@
     "name": "Hummus 200 g, Natur",
     "price": 0.79,
     "url": "https://www.aldi-sued.de/produkt/wonnemeyer-hummus-200-g-natur-000000000202835002"
-   },
-   "changed": 0.99
+   }
   },
   "schinken": {
    "price": 2.65,
@@ -133,12 +132,13 @@
    }
   },
   "hack": {
-   "price": 3.5,
+   "price": 4.99,
    "aldi": {
-    "name": "Hackfleisch gemischt 1 kg",
-    "price": 6.99,
-    "url": "https://www.aldi-sued.de/produkt/meine-metzgerei-hackfleisch-gemischt-1-kg-000000000000730931"
-   }
+    "name": "Hackfleisch gemischt 500 g",
+    "price": 4.99,
+    "url": "https://www.aldi-sued.de/produkt/meine-metzgerei-hackfleisch-gemischt-500-g-000000000000648898"
+   },
+   "changed": 3.5
   },
   "rinderhack": {
    "price": 5.49,
@@ -146,8 +146,7 @@
     "name": "Hackfleisch vom Rind 800 g",
     "price": 8.79,
     "url": "https://www.aldi-sued.de/produkt/meine-metzgerei-hackfleisch-vom-rind-800-g-000000000000550926"
-   },
-   "changed": 4.49
+   }
   },
   "thunfisch": {
    "price": 1.29,
@@ -163,8 +162,7 @@
     "name": "Norwegische Lachsfiletportionen 500 g",
     "price": 9.49,
     "url": "https://www.aldi-sued.de/produkt/golden-seafood-norwegische-lachsfiletportionen-500-g-000000000000211003"
-   },
-   "changed": 3.75
+   }
   },
   "fischstaebchen": {
    "price": 2.99,
@@ -223,13 +221,13 @@
    }
   },
   "kokosmilch": {
-   "price": 1,
+   "price": 1.19,
    "aldi": {
     "name": "Kokosnussmilch 400 ml",
-    "price": 1,
+    "price": 1.19,
     "url": "https://www.aldi-sued.de/produkt/asia-green-garden-kokosnussmilch-400-ml-000000000191455001"
    },
-   "changed": 1.19
+   "changed": 1
   },
   "pesto": {
    "price": 0.99,
@@ -277,8 +275,7 @@
     "name": "Eierspätzle 500 g",
     "price": 1.69,
     "url": "https://www.aldi-sued.de/produkt/landfreude-eierspaetzle-500-g-000000000211588001"
-   },
-   "changed": 1.89
+   }
   },
   "reisnudeln": {
    "price": 0.99,
@@ -294,8 +291,7 @@
     "name": "Rheinisches Vollkornbrot, fein 400 g",
     "price": 1.19,
     "url": "https://www.aldi-sued.de/produkt/zitterwaelder-rheinisches-vollkornbrot-fein-400-g-000000000000187722"
-   },
-   "changed": 1.61
+   }
   },
   "toast": {
    "price": 0.89,
