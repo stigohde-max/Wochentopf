@@ -1,7 +1,7 @@
 {
- "updated": "2026-10-26T03:56:14.669Z",
+ "updated": "2026-11-02T04:17:20.951Z",
  "source": "Aldi Süd, Produktseiten auf aldi-sued.de",
- "count": 56,
+ "count": 52,
  "items": {
   "quark": {
    "price": 1.19,
@@ -17,14 +17,6 @@
     "name": "Skyr 500 g",
     "price": 1.29,
     "url": "https://www.aldi-sued.de/produkt/milsani-skyr-500-g-000000000000203092"
-   }
-  },
-  "huettenkaese": {
-   "price": 1.11,
-   "aldi": {
-    "name": "Hüttenkäse 400 g",
-    "price": 2.22,
-    "url": "https://www.aldi-sued.de/produkt/gervais-huettenkaese-400-g-000000000000204788"
    }
   },
   "joghurt": {
@@ -73,14 +65,6 @@
     "name": "Gouda Scheiben, 400 g",
     "price": 2.45,
     "url": "https://www.aldi-sued.de/produkt/milsani-gouda-scheiben-400-g-000000000000554730"
-   }
-  },
-  "reibekaese": {
-   "price": 1.43,
-   "aldi": {
-    "name": "Gouda 250 g, gerieben",
-    "price": 1.79,
-    "url": "https://www.aldi-sued.de/produkt/hofburger-gouda-250-g-gerieben-000000000000474280"
    }
   },
   "mozzarella": {
@@ -137,16 +121,16 @@
     "name": "Hackfleisch gemischt 500 g",
     "price": 4.99,
     "url": "https://www.aldi-sued.de/produkt/meine-metzgerei-hackfleisch-gemischt-500-g-000000000000648898"
-   },
-   "changed": 3.5
+   }
   },
   "rinderhack": {
-   "price": 5.49,
+   "price": 4.59,
    "aldi": {
-    "name": "Hackfleisch vom Rind 800 g",
-    "price": 8.79,
-    "url": "https://www.aldi-sued.de/produkt/meine-metzgerei-hackfleisch-vom-rind-800-g-000000000000550926"
-   }
+    "name": "Hackfleisch vom Rind 500 g",
+    "price": 4.59,
+    "url": "https://www.aldi-sued.de/produkt/meine-metzgerei-hackfleisch-vom-rind-500-g-000000000000550925"
+   },
+   "changed": 5.49
   },
   "thunfisch": {
    "price": 1.29,
@@ -170,14 +154,6 @@
     "name": "Fischstäbchen 450 g",
     "price": 2.99,
     "url": "https://www.aldi-sued.de/produkt/golden-seafood-fischstaebchen-450-g-000000000000191386"
-   }
-  },
-  "garnelen": {
-   "price": 2.77,
-   "aldi": {
-    "name": "Garnelen 720 g",
-    "price": 7.99,
-    "url": "https://www.aldi-sued.de/produkt/golden-seafood-garnelen-720-g-000000000000191673"
    }
   },
   "lachsRaeucher": {
@@ -204,21 +180,14 @@
     "url": "https://www.aldi-sued.de/produkt/king-s-crown-sonnenmais-285-g-000000000000192131"
    }
   },
-  "tomatenDose": {
-   "price": 0.59,
-   "aldi": {
-    "name": "Tomaten gehackt 400 g",
-    "price": 0.59,
-    "url": "https://www.aldi-sued.de/produkt/king-s-crown-tomaten-gehackt-400-g-000000000000193761"
-   }
-  },
   "passiert": {
-   "price": 0.65,
+   "price": 0.45,
    "aldi": {
     "name": "Passierte Tomaten 500 g",
-    "price": 0.65,
+    "price": 0.45,
     "url": "https://www.aldi-sued.de/produkt/king-s-crown-passierte-tomaten-500-g-000000000000263580"
-   }
+   },
+   "changed": 0.65
   },
   "kokosmilch": {
    "price": 1.19,
@@ -226,8 +195,7 @@
     "name": "Kokosnussmilch 400 ml",
     "price": 1.19,
     "url": "https://www.aldi-sued.de/produkt/asia-green-garden-kokosnussmilch-400-ml-000000000191455001"
-   },
-   "changed": 1
+   }
   },
   "pesto": {
    "price": 0.99,
@@ -270,12 +238,13 @@
    }
   },
   "spaetzle": {
-   "price": 1.69,
+   "price": 1.29,
    "aldi": {
     "name": "Eierspätzle 500 g",
-    "price": 1.69,
+    "price": 1.29,
     "url": "https://www.aldi-sued.de/produkt/landfreude-eierspaetzle-500-g-000000000211588001"
-   }
+   },
+   "changed": 1.69
   },
   "reisnudeln": {
    "price": 0.99,
@@ -328,7 +297,7 @@
   "mandeln": {
    "price": 2.49,
    "aldi": {
-    "name": "Mandeln 200 g, natur",
+    "name": "Mandeln 200 g, Natur",
     "price": 2.49,
     "url": "https://www.aldi-sued.de/produkt/back-family-mandeln-200-g-natur-000000000000448033"
    }
@@ -382,12 +351,13 @@
    }
   },
   "schnitzel": {
-   "price": 4.69,
+   "price": 3.74,
    "aldi": {
     "name": "Schweine Schnitzel 400 g",
-    "price": 3.75,
+    "price": 2.99,
     "url": "https://www.aldi-sued.de/produkt/meine-metzgerei-schweine-schnitzel-400-g-000000000000341864"
-   }
+   },
+   "changed": 4.69
   },
   "haehnchenschenkel": {
    "price": 6.65,

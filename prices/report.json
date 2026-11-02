@@ -1,12 +1,17 @@
 {
-  "at": "2026-10-26T03:56:14.669Z",
-  "found": 56,
+  "at": "2026-11-02T04:17:20.951Z",
+  "found": 52,
   "of": 61,
   "log": [
+    "huettenkaese: nicht gefunden (0 Kandidaten)",
+    "reibekaese: nicht gefunden (0 Kandidaten)",
     "haehnchen: kein Preis auf https://www.aldi-sued.de/produkt/meine-metzgerei-haehnchenbrustfilet-teilstueck-1-kg-000000000000211078",
     "haehnchen: nicht gefunden (1 Kandidaten)",
+    "garnelen: nicht gefunden (0 Kandidaten)",
     "kichererbsen: kein Preis auf https://www.aldi-sued.de/produkt/king-s-crown-kichererbsen-265-g-000000000000625269",
     "kichererbsen: nicht gefunden (1 Kandidaten)",
+    "tomatenDose: kein Preis auf https://www.aldi-sued.de/produkt/king-s-crown-tomaten-gehackt-400-g-000000000000193761",
+    "tomatenDose: nicht gefunden (1 Kandidaten)",
     "beeren: nicht gefunden (0 Kandidaten)",
     "blumenkohl: nicht gefunden (0 Kandidaten)",
     "speck: verworfen, 4.04 € statt etwa 1.49 € (Bacon-Streifen 100 g)"
