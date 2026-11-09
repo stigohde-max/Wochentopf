@@ -1,7 +1,7 @@
 {
- "updated": "2026-11-02T04:17:20.951Z",
+ "updated": "2026-11-09T11:45:19.445Z",
  "source": "Aldi Süd, Produktseiten auf aldi-sued.de",
- "count": 52,
+ "count": 51,
  "items": {
   "quark": {
    "price": 1.19,
@@ -68,20 +68,22 @@
    }
   },
   "mozzarella": {
-   "price": 0.85,
+   "price": 0.89,
    "aldi": {
     "name": "Mozzarella 125 g, Classic",
-    "price": 0.85,
+    "price": 0.89,
     "url": "https://www.aldi-sued.de/produkt/cucina-nobile-mozzarella-125-g-classic-000000000202689001"
-   }
+   },
+   "changed": 0.85
   },
   "feta": {
-   "price": 1.19,
+   "price": 1.27,
    "aldi": {
     "name": "Hirtenkäse, 250 g",
-    "price": 1.49,
+    "price": 1.59,
     "url": "https://www.aldi-sued.de/produkt/lyttos-hirtenkaese-250-g-000000000204547002"
-   }
+   },
+   "changed": 1.19
   },
   "hummus": {
    "price": 0.79,
@@ -124,13 +126,13 @@
    }
   },
   "rinderhack": {
-   "price": 4.59,
+   "price": 5.49,
    "aldi": {
-    "name": "Hackfleisch vom Rind 500 g",
-    "price": 4.59,
-    "url": "https://www.aldi-sued.de/produkt/meine-metzgerei-hackfleisch-vom-rind-500-g-000000000000550925"
+    "name": "Hackfleisch vom Rind 800 g",
+    "price": 8.79,
+    "url": "https://www.aldi-sued.de/produkt/meine-metzgerei-hackfleisch-vom-rind-800-g-000000000000550926"
    },
-   "changed": 5.49
+   "changed": 4.59
   },
   "thunfisch": {
    "price": 1.29,
@@ -181,13 +183,13 @@
    }
   },
   "passiert": {
-   "price": 0.45,
+   "price": 0.65,
    "aldi": {
     "name": "Passierte Tomaten 500 g",
-    "price": 0.45,
+    "price": 0.65,
     "url": "https://www.aldi-sued.de/produkt/king-s-crown-passierte-tomaten-500-g-000000000000263580"
    },
-   "changed": 0.65
+   "changed": 0.45
   },
   "kokosmilch": {
    "price": 1.19,
@@ -238,21 +240,13 @@
    }
   },
   "spaetzle": {
-   "price": 1.29,
+   "price": 1.69,
    "aldi": {
     "name": "Eierspätzle 500 g",
-    "price": 1.29,
+    "price": 1.69,
     "url": "https://www.aldi-sued.de/produkt/landfreude-eierspaetzle-500-g-000000000211588001"
    },
-   "changed": 1.69
-  },
-  "reisnudeln": {
-   "price": 0.99,
-   "aldi": {
-    "name": "Reisnudeln 250 g, Breit",
-    "price": 0.99,
-    "url": "https://www.aldi-sued.de/produkt/asia-green-garden-reisnudeln-250-g-breit-000000000581131002"
-   }
+   "changed": 1.29
   },
   "brot": {
    "price": 1.49,
@@ -351,13 +345,13 @@
    }
   },
   "schnitzel": {
-   "price": 3.74,
+   "price": 4.69,
    "aldi": {
     "name": "Schweine Schnitzel 400 g",
-    "price": 2.99,
+    "price": 3.75,
     "url": "https://www.aldi-sued.de/produkt/meine-metzgerei-schweine-schnitzel-400-g-000000000000341864"
    },
-   "changed": 4.69
+   "changed": 3.74
   },
   "haehnchenschenkel": {
    "price": 6.65,

@@ -1,6 +1,6 @@
 {
-  "at": "2026-11-02T04:17:20.951Z",
-  "found": 52,
+  "at": "2026-11-09T11:45:19.445Z",
+  "found": 51,
   "of": 61,
   "log": [
     "huettenkaese: nicht gefunden (0 Kandidaten)",
@@ -12,8 +12,9 @@
     "kichererbsen: nicht gefunden (1 Kandidaten)",
     "tomatenDose: kein Preis auf https://www.aldi-sued.de/produkt/king-s-crown-tomaten-gehackt-400-g-000000000000193761",
     "tomatenDose: nicht gefunden (1 Kandidaten)",
+    "reisnudeln: nicht gefunden (0 Kandidaten)",
     "beeren: nicht gefunden (0 Kandidaten)",
     "blumenkohl: nicht gefunden (0 Kandidaten)",
-    "speck: verworfen, 4.04 € statt etwa 1.49 € (Bacon-Streifen 100 g)"
+    "speck: verworfen, 3.74 € statt etwa 1.49 € (Bacon-Streifen 100 g)"
   ]
 }
