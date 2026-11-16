@@ -1,7 +1,7 @@
 {
- "updated": "2026-11-09T11:45:19.445Z",
+ "updated": "2026-11-16T11:38:05.920Z",
  "source": "Aldi Süd, Produktseiten auf aldi-sued.de",
- "count": 51,
+ "count": 52,
  "items": {
   "quark": {
    "price": 1.19,
@@ -20,12 +20,13 @@
    }
   },
   "joghurt": {
-   "price": 0.9,
+   "price": 0.8,
    "aldi": {
     "name": "Naturjoghurt 1 kg, 3,5 % Fett",
-    "price": 1.79,
+    "price": 1.59,
     "url": "https://www.aldi-sued.de/produkt/milsani-naturjoghurt-1-kg-3-5-fett-000000000415545001"
-   }
+   },
+   "changed": 0.9
   },
   "sojajoghurt": {
    "price": 0.99,
@@ -73,8 +74,7 @@
     "name": "Mozzarella 125 g, Classic",
     "price": 0.89,
     "url": "https://www.aldi-sued.de/produkt/cucina-nobile-mozzarella-125-g-classic-000000000202689001"
-   },
-   "changed": 0.85
+   }
   },
   "feta": {
    "price": 1.27,
@@ -82,8 +82,7 @@
     "name": "Hirtenkäse, 250 g",
     "price": 1.59,
     "url": "https://www.aldi-sued.de/produkt/lyttos-hirtenkaese-250-g-000000000204547002"
-   },
-   "changed": 1.19
+   }
   },
   "hummus": {
    "price": 0.79,
@@ -109,6 +108,14 @@
     "url": "https://www.aldi-sued.de/produkt/no-brand-aufschnitt-spezialitaeten-200-g-haehnchenbrust-000000000642894002"
    }
   },
+  "haehnchen": {
+   "price": 8.19,
+   "aldi": {
+    "name": "Hähnchenbrustfilet Teilstück 1 kg",
+    "price": 8.19,
+    "url": "https://www.aldi-sued.de/produkt/meine-metzgerei-haehnchenbrustfilet-teilstueck-1-kg-000000000000211078"
+   }
+  },
   "pute": {
    "price": 5,
    "aldi": {
@@ -118,12 +125,13 @@
    }
   },
   "hack": {
-   "price": 4.99,
+   "price": 3.99,
    "aldi": {
     "name": "Hackfleisch gemischt 500 g",
-    "price": 4.99,
+    "price": 3.99,
     "url": "https://www.aldi-sued.de/produkt/meine-metzgerei-hackfleisch-gemischt-500-g-000000000000648898"
-   }
+   },
+   "changed": 4.99
   },
   "rinderhack": {
    "price": 5.49,
@@ -131,8 +139,7 @@
     "name": "Hackfleisch vom Rind 800 g",
     "price": 8.79,
     "url": "https://www.aldi-sued.de/produkt/meine-metzgerei-hackfleisch-vom-rind-800-g-000000000000550926"
-   },
-   "changed": 4.59
+   }
   },
   "thunfisch": {
    "price": 1.29,
@@ -188,8 +195,7 @@
     "name": "Passierte Tomaten 500 g",
     "price": 0.65,
     "url": "https://www.aldi-sued.de/produkt/king-s-crown-passierte-tomaten-500-g-000000000000263580"
-   },
-   "changed": 0.45
+   }
   },
   "kokosmilch": {
    "price": 1.19,
@@ -245,8 +251,7 @@
     "name": "Eierspätzle 500 g",
     "price": 1.69,
     "url": "https://www.aldi-sued.de/produkt/landfreude-eierspaetzle-500-g-000000000211588001"
-   },
-   "changed": 1.29
+   }
   },
   "brot": {
    "price": 1.49,
@@ -289,12 +294,13 @@
    }
   },
   "mandeln": {
-   "price": 2.49,
+   "price": 1.69,
    "aldi": {
     "name": "Mandeln 200 g, Natur",
-    "price": 2.49,
+    "price": 1.69,
     "url": "https://www.aldi-sued.de/produkt/back-family-mandeln-200-g-natur-000000000000448033"
-   }
+   },
+   "changed": 2.49
   },
   "erdnuesse": {
    "price": 0.79,
@@ -350,8 +356,7 @@
     "name": "Schweine Schnitzel 400 g",
     "price": 3.75,
     "url": "https://www.aldi-sued.de/produkt/meine-metzgerei-schweine-schnitzel-400-g-000000000000341864"
-   },
-   "changed": 3.74
+   }
   },
   "haehnchenschenkel": {
    "price": 6.65,
@@ -386,12 +391,13 @@
    }
   },
   "mehl": {
-   "price": 0.59,
+   "price": 0.45,
    "aldi": {
     "name": "Qualitäts-Weizenmehl Type 405 1 kg",
-    "price": 0.59,
+    "price": 0.45,
     "url": "https://www.aldi-sued.de/produkt/back-family-qualitaets-weizenmehl-type-405-1-kg-000000000000188687"
-   }
+   },
+   "changed": 0.59
   },
   "sauerrahm": {
    "price": 0.59,
